@@ -59,7 +59,7 @@ RStudio is an interface for R that is relatively user-friendly, visually suffici
 
 Repositories (**repos** for short) are essentially project folders where you intend to store a set of files in the same location, much like a folder. These repositories are constantly being updated and are in need of version of control. This is where GitHub and other Git platforms come in. GitHub allows you to make your edits to a project locally and save them remotely while keeping all previous versions to your project intact. You do not need to constantly change file names to indicate new versions, just push your edits to GitHub. GitHub will store the previous versions and a detailed record of the changes made. GitHub and other version control platforms are fundamentally important for collaboration in the current age.
 
-We will now start the setup of your individual student **GitHub repositories**. Each student should click on this link https://edu.cs.illinois.edu/create-gh-repo/fa22_stat430 in order to create your student repo. Your personal repo is where you will keep your assignment files. The idea is that:  
+We will now start the setup of your individual student **GitHub repositories**. Each student should click on this link https://edu.cs.illinois.edu/create-gh-repo/sp23_stat528 in order to create your student repo. Your personal repo is where you will keep your assignment files. The idea is that:  
 - you will work on your assignments from your repo, updating it often to ensure you're working on the correct file(s)  
 - you will obtain course resources, including homework assignments, from my **stat528resources** course repo.  
 We will cover GitHub in much more detail throughout this course.
@@ -82,7 +82,7 @@ For this class to run smoothly I ask that you create a directory (folder) named 
 The md stands for Markdown, not the R Markdown that we will use later. This file that you've created is a Markdown file, and GitHub does some interesting rendering of this plain-text file. 
 
 
-Your repo has a very special address which you need to **clone** onto your local computer. Cloning the repo connects your GitHub repo to your local computer as a directory (with the same name as the repo). After we access Git via a terminal or shell, we will clone our repos. Make sure that you know which directory that you clone your repo in! I recommend creating a **STAT430** directory on your Desktop and then cloning your repo in this directory.
+Your repo has a very special address which you need to **clone** onto your local computer. Cloning the repo connects your GitHub repo to your local computer as a directory (with the same name as the repo). After we access Git via a terminal or shell, we will clone our repos. Make sure that you know which directory that you clone your repo in! I recommend creating a **STAT528** directory on your Desktop and then cloning your repo in this directory.
 
 3. Open your computer's terminal or use RStudio to open the Terminal. To do the later, click "Tools", then "Terminal", then "New Terminal." This Terminal is a shell that allows us to access Git via the command-line. 
 
@@ -117,7 +117,7 @@ Please make sure you have the correct access rights
 and the repository exists.
 ```
 
-If you do get this error message, go to [this link](https://docs.github.com/articles/authenticating-to-a-github-organization-with-saml-single-sign-on/) and learn about SAML SSO. You may need to generate an [SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent), [add your SSH key to your GitHub account](https://docs.github.com/en/enterprise-server@3.0/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account), and then [configure SSO](https://docs.github.com/en/enterprise-cloud@latest/authentication/authenticating-with-saml-single-sign-on/authorizing-an-ssh-key-for-use-with-saml-single-sign-on) for the stat430fa2022 GitHub organization (it may say Configure SSO instead of Enable SSO in your SSH and GPG keys GitHub page).
+If you do get this error message, go to [this link](https://docs.github.com/articles/authenticating-to-a-github-organization-with-saml-single-sign-on/) and learn about SAML SSO. You may need to generate an [SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent), [add your SSH key to your GitHub account](https://docs.github.com/en/enterprise-server@3.0/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account), and then [configure SSO](https://docs.github.com/en/enterprise-cloud@latest/authentication/authenticating-with-saml-single-sign-on/authorizing-an-ssh-key-for-use-with-saml-single-sign-on) for this course's GitHub organization (it may say Configure SSO instead of Enable SSO in your SSH and GPG keys GitHub page).
 
 
 **Do not edit any files in your local versions of my stat528resources repo**. The **stat528resources** repo is an internal repo that you can only pull materials from, you do not have writing permissions in this repo. Editing files in the **stat528resources** repo  will create a [conflict](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-merge-conflicts). You should copy files from my **stat528resources** repo to your desired destination.
@@ -127,10 +127,10 @@ If you do get this error message, go to [this link](https://docs.github.com/arti
 Now clone your personal repo into your **STAT528**  directory by following the same steps that cloned my repo into this directory. You can do this by first changing *YourNetID.git* to your actual netid .git in the following and then coping the command into the terminal.
 
 ```
-git clone git@github.com:stat430fa22/fa22_stat430_YourNetID.git
+git clone git@github.com:illinois-stat528/sp23_stat528_YourNetID.git
 ```
 
-These commands establish the connection between GitHub (remote) and your computer (local). **You only need to clone your repos once, make sure that your repos are inside your STAT430 directory and are not nested within one another.** You can always delete either of these repos and reclone if you need to.
+These commands establish the connection between GitHub (remote) and your computer (local). **You only need to clone your repos once, make sure that your repos are inside your STAT528 directory and are not nested within one another.** You can always delete either of these repos and reclone if you need to.
 
 
 7. (Optional) Using the terminal or the shell,  
