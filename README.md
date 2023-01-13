@@ -50,9 +50,11 @@ See the Syllabus for more details. See the notes directory for course notes.
 	
 **Course location:** 106B8 Engineering Hall
 
-**Office hours**: TBD
+**Office hours**: 12:00PM - 1:00PM on Fridays (Zoom link: https://illinois.zoom.us/j/85842476445?pwd=enVPMXVkL3pYbHltU3JrMjJDU2RZdz09)
 
-**TA**: TBD
+**TA**: Diptarka Saha (saha12@illinois.edu)
+
+**TA Office hours**: 1:00PM - 2:00PM on Fridays (Zoom link: https://illinois.zoom.us/j/94102816368?pwd=MTdXejNHeGU2RXVGY3o4TTVUdVVrZz09)
 
 **Course website**: 
 
