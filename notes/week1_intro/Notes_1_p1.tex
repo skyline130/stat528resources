@@ -80,6 +80,13 @@
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{graphicx}
 \usepackage{bm}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{tikz-cd}
+\usepackage{url}
 \definecolor{foreground}{RGB}{255,255,255}
 \definecolor{background}{RGB}{34,28,54}
 \definecolor{title}{RGB}{105,165,255}
@@ -115,12 +122,24 @@ University of Illinois}
 \begin{document}
 \frame{\titlepage}
 
-\begin{frame}{Learning Objectives Today}
-\protect\hypertarget{learning-objectives-today}{}
+\begin{frame}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Proj}{\textbf{P}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\rootn}{\sqrt{n}}
+\newcommand{\p}{\mathbf{p}}
+\newcommand{\E}{\text{E}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\end{frame}
+
+\begin{frame}{Agenda for today}
+\protect\hypertarget{agenda-for-today}{}
 \begin{itemize}
 \tightlist
 \item
-  Course Syllabus, materials, and objectives
+  Course Syllabus and organization
 \item
   Introductory materials
 \item
@@ -128,12 +147,301 @@ University of Illinois}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{}
-\protect\hypertarget{section}{}
+\begin{frame}{Materials and organization}
+\protect\hypertarget{materials-and-organization}{}
+\begin{itemize}
+\tightlist
+\item
+  Install or update R and RStudio
+\item
+  Write homework assignments in RMarkdown and submit pdfs/html
+\item
+  Submit homework in your personal GitHub repository within my GitHub
+  STAT 528 organization
+\end{itemize}
 \end{frame}
 
-\begin{frame}{References}
-\protect\hypertarget{references}{}
+\begin{frame}{Computer resources}
+\protect\hypertarget{computer-resources}{}
+\begin{itemize}
+\item
+  The R Project for Statistical Computing:
+  \url{https://www.r-project.org/}
+\item
+  RStudio as an integrated development environment for R:
+  \url{https://www.rstudio.com/}
+\item
+  R Markdown: \url{https://rmarkdown.rstudio.com/}
+\item
+  The tidyverse for data science: \url{https://www.tidyverse.org/}
+\item
+  GitHub for version control: \url{https://github.com/}
+\item
+  UIUC CS GitHub repo creator tool:
+  \url{https://wiki.illinois.edu/wiki/pages/viewpage.action?spaceKey=CSID&title=GitHub+repo+creator+tool}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Course layout}
+\protect\hypertarget{course-layout}{}
+\begin{itemize}
+\tightlist
+\item
+  Our course will start with a detailed treatment of exponential family
+  theory
+\item
+  Motivation of GLMs from exponential family theory follows
+\item
+  We will then discuss GLMs for binary and count responses as well as
+  multinomial regression
+\item
+  Next we will discuss data separation and GLM diagnostics
+\item
+  Spring break!
+\item
+  We will resume with contingency tables
+\item
+  The remainder of the course will be devoted to a detailed treatment of
+  more advanced regression topics:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    linear mixed-effects models
+  \item
+    generalized linear mixed-effects models and generalized estimating
+    equations
+  \item
+    aster models for life history analysis
+  \item
+    multivariate regression and variance reduction via envelope
+    methodology
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Course layout (part II)}
+\protect\hypertarget{course-layout-part-ii}{}
+\begin{itemize}
+\tightlist
+\item
+  The course will start with theory
+\item
+  It will then be a combination of methodology and data analysis
+\item
+  When we return from spring break, the course will be a mix of theory,
+  methodology, and data analysis
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Student Learning Outcomes}
+\protect\hypertarget{student-learning-outcomes}{}
+Upon successful completion of this course students will be able to
+conduct methodologically strong data analyses that can answer questions
+of scientific interest.
+
+Students will gain written communication skills, will be able to present
+their data analyses in the form of a reproducible technical report, and
+will gain experience with data science workflow.
+\end{frame}
+
+\begin{frame}{Background on topics}
+\protect\hypertarget{background-on-topics}{}
+\begin{itemize}
+\tightlist
+\item
+  Distributions
+\item
+  Likelihoods
+\item
+  Exponential families
+\item
+  GLMs
+\item
+  LMMs
+\end{itemize}
+
+\vspace*{12pt}
+
+There is more detail in the \texttt{introduction.pdf} notes. Some of
+this additional detail is useful for your first homework assignment.
+\end{frame}
+
+\begin{frame}{Bernoulli and Binomial distributions}
+\protect\hypertarget{bernoulli-and-binomial-distributions}{}
+A random variable \(Y \sim\) Bernoulli\((p)\) has mass function \[
+  f(y) = \left\{\begin{array}{cc}
+    p   & y = 1 \\
+    1-p & y = 0
+  \end{array}\right.
+\] where \(\text{E}(Y) = p\) and \(\text{Var}(Y) = 1 - p\), and
+\(0 < p < 1\) is a success probability.
+
+\vspace*{12pt}
+
+A random variable \(Y \sim\) Binomial\((n,p)\) has mass function \[
+  f(y) = {n \choose y}p^y(1-p)^{1-y}, \qquad y = 0,1,\ldots, n,
+\] where \(\text{E}(Y) = np\) and \(\text{Var}(Y) = np(1-p)\). The
+Binomial distribution arises as a sum of Bernoulli trials.
+\end{frame}
+
+\begin{frame}{Multinomial distribution}
+\protect\hypertarget{multinomial-distribution}{}
+\begin{itemize}
+\tightlist
+\item
+  \(n\) independent trials
+\item
+  each trial results in one of \(c\) categories being observed
+\item
+  probability vector \(\mathbf{p}= (p_1,\ldots, p_c)\)
+\item
+  \(N_j\) be the total number of observations in category level
+\end{itemize}
+
+We will say \[
+  (N_1,\ldots,N_c) \sim \text{multinomial}(n,\mathbf{p}) 
+\] with mass function \[
+  f(n_1,\ldots,n_c) = {n \choose n_1 \ldots n_c} p_1^{n_1}\cdots p_c^{n_c}, 
+    \qquad \sum_{j=1}^c n_j = n,
+\] where:
+
+\begin{itemize}
+\tightlist
+\item
+  \(\text{E}(N_j) = np_j\)
+\item
+  \(\text{Var}(N_j) = np_j(1-p_j)\)
+\item
+  \(\text{Cov}(N_j,N_k) = -np_jp_k\) where \(j \neq k\).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Poisson distribution}
+\protect\hypertarget{poisson-distribution}{}
+A random variable \(Y \sim\) Poisson\((\mu)\), \(\mu > 0\), has mass
+function \[
+  f(y) = \frac{\mu^y e^{-\mu}}{y!},  \qquad y = 0,1,\ldots,
+\] where \(\text{E}(Y) = \mu\) and \(\text{Var}(Y) = \mu\).
+\end{frame}
+
+\begin{frame}{Likelihoods}
+\protect\hypertarget{likelihoods}{}
+\begin{itemize}
+\item
+  For a model with parameter \(\theta\), the \textbf{likelihood}
+  \(L(\theta)\) is the joint density of data at its observed values, as
+  a function of \(\theta\).
+\item
+  When data is iid the likelihood and log likelihood \(l(\theta)\) will
+  be \[
+  L(\theta) = \prod_{i=1}^n f_\theta(y_i), \qquad 
+    l(\theta) = \sum_{i=1}^n \log(f_\theta(y_1)).
+  \]
+\item
+  A maximum likelihood estimate (MLE) \(\hat\theta\) maximizes
+  \(l(\theta)\) and \(L(\theta)\). The estimate \(\hat\theta\) is
+  usually the unique solution of
+  \(\frac{\partial}{\partial\theta}l(\theta) = 0\).
+\item
+  \(\sqrt{n}(\hat\theta - \theta) \to N(0, I(\theta)^{-1})\) where \[
+  I(\theta) = -\text{E}\left(\frac{\partial^2 l(\theta)}{\partial \theta^2}\right).
+  \]
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Exponential family}
+\protect\hypertarget{exponential-family}{}
+An \emph{exponential family of distributions} is a parametric
+statistical model having log likelihood that takes the form
+\begin{equation} \label{expolog}
+    l(\theta) = \langle y,\theta \rangle - c(\theta),
+\end{equation} where:
+
+\begin{itemize}
+\tightlist
+\item
+  \(y\) is a vector statistic
+\item
+  \(\theta\) is a vector parameter
+\item
+  \(\langle y,\theta \rangle\) is the usual inner product
+\item
+  \(c(\theta)\) is the cumulant function.
+\end{itemize}
+
+We have: \begin{align*}
+  \text{E}_\theta(Y) &= \nabla c(\theta), \\  
+  \text{Var}_\theta(Y) &= \nabla^2 c(\theta).
+\end{align*}
+
+Examples: Binomial, Multinomial, Poisson, normal, etc.
+\end{frame}
+
+\begin{frame}{GLM}
+\protect\hypertarget{glm}{}
+Recall in LM: \[
+   y = x^T\beta + \varepsilon, \qquad \text{E}(y|x) = x^T\beta
+\]
+
+\vspace*{12pt}
+
+Generalized linear models (GLM) are extensions to the above where in
+GLM: \[
+ \text{E}_\theta(y_i|x_i) = g(x_i^T\beta) 
+\] which implies that we can write \[
+  g^{-1}\left(\text{E}_\theta(y_i|x_i)\right) = x_i^T\beta.
+\] These models have very nice statistical properties when the
+underlying model is an exponential family.
+\end{frame}
+
+\begin{frame}{LMM}
+\protect\hypertarget{lmm}{}
+The basic LMM takes the form \[
+  Y = X\beta + Zb + \varepsilon \qquad \text{or} \qquad Y\mid b \sim N(X\beta + Zb, \sigma^2I),
+\] where:
+
+\begin{itemize}
+\tightlist
+\item
+  \(Y\) is the response vector
+\item
+  \(X\) is a fixed-effects model matrix
+\item
+  \(\beta\) is a fixed-effects coefficient vector
+\item
+  \(Z\) is a model matrix of random-effects
+\item
+  \(b\) is a vector of random effects
+\item
+  \(\sigma^2\) is the variance of the error distribution.
+\end{itemize}
+
+If we further assume that \(b \sim N(0, \sigma^2D)\) then the
+unconditional response \(Y\) is distributed as \[
+  Y \sim N(X\beta, \sigma^2(I + ZDZ^T)).
+\]
+\end{frame}
+
+\begin{frame}{Multivariate regression model}
+\protect\hypertarget{multivariate-regression-model}{}
+The basic multivariate regression model takes the form \[
+  Y = \alpha +\beta X  + \varepsilon,
+\] where:
+
+\begin{itemize}
+\tightlist
+\item
+  \(Y\) is the response vector
+\item
+  \(\alpha\) is an intercept vector
+\item
+  \(X\) is a predictor vector
+\item
+  \(\beta\) is a coefficient matrix
+\item
+  \(\varepsilon \sim N(0, \Sigma)\) where \(\Sigma > 0\).
+\end{itemize}
 \end{frame}
 
 \end{document}

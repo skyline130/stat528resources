@@ -208,11 +208,11 @@ provided that $\theta$ is an interior point of the parameter space.
 
 Generalized linear models (GLM) are an extension to linear regression to other classes of distributions. In this class we will place emphasis on GLMs corresponding to exponential families. Recall that in linear regression one is interested in estimated $\beta$, a regression coefficient vector in standard terminology, where 
 $$
-  \E(y|x) = x^T\beta + \varepsilon, 
+  y = x^T\beta + \varepsilon, 
     \qquad \text{and} \qquad 
-  \hat{\E}(y|x) = x^T\hat\beta
+  \E(y|x) = x^T\beta
 $$
-where $\varepsilon$ is statistical error (usually assumed to follow a normal distribution) and $\hat\beta$ is the least squares estimator of $\beta$. In more general models we cannot always express the mean function as a linear function of covariates in a sensible fashion. However, all is not lost. In an exponential family GLM, the parameter vector $\theta$ is ``linked'' to the mean value parameter $E(y|x)$ through a change-of-parameter mappings $g(\theta)$ (called the inverse link function). We can reparameterize $\theta_i = x_i^T\beta$ where $\beta$ is a lower dimension vector of regression coefficients and write
+where $\varepsilon$ is statistical error (usually assumed to follow a normal distribution) and $\beta$ is a regression coefficient vector. In more general models we cannot always express the mean function as a linear function of covariates in a sensible fashion. However, all is not lost. In an exponential family GLM, the parameter vector $\theta$ is ``linked'' to the mean value parameter $E(y|x)$ through a change-of-parameter mappings $g(\theta)$ (called the inverse link function). We can reparameterize $\theta_i = x_i^T\beta$ where $\beta$ is a lower dimension vector of regression coefficients and write
 $$
  \E_\theta(y_i|x_i) = \mu_x = g(x_i^T\beta) 
 $$
@@ -233,6 +233,18 @@ where $Y$ is the response vector, $X$ is a fixed-effects model matrix, $\beta$ i
 $$
   Y \sim N(X\beta, \sigma^2(I + ZDZ^T)).
 $$
+
+
+
+\section*{Multivariate regression model}
+
+Multivariate regression models are an extension to the classical linear model in which the response is now a vector and elements of the response are allowed to be correlated. The basic multivariate regression model takes the form
+$$
+  Y = \alpha +\beta X  + \varepsilon,
+$$
+where $Y$ is the response vector, $\alpha$ is an intercept vector, $X$ is a predictor vector, $\beta$ is a coefficient matrix, and $\varepsilon \sim N(0, \Sigma)$ where  $\Sigma > 0$. The multivariate regression model is very similar to the standard linear regression model with a scalar response. But estimation of important quantities requires matrix calculus which is not a part of standard statistics curricula.
+
+
 
 
 \section*{Acknowledgments}

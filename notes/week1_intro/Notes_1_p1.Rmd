@@ -17,6 +17,13 @@ urlcolor: blue
 header-includes:
 - \usepackage{graphicx}
 - \usepackage{bm}
+- \usepackage{array}
+- \usepackage{amsmath}
+- \usepackage{amsthm}
+- \usepackage{amsfonts}
+- \usepackage{amssymb}
+- \usepackage{tikz-cd}
+- \usepackage{url}
 - \definecolor{foreground}{RGB}{255,255,255}
 - \definecolor{background}{RGB}{34,28,54}
 - \definecolor{title}{RGB}{105,165,255}
@@ -27,6 +34,17 @@ header-includes:
 - \definecolor{vhilight}{RGB}{255,111,207}
 - \setbeamertemplate{footline}[page number]
 ---
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Proj}{\textbf{P}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\rootn}{\sqrt{n}}
+\newcommand{\p}{\mathbf{p}}
+\newcommand{\E}{\text{E}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+
 
 ```{r setup, include=FALSE, warning=FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = TRUE,tidy.opts=list(width.cutoff=40))
@@ -51,9 +69,9 @@ dark_theme = theme(plot.background   = element_blank(),
 
 <!-- ## Learning Objectives Today -->
 ## Agenda for today
-- Course Syllabus, materials, and organization
-- Course software and GitHub
+- Course Syllabus and organization
 - Introductory materials
+- Course software and GitHub
 
 
 ## Materials and organization
@@ -62,15 +80,205 @@ dark_theme = theme(plot.background   = element_blank(),
 - Submit homework in your personal GitHub repository within my GitHub STAT 528 organization
 
 
+## Computer resources
+
+ - The R Project for Statistical Computing: \url{https://www.r-project.org/}
+
+ - RStudio as an integrated development environment for R: \url{https://www.rstudio.com/}
+ 
+ - R Markdown: \url{https://rmarkdown.rstudio.com/}
+ 
+ - The tidyverse for data science: \url{https://www.tidyverse.org/}
+ 
+ - GitHub for version control: \url{https://github.com/}
+ 
+ - UIUC CS GitHub repo creator tool: \url{https://wiki.illinois.edu/wiki/pages/viewpage.action?spaceKey=CSID&title=GitHub+repo+creator+tool}
+ 
+
+
+## Course layout
+- Our course will start with a detailed treatment of exponential family theory
+- Motivation of GLMs from exponential family theory follows
+- We will then discuss GLMs for binary and count responses as well as multinomial regression
+- Next we will discuss data separation and GLM diagnostics
+- Spring break!
+- We will resume with contingency tables 
+- The remainder of the course will be devoted to a detailed treatment of more advanced regression topics:
+  - linear mixed-effects models
+  - generalized linear mixed-effects models and generalized estimating equations
+  - aster models for life history analysis
+  - multivariate regression and variance reduction via envelope methodology
+
+
+## Course layout (part II)
+- The course will start with theory
+- It will then be a combination of methodology and data analysis
+- When we return from spring break, the course will be a mix of theory, methodology, and data analysis
+
+
 ## Student Learning Outcomes
-Upon successful completion of this course students will be able to conduct methodologically strong data analyses that can answer questions of scientific interest, specifically the students will: 
-- Analyze and investigate fundamentals of exponential family theory
-- Analyze data sets with categorical data 
-- Develop a solid theoretical and practical understanding of generalized linear models and linear mixed models
-- Develop a solid theoretical and practical understanding of generalized linear mixed models, generalized estimation equations, repeated measures designs, and aster models 
-- Develop a working understanding of the envelope model variance reduction technique
-- Critique estimation procedures and modeling development strategies
-- Apply version control software and develop reproducible technical reports
+Upon successful completion of this course students will be able to conduct methodologically strong data analyses that can answer questions of scientific interest. 
+
+Students will gain written communication skills, will be able to present their data analyses in the form of a reproducible technical report, and will gain experience with data science workflow.
 
 
-## References
+
+## Background on topics
+
+- Distributions 
+- Likelihoods
+- Exponential families
+- GLMs
+- LMMs
+
+\vspace*{12pt}
+
+There is more detail in the \texttt{introduction.pdf} notes. Some of this additional detail is useful for your first homework assignment.
+
+
+
+## Bernoulli and Binomial distributions
+
+A random variable $Y \sim$ Bernoulli$(p)$ has mass function
+$$
+  f(y) = \left\{\begin{array}{cc}
+    p   & y = 1 \\
+    1-p	& y = 0
+  \end{array}\right.
+$$
+where $\E(Y) = p$ and $\Var(Y) = 1 - p$, and $0 < p < 1$ is a success probability. 
+
+\vspace*{12pt}
+
+A random variable $Y \sim$ Binomial$(n,p)$ has mass function 
+$$
+  f(y) = {n \choose y}p^y(1-p)^{1-y}, \qquad y = 0,1,\ldots, n,
+$$
+where $\E(Y) = np$ and $\Var(Y) = np(1-p)$. The Binomial distribution arises as a sum of Bernoulli trials. 
+
+
+## Multinomial distribution
+
+- $n$ independent trials
+- each trial results in one of $c$ categories being observed 
+- probability vector $\p = (p_1,\ldots, p_c)$ 
+- $N_j$ be the total number of observations in category level  
+
+We will say 
+$$
+  (N_1,\ldots,N_c) \sim \text{multinomial}(n,\p) 
+$$
+with mass function 
+$$
+  f(n_1,\ldots,n_c) = {n \choose n_1 \ldots n_c} p_1^{n_1}\cdots p_c^{n_c}, 
+    \qquad \sum_{j=1}^c n_j = n,
+$$
+where: 
+
+- $\E(N_j) = np_j$ 
+- $\Var(N_j) = np_j(1-p_j)$
+- $\Cov(N_j,N_k) = -np_jp_k$ where $j \neq k$.
+
+
+## Poisson distribution 
+
+A random variable $Y \sim$ Poisson$(\mu)$, $\mu > 0$, has mass function 
+$$
+  f(y) = \frac{\mu^y e^{-\mu}}{y!},  \qquad y = 0,1,\ldots,
+$$
+where $\E(Y) = \mu$ and $\Var(Y) = \mu$. 
+
+
+## Likelihoods
+
+- For a model with parameter $\theta$, the \textbf{likelihood} $L(\theta)$ is the joint density of data at its observed values, as a function of $\theta$.
+
+- When data is iid the likelihood and log likelihood $l(\theta)$ will be
+$$
+  L(\theta) = \prod_{i=1}^n f_\theta(y_i), \qquad 
+    l(\theta) = \sum_{i=1}^n \log(f_\theta(y_1)).
+$$
+- A maximum likelihood estimate (MLE) $\hat\theta$ maximizes $l(\theta)$ and $L(\theta)$. The estimate $\hat\theta$ is usually the unique solution of $\frac{\partial}{\partial\theta}l(\theta) = 0$.
+
+- $\sqrt{n}(\hat\theta - \theta) \to N(0, I(\theta)^{-1})$  where 
+$$
+  I(\theta) = -\E\left(\frac{\partial^2 l(\theta)}{\partial \theta^2}\right).
+$$
+
+
+## Exponential family
+
+An \emph{exponential family of distributions} is a parametric statistical model having log likelihood that takes the form 
+\begin{equation} \label{expolog}
+	l(\theta) = \langle y,\theta \rangle - c(\theta),
+\end{equation}
+where: 
+
+- $y$ is a vector statistic 
+- $\theta$ is a vector parameter 
+- $\langle y,\theta \rangle$ is the usual inner product 
+- $c(\theta)$ is the cumulant function.
+
+We have:
+\begin{align*}
+  \E_\theta(Y) &= \nabla c(\theta), \\	
+  \Var_\theta(Y) &= \nabla^2 c(\theta).
+\end{align*}
+
+Examples: Binomial, Multinomial, Poisson, normal, etc.
+
+
+## GLM
+
+Recall in LM:
+$$
+   y = x^T\beta + \varepsilon, \qquad \E(y|x) = x^T\beta
+$$
+
+\vspace*{12pt}
+
+Generalized linear models (GLM) are extensions to the above where in GLM:
+$$
+ \E_\theta(y_i|x_i) = g(x_i^T\beta) 
+$$
+which implies that we can write
+$$
+  g^{-1}\left(\E_\theta(y_i|x_i)\right) = x_i^T\beta.
+$$
+These models have very nice statistical properties when the underlying model is an exponential family.
+
+
+
+## LMM 
+
+The basic LMM takes the form
+$$
+  Y = X\beta + Zb + \varepsilon \qquad \text{or} \qquad Y\mid b \sim N(X\beta + Zb, \sigma^2I),
+$$
+where: 
+
+- $Y$ is the response vector
+- $X$ is a fixed-effects model matrix 
+- $\beta$ is a fixed-effects coefficient vector 
+- $Z$ is a model matrix of random-effects 
+- $b$ is a vector of random effects 
+- $\sigma^2$ is the variance of the error distribution. 
+
+
+If we further assume that $b \sim N(0, \sigma^2D)$ then the unconditional response $Y$ is distributed as 
+$$
+  Y \sim N(X\beta, \sigma^2(I + ZDZ^T)).
+$$
+
+## Multivariate regression model
+The basic multivariate regression model takes the form 
+$$
+  Y = \alpha +\beta X  + \varepsilon,
+$$
+where: 
+
+- $Y$ is the response vector
+- $\alpha$ is an intercept vector
+- $X$ is a predictor vector
+- $\beta$ is a coefficient matrix
+- $\varepsilon \sim N(0, \Sigma)$ where  $\Sigma > 0$.
