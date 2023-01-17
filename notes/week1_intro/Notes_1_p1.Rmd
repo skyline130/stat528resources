@@ -1,0 +1,76 @@
+---
+title: "STAT 528 - Advanced Regression Analysis II"
+author: "Generalized Linear Models"
+institute: |
+  | Daniel J. Eck
+  | Department of Statistics  
+  | University of Illinois
+date: ""
+output: 
+    beamer_presentation:
+        keep_tex: true
+        fig_width: 11
+        fig_height: 7.5
+        includes:
+bibliography: ../note_sources.bib
+urlcolor: blue
+header-includes:
+- \usepackage{graphicx}
+- \usepackage{bm}
+- \definecolor{foreground}{RGB}{255,255,255}
+- \definecolor{background}{RGB}{34,28,54}
+- \definecolor{title}{RGB}{105,165,255}
+- \definecolor{gray}{RGB}{175,175,175}
+- \definecolor{lightgray}{RGB}{225,225,225}
+- \definecolor{subtitle}{RGB}{232,234,255}
+- \definecolor{hilight}{RGB}{112,224,255}
+- \definecolor{vhilight}{RGB}{255,111,207}
+- \setbeamertemplate{footline}[page number]
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy.opts=list(width.cutoff=40))
+library(ggplot2)
+
+mycols     = c("chartreuse3", "orangered", "deepskyblue3", "darkorchid1", "yellow")
+dark_theme = theme(plot.background   = element_blank(), 
+                   panel.background  = element_blank(),
+                   #legend.background = element_blank(), legend.key = element_blank(),
+                   axis.title.x      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(10,0,0,0)),
+                   axis.title.y      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(0,20,0,0)),
+                   axis.text         = element_text(size=18, color = "grey80"), 
+                   text              = element_text(size=20),
+                   axis.title        = element_text(size = 26),
+                   legend.title      = element_text(size = 26, colour = "grey80"),
+                   panel.border      = element_blank(),
+                   panel.grid.major  = element_line(colour = "grey50"), 
+                   panel.grid.minor  = element_line(colour = "grey30"))
+```
+
+<!-- ## Learning Objectives Today -->
+## Agenda for today
+- Course Syllabus, materials, and organization
+- Course software and GitHub
+- Introductory materials
+
+
+## Materials and organization
+- Install or update R and RStudio
+- Write homework assignments in RMarkdown and submit pdfs/html
+- Submit homework in your personal GitHub repository within my GitHub STAT 528 organization
+
+
+## Student Learning Outcomes
+Upon successful completion of this course students will be able to conduct methodologically strong data analyses that can answer questions of scientific interest, specifically the students will: 
+- Analyze and investigate fundamentals of exponential family theory
+- Analyze data sets with categorical data 
+- Develop a solid theoretical and practical understanding of generalized linear models and linear mixed models
+- Develop a solid theoretical and practical understanding of generalized linear mixed models, generalized estimation equations, repeated measures designs, and aster models 
+- Develop a working understanding of the envelope model variance reduction technique
+- Critique estimation procedures and modeling development strategies
+- Apply version control software and develop reproducible technical reports
+
+
+## References

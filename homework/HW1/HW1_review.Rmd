@@ -1,0 +1,55 @@
+---
+title: "Homework 1: Review of materials"
+author: "your name"
+date: "Due: January 27th at 11:59 PM"
+output: pdf_document
+header-includes: 
+ - \usepackage{amsthm}
+ - \usepackage{amsmath}
+ - \usepackage{amsfonts}
+ - \usepackage{amscd}
+ - \usepackage{amssymb}
+ - \usepackage{natbib}
+ - \usepackage{url}
+---
+
+\allowdisplaybreaks
+
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\inner}[1]{\langle #1 \rangle}
+\newcommand{\yobs}{y_{\text{obs}}}
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+\noindent{\bf Problem 1}: Prove that the Binomial distribution arises as a sum of $n$ iid Bernoulli trials each with success probability $p$. 
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 2}: Let $l(\theta)$ denote a twice continuously differentiable log likelihood corresponding to an iid sample under density $f_\theta$ where $n$ is the sample size. The score function is defined as
+$$
+  u(\theta) = \frac{\partial l(\theta)}{\partial\theta},
+$$
+and the Fisher information matrix is defined as
+$$
+  I(\theta) = -\E\left(\frac{\partial^2 l(\theta)}{\partial \theta^2}\right),
+$$
+where the expectation is over the assumed distribution for the data when the parameter value is $\theta$. Prove that
+$$
+  \E(u(\theta)) = 0 \qquad \text{and} \qquad \Var(u(\theta)) = I(\theta).
+$$
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 3}: Let $Y \sim \text{binomial}(n,\pi)$ and let $T_n = \hat\pi = Y/n$. Use the CLT and the Delta Method to construct an asymptotic confidence interval for logit$(\pi)$. Note that this recipe does not work when the estimated success probability is on the boundary of its support, ie $\hat{\pi} = 0$ or $\hat{\pi} = 1$. Why?
+
+\vspace*{1cm}
+
+
+
+
