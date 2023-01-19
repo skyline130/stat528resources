@@ -419,16 +419,19 @@ An exponential family fails to be identifiable if and only if the canonical stat
 \end{itemize}
 \end{frame}
 
-\begin{frame}{}
-\protect\hypertarget{section-5}{}
-\textbf{Note}: It is always possible to choose the canonical statistic
-and parameter so the family is identifiable. \(Y\) being concentrated on
-a hyperplane means some components are affine functions of other
-components with probability one, and this relation can be used to
-eliminate components of the canonical statistic vector until one gets to
-an identifiable choice of canonical statistic and parameter. But this is
-not always advisable. Prematurely enforcing identifiability may
-complicate many theoretical issues.
+\begin{frame}{Note}
+\protect\hypertarget{note}{}
+It is always possible to choose the canonical statistic and parameter so
+the family is identifiable.
+
+\(Y\) being concentrated on a hyperplane means some components are
+affine functions of other components with probability one, and this
+relation can be used to eliminate components of the canonical statistic
+vector until one gets to an identifiable choice of canonical statistic
+and parameter.
+
+But this is not always advisable. Prematurely enforcing identifiability
+may complicate many theoretical issues.
 \end{frame}
 
 \begin{frame}{Example: Multinomial distribution}
@@ -449,7 +452,7 @@ parameter \(\psi\) (a Radon-Nikodym derivate in probability theory).
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-6}{}
+\protect\hypertarget{section-5}{}
 In the same vein as \eqref{Radon}, we obtain the identity
 \begin{equation} \label{cumident}
     c(\theta) = c(\psi) + \log\left(\mathrm{E}_{\psi}\left(e^{\langle Y, \theta - \psi \rangle}\right)\right)
@@ -462,7 +465,7 @@ theorem.
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-7}{}
+\protect\hypertarget{section-6}{}
 Then \eqref{Radon} gives \begin{align*}
   f_{\theta}(y) &= f_{\psi}(y)e^{\langle y,\theta-\psi\rangle - c(\theta) + c(\psi)} \\
     &= {n \choose y} \left(\prod_{i=1}^d\left[p_ie^{\theta_i-\psi_i}\right]^{y_i}\right)\left(\sum_{i=1}^d p_ie^{\theta_i-\psi_i}\right)^{-n} \\
@@ -471,7 +474,7 @@ Then \eqref{Radon} gives \begin{align*}
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-8}{}
+\protect\hypertarget{section-7}{}
 We simplify the above by choosing \(p\) and \(\psi\) so that
 \(p_ie^{-\psi_i} = 1\) for all \(i\) and \(c(\psi) = 0\), so that \[
   c(\theta) = n\log\left(\sum_{i=1}^d e^{\theta_i}\right)
@@ -484,7 +487,7 @@ We simplify the above by choosing \(p\) and \(\psi\) so that
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-9}{}
+\protect\hypertarget{section-8}{}
 This is not an identifiable parameterization.
 
 The components of \(y\) sum to \(n\) so \(Y\) is concentrated on a

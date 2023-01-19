@@ -320,9 +320,13 @@ An exponential family fails to be identifiable if and only if the canonical stat
 
 
 
-## 
+## Note
 
-**Note**: It is always possible to choose the canonical statistic and parameter so the family is identifiable. $Y$ being concentrated on a hyperplane means some components are affine functions of other components with probability one, and this relation can be used to eliminate components of the canonical statistic vector until one gets to an identifiable choice of canonical statistic and parameter. But this is not always advisable. Prematurely enforcing identifiability may complicate many theoretical issues.
+It is always possible to choose the canonical statistic and parameter so the family is identifiable. 
+
+$Y$ being concentrated on a hyperplane means some components are affine functions of other components with probability one, and this relation can be used to eliminate components of the canonical statistic vector until one gets to an identifiable choice of canonical statistic and parameter. 
+
+But this is not always advisable. Prematurely enforcing identifiability may complicate many theoretical issues.
 
 
 ## Example: Multinomial distribution 
