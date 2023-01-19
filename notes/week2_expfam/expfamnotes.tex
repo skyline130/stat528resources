@@ -284,11 +284,11 @@ where the last equality follows from the multinomial theorem. Then \eqref{Radon}
     &= {n \choose y} \left(\prod_{i=1}^d\left[p_ie^{\theta_i-\psi_i}\right]^{y_i}\right)\left(\sum_{i=1}^d p_ie^{\theta_i-\psi_i}\right)^{-n} \\
     &= {n \choose y} \prod_{i=1}^d \left(\frac{p_ie^{\theta_i-\psi_i}}{\sum_{j=1}^dp_je^{\theta_j-\psi_j}}\right)^{y_i}.
 \end{align*}
-We simplify the above by choosing $p$ and $\psi$ so that $p_ie^{-\psi_i} = 1$ for all $i$ and $c(\psi) = 0$, so
+We simplify the above by choosing $p$ to be the vector with all components $1/d$ corresponding to $\psi = 0$ and $c(\psi) = n\log(d)$ so that for all $i$ we have
 $$
-  c(\theta) = n\log\left(\sum_{i=1}^d e^{\theta_i}\right)
+  c(\theta) = n\log\left(\sum_{i=1}^d e^{\theta_i}\right).
 $$
-and
+Thus,
 $$
   f_{\theta}(y) = {n \choose y}\prod_{i=1}^d \left(\frac{e^{\theta_i}}{\sum_{j=1}^d e^{\theta_j}}\right)^{y_i}
 $$
