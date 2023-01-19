@@ -442,7 +442,7 @@ First, some background on ratios of densities:
 When we look at a ratio of two exponential family densities with
 canonical parameter vectors \(\theta\) and \(\psi\), the \(h(w)\) term
 cancels, and \begin{equation} \label{Radon}
-  f_{\theta;\psi}(y) = e^{\langle y,\theta - \psi\rangle - c(\theta) + c(\psi)} 
+    f_{\theta;\psi}(w) = \frac{f_{\theta}(w)}{f_{\psi}(w)} = e^{\langle y,\theta - \psi\rangle - c(\theta) + c(\psi)}   
 \end{equation} is a density of the distribution with canonical parameter
 \(\theta\) taken with respect to the distribution with canonical
 parameter \(\psi\) (a Radon-Nikodym derivate in probability theory).
@@ -473,7 +473,7 @@ Then \eqref{Radon} gives \begin{align*}
 \begin{frame}{}
 \protect\hypertarget{section-8}{}
 We simplify the above by choosing \(p\) and \(\psi\) so that
-\(p_ie^{-\psi_i} = 1\) for all \(i\) and \(c(\psi) = 0\), so \[
+\(p_ie^{-\psi_i} = 1\) for all \(i\) and \(c(\psi) = 0\), so that \[
   c(\theta) = n\log\left(\sum_{i=1}^d e^{\theta_i}\right)
 \] and \[
   f_{\theta}(y) = {n \choose y}\prod_{i=1}^d \left(\frac{e^{\theta_i}}{\sum_{j=1}^d e^{\theta_j}}\right)^{y_i}
@@ -481,6 +481,17 @@ We simplify the above by choosing \(p\) and \(\psi\) so that
 \(n\) and probability vector having components \[
   p_i(\theta) = \frac{e^{\theta_i}}{\sum_{j=1}^d e^{\theta_j}}.
 \]
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-9}{}
+This is not an identifiable parameterization.
+
+The components of \(y\) sum to \(n\) so \(Y\) is concentrated on a
+hyperplane to which the vector \((1,1, \cdots, 1)^T\) is perpendicular.
+
+Eliminating a component of \(Y\) to get an identifiability would destroy
+symmetry of formulas and make everything harder and messier.
 \end{frame}
 
 \end{document}

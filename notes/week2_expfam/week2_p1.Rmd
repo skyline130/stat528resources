@@ -333,7 +333,7 @@ First, some background on ratios of densities:
 
 When we look at a ratio of two exponential family densities with canonical parameter vectors $\theta$ and $\psi$, the $h(w)$ term cancels, and
 \begin{equation} \label{Radon}
-  f_{\theta;\psi}(y) = e^{\langle y,\theta - \psi\rangle - c(\theta) + c(\psi)}	
+    f_{\theta;\psi}(w) = \frac{f_{\theta}(w)}{f_{\psi}(w)} = e^{\langle y,\theta - \psi\rangle - c(\theta) + c(\psi)}	
 \end{equation}
 is a density of the distribution with canonical parameter $\theta$ taken with respect to the distribution with canonical parameter $\psi$ (a Radon-Nikodym derivate in probability theory). 
 

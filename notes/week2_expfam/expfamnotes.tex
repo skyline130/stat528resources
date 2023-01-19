@@ -151,7 +151,7 @@ where
 \section*{Ratios of densities}
 When we look at a ratio of two exponential family densities with canonical parameter vectors $\theta$ and $\psi$, the $h(w)$ term cancels, and
 \begin{equation} \label{Radon}
-  f_{\theta;\psi}(w) = e^{\inner{Y(w),\theta - \psi} - c(\theta) + c(\psi)}	
+  f_{\theta;\psi}(w) = \frac{f_{\theta}(w)}{f_{\psi}(w)} = e^{\inner{Y(w),\theta - \psi} - c(\theta) + c(\psi)}	
 \end{equation}
 is a density of the distribution with canonical parameter $\theta$ taken with respect to the distribution with canonical parameter $\psi$ (a Radon-Nikodym derivate in probability theory). For any $w$ such that $h(w) = 0$ \eqref{Radon} still makes sense because such $w$ are not in the support of the distribution with parameter value $\psi$ and hence do not not contribute to any probability or expectation calculation, so it does not matter how \eqref{Radon} is defined for such $w$. Now, since \eqref{Radon} is everywhere strictly positive, we see that every distribution in the family has the same support.
 

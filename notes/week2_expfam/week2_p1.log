@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  19 JAN 2023 08:43
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  19 JAN 2023 09:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1206,6 +1206,8 @@ File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 
 ] [26
 
+] [27
+
 ]
 \tf@nav=\write5
 \openout5 = `week2_p1.nav'.
@@ -1218,10 +1220,10 @@ File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 
 (./week2_p1.aux) ) 
 Here is how much of TeX's memory you used:
- 29122 strings out of 478268
- 586546 string characters out of 5846347
+ 29127 strings out of 478268
+ 586590 string characters out of 5846347
  878117 words of memory out of 5000000
- 46523 multiletter control sequences out of 15000+600000
+ 46525 multiletter control sequences out of 15000+600000
  543728 words of font info for 129 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  128i,20n,122p,1005b,459s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -1243,10 +1245,10 @@ y10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></u
 sr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb
 ></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10
 .pfb>
-Output written on week2_p1.pdf (26 pages, 216431 bytes).
+Output written on week2_p1.pdf (27 pages, 217488 bytes).
 PDF statistics:
- 302 PDF objects out of 1000 (max. 8388607)
- 235 compressed objects within 3 object streams
- 86 named destinations out of 1000 (max. 500000)
+ 308 PDF objects out of 1000 (max. 8388607)
+ 240 compressed objects within 3 object streams
+ 89 named destinations out of 1000 (max. 500000)
  45099 words of extra memory for PDF output out of 51595 (max. 10000000)
 
