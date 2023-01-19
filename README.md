@@ -174,7 +174,7 @@ Homeworks will be worth 100 points unless otherwise noted.
 
 
 #### Exams
-There will be two exams in this class. A midterm examination will be administered at the half-way point, around March 22nd. The final examination will occur at the end of the semester, time is TBD. The final examination will be cumulative.
+There will be two exams in this class. A midterm examination will be due on Friday, March 10th at 11:59 PM. The final examination will occur at the end of the semester, and it will be due on 05/11 at 11:59 pm. The final examination will be cumulative.
 
 <!-- ### Final Grade Percentage & Letter Grade  -->
 <!-- | Lower bound | Upper bound | Letter grade | -->
