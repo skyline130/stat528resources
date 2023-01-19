@@ -1,0 +1,249 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\newif\ifbibliography
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{graphicx}
+\usepackage{bm}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{tikz-cd}
+\usepackage{url}
+\definecolor{foreground}{RGB}{255,255,255}
+\definecolor{background}{RGB}{34,28,54}
+\definecolor{title}{RGB}{105,165,255}
+\definecolor{gray}{RGB}{175,175,175}
+\definecolor{lightgray}{RGB}{225,225,225}
+\definecolor{subtitle}{RGB}{232,234,255}
+\definecolor{hilight}{RGB}{112,224,255}
+\definecolor{vhilight}{RGB}{255,111,207}
+\setbeamertemplate{footline}[page number]
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={STAT 528 - Advanced Regression Analysis II},
+  pdfauthor={Exponential family theory},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{STAT 528 - Advanced Regression Analysis II}
+\author{Exponential family theory}
+\date{}
+\institute{Daniel J. Eck\\
+Department of Statistics\\
+University of Illinois}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Proj}{\textbf{P}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\rootn}{\sqrt{n}}
+\newcommand{\p}{\mathbf{p}}
+\newcommand{\E}{\text{E}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\end{frame}
+
+\begin{frame}{Agenda for today}
+\protect\hypertarget{agenda-for-today}{}
+\begin{itemize}
+\tightlist
+\item
+  Course software and GitHub
+\item
+  Go over basics of exponential family theory
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Exponential family}
+\protect\hypertarget{exponential-family}{}
+An \emph{exponential family of distributions} is a parametric
+statistical model having log likelihood that takes the form
+\begin{equation} \label{expolog}
+    l(\theta) = \langle y,\theta \rangle - c(\theta),
+\end{equation} where \(y\) is a vector statistic and \(\theta\) is a
+vector parameter, and
+
+\begin{itemize}
+\tightlist
+\item
+  \(\langle y,\theta \rangle\) is the usual inner product,
+\item
+  \(c(\theta)\) is the cumulant function.
+\end{itemize}
+
+This uses the convention that terms that do not contain the parameter
+vector can be dropped from a log likelihood; otherwise additional terms
+also appear in \eqref{expolog}.
+
+When the log likelihood can be expressed as \eqref{expolog} we say that
+\(y\) is the \textbf{canonical statistic} and \(\theta\) is the
+\textbf{canonical parameter}.
+\end{frame}
+
+\begin{frame}{Example: Binomial distribution}
+\protect\hypertarget{example-binomial-distribution}{}
+Let \(X \sim\) Binomial(\(n\),\(p\)) where \(0 < p < 1\). We can write
+the log probability mass function for \(X\) \begin{align*}
+  l(p) &= \log\left({n \choose x}\right) +  x\log(p) + (n-x)\log(1-p) \\
+       &\propto \log\left({n \choose x}\right) +  x\log(p) + (n-x)\log(1-p) 
+\end{align*} in exponential family form \[
+  l(\theta) = \langle y,\theta \rangle - c(\theta).
+\]
+\end{frame}
+
+\begin{frame}{Densities}
+\protect\hypertarget{densities}{}
+Let \(w\) represent the full data, then the densities have the form
+\begin{equation} \label{expodens}
+  f_\theta(w) = h(w)\exp\left(\langle Y(w),\theta\rangle - c(\theta)\right)
+\end{equation} and the word ``density'\,' here can refer to a PMF, PDF,
+or to a density with respect to a positive measure.
+
+The \(h(w)\) arises from any term not containing the parameter that is
+dropped in going from log densities to log likelihood as we saw on the
+previous slide.
+
+The function \(h\) has to be nonnegative, and any point \(w\) such that
+\(h(w) = 0\) is not in the support of any distribution in the family.
+\end{frame}
+
+\begin{frame}{Example: Binomial distribution}
+\protect\hypertarget{example-binomial-distribution-1}{}
+Let \(X \sim\) Binomial(\(n\),\(p\)) where \(0 < p < 1\). We can write
+the probability mass function for \(X\) \[
+  f_p(x) = {n \choose x}p^x(1-p)^{n-x}
+\] as an exponential family density \[
+ f_{\theta}(w) = h(w)\exp\left( \langle Y(w),\theta \rangle - c(\theta)\right).
+\]
+\end{frame}
+
+\begin{frame}{Example: Normal distribution}
+\protect\hypertarget{example-normal-distribution}{}
+Let \(W \sim N(\mu, \sigma^2)\). Then we can write \[
+    f_{\mu,\sigma^2}(w) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp\left(-\frac{(w-\mu)^2}{2\sigma^2}\right) 
+\] as an exponential family density \[
+ f_{\theta}(w) = h(w)\exp\left( \langle Y(w),\theta \rangle - c(\theta)\right),
+\] where \[
+  c(\theta) = \frac{1}{2}\left(\frac{\theta_1^2}{2\theta_2} - \log(2\theta_2)\right).
+\]
+\end{frame}
+
+\begin{frame}{Cumulant functions}
+\protect\hypertarget{cumulant-functions}{}
+Being a density, \eqref{expodens} must sum, integrate, or sum-integrate
+to one. Hence, \begin{align*}
+    1 &= \int f_\theta(w) dw \\ 
+      &= \int \exp\left(\langle Y(w),\theta\rangle - c(\theta)\right) h(w)dw \\
+      &= \exp\left(-c(\theta)\right) \int \exp\left(\langle Y(w),\theta\rangle\right) h(w) dw.
+\end{align*} Rearranging the above implies that \[
+  c(\theta) = \log\left(\int \exp\left(\langle Y(w),\theta\rangle\right) h(w) dw\right).
+\]
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section}{}
+The cumulant function is the log Laplace transformation corresponding to
+the \emph{generating measure} given by \[
+  \lambda(dw) = h(w)dw
+\] when the random variable is continuous. Under this formulation \[
+  c(\theta) = \log\left(\int \exp\left(\langle Y(w),\theta\rangle\right) \lambda(dw)\right).
+\]
+
+In our log likelihood based definition of the exponential family
+\eqref{expolog}, the dropped terms which do not appear in the log
+likelihood are incorporated into the counting measure (discrete
+distributions) or Lebesgue measure (continuous distributions).
+\end{frame}
+
+\end{document}

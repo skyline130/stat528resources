@@ -1,0 +1,114 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+%\usepackage{amscd}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{natbib}
+\usepackage{url}
+\usepackage{graphicx,times}
+\usepackage{tikz-cd}
+\usepackage{array,epsfig,fancyheadings,rotating}
+\usepackage{geometry}
+\usepackage[usenames]{color}
+
+\geometry{margin=1in}
+\renewcommand{\baselinestretch}{1.2}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Proj}{\textbf{P}}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\rootn}{\sqrt{n}}
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\indep}{\perp\!\!\!\perp}
+\newcommand{\inner}[1]{\langle #1 \rangle}
+\newcommand{\set}[1]{\{\, #1 \,\}}
+
+\DeclareMathOperator{\E}{E}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\etr}{etr}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\MSE}{MSE}
+\DeclareMathOperator{\vecop}{vec}
+\DeclareMathOperator{\vech}{vech}
+
+
+\newtheorem{cor}{Corollary}
+\newtheorem{lem}{Lemma}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{prop}{Proposition}
+
+
+\pagestyle{fancy}
+\def\n{\noindent}
+\lhead[\fancyplain{} \leftmark]{}
+\chead[]{}
+\rhead[]{\fancyplain{}\rightmark}
+\cfoot{}
+%\headrulewidth=0pt
+
+
+\setcounter{page}{1}
+\setcounter{equation}{0}
+
+\newcommand\red[1]{{\color{red}#1}}
+
+\allowdisplaybreaks
+
+\title{Homework 2: Exponential Families}
+\author{your name}
+\date{Due: February 3rd at 11:59 PM} 
+
+
+
+\begin{document}
+
+\maketitle
+
+
+\noindent{\bf Problem 1}: Verify that displayed equation 7 in the exponential family notes holds for the binomial distribution, the Poisson distribution, and the normal distribution with both $\mu$ and $\sigma^2$ unknown.
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 2}: Show that the second derivative of the map $h$ (displayed equation 11 in the exponential family notes) is equal to $-\nabla^2 c(\theta)$ and justify that this matrix is negative definite when the exponential family model is identifiable.
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 3}: The above problem is one of the steps needed to finish the proof of Theorem 2 in the exponential family notes. Finish the proof of Theorem 2.
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 4}: Let $Y$ be a regular full exponential family with canonical parameter vector $\theta$. Verify that $Y$ is sub-exponential.
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 5}: In the notes it was claimed that the negative and/or a scalar products of $\sum_{i=1}^n\{y_i - \nabla c(\theta)\}$ are also sub-exponential (page 15). Show that this is in fact true when the observations $y_i$ are iid from a regular full exponential family.
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 6}: Derive the MLEs of the canonical parameters of the binomial distribution, the Poisson distribution, and the normal distribution with both $\mu$ and $\sigma^2$ unknown.
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 7}: Derive the asymptotic distribution for the MLE of the submodel canonical parameter vector $\hat\beta$ and the submodel mean-value parameter vector $\hat\tau$.
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 8}: Prove Lemma 1 in the exponential family notes.
+
+\vspace*{1cm}
+
+
+
+\end{document}
+
+
+

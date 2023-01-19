@@ -1,0 +1,176 @@
+---
+title: "STAT 528 - Advanced Regression Analysis II"
+author: "Exponential family theory"
+institute: |
+  | Daniel J. Eck
+  | Department of Statistics  
+  | University of Illinois
+date: ""
+output: 
+    beamer_presentation:
+        keep_tex: true
+        fig_width: 11
+        fig_height: 7.5
+        includes:
+bibliography: ../note_sources.bib
+urlcolor: blue
+header-includes:
+- \usepackage{graphicx}
+- \usepackage{bm}
+- \usepackage{array}
+- \usepackage{amsmath}
+- \usepackage{amsthm}
+- \usepackage{amsfonts}
+- \usepackage{amssymb}
+- \usepackage{tikz-cd}
+- \usepackage{url}
+- \definecolor{foreground}{RGB}{255,255,255}
+- \definecolor{background}{RGB}{34,28,54}
+- \definecolor{title}{RGB}{105,165,255}
+- \definecolor{gray}{RGB}{175,175,175}
+- \definecolor{lightgray}{RGB}{225,225,225}
+- \definecolor{subtitle}{RGB}{232,234,255}
+- \definecolor{hilight}{RGB}{112,224,255}
+- \definecolor{vhilight}{RGB}{255,111,207}
+- \setbeamertemplate{footline}[page number]
+---
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Proj}{\textbf{P}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\rootn}{\sqrt{n}}
+\newcommand{\p}{\mathbf{p}}
+\newcommand{\E}{\text{E}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy.opts=list(width.cutoff=40))
+library(ggplot2)
+
+mycols     = c("chartreuse3", "orangered", "deepskyblue3", "darkorchid1", "yellow")
+dark_theme = theme(plot.background   = element_blank(), 
+                   panel.background  = element_blank(),
+                   #legend.background = element_blank(), legend.key = element_blank(),
+                   axis.title.x      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(10,0,0,0)),
+                   axis.title.y      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(0,20,0,0)),
+                   axis.text         = element_text(size=18, color = "grey80"), 
+                   text              = element_text(size=20),
+                   axis.title        = element_text(size = 26),
+                   legend.title      = element_text(size = 26, colour = "grey80"),
+                   panel.border      = element_blank(),
+                   panel.grid.major  = element_line(colour = "grey50"), 
+                   panel.grid.minor  = element_line(colour = "grey30"))
+```
+
+<!-- ## Learning Objectives Today -->
+## Agenda for today
+- Course software and GitHub
+- Go over basics of exponential family theory
+
+
+## Exponential family
+
+An \emph{exponential family of distributions} is a parametric statistical model having log likelihood that takes the form 
+\begin{equation} \label{expolog}
+	l(\theta) = \langle y,\theta \rangle - c(\theta),
+\end{equation}
+where $y$ is a vector statistic and $\theta$ is a vector parameter, and 
+
+- $\langle y,\theta \rangle$ is the usual inner product,
+- $c(\theta)$ is the cumulant function.
+
+This uses the convention that terms that do not contain the parameter vector can be dropped from a log likelihood; otherwise additional terms also appear in \eqref{expolog}. 
+
+When the log likelihood can be expressed as \eqref{expolog} we say that $y$ is the **canonical statistic** and $\theta$ is the **canonical parameter**.
+
+
+## Example: Binomial distribution
+
+Let $X \sim$ Binomial($n$,$p$) where $0 < p < 1$. We can write the log probability mass function for $X$
+\begin{align*}
+  l(p) &= \log\left({n \choose x}\right) +  x\log(p) + (n-x)\log(1-p) \\
+       &\propto \log\left({n \choose x}\right) +  x\log(p) + (n-x)\log(1-p) 
+\end{align*}
+in exponential family form
+$$
+  l(\theta) = \langle y,\theta \rangle - c(\theta).
+$$
+
+
+
+## Densities 
+
+Let $w$ represent the full data, then the densities have the form
+\begin{equation} \label{expodens}
+  f_\theta(w) = h(w)\exp\left(\langle Y(w),\theta\rangle - c(\theta)\right)
+\end{equation}
+and the word ``density'' here can refer to a PMF, PDF, or to a density with respect to a positive measure. 
+
+The $h(w)$ arises from any term not containing the parameter that is dropped in going from log densities to log likelihood as we saw on the previous slide. 
+
+The function $h$ has to be nonnegative, and any point $w$ such that $h(w) = 0$ is not in the support of any distribution in the family.
+
+
+
+## Example: Binomial distribution 
+
+Let $X \sim$ Binomial($n$,$p$) where $0 < p < 1$. We can write the probability mass function for $X$
+$$
+  f_p(x) = {n \choose x}p^x(1-p)^{n-x}
+$$
+as an exponential family density
+$$
+ f_{\theta}(w) = h(w)\exp\left( \langle Y(w),\theta \rangle - c(\theta)\right).
+$$
+
+
+## Example: Normal distribution 
+
+Let $W \sim N(\mu, \sigma^2)$. Then we can write
+$$
+  	f_{\mu,\sigma^2}(w) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp\left(-\frac{(w-\mu)^2}{2\sigma^2}\right) 
+$$
+as an exponential family density
+$$
+ f_{\theta}(w) = h(w)\exp\left( \langle Y(w),\theta \rangle - c(\theta)\right),
+$$
+where
+$$
+  c(\theta) = \frac{1}{2}\left(\frac{\theta_1^2}{2\theta_2} - \log(2\theta_2)\right).
+$$  
+
+
+## Cumulant functions 
+
+Being a density, \eqref{expodens} must sum, integrate, or sum-integrate to one. Hence, 
+\begin{align*}
+	1 &= \int f_\theta(w) dw \\ 
+	  &= \int \exp\left(\langle Y(w),\theta\rangle - c(\theta)\right) h(w)dw \\
+	  &= \exp\left(-c(\theta)\right) \int \exp\left(\langle Y(w),\theta\rangle\right) h(w) dw.
+\end{align*}
+Rearranging the above implies that 
+$$
+  c(\theta) = \log\left(\int \exp\left(\langle Y(w),\theta\rangle\right) h(w) dw\right).
+$$
+
+
+##
+
+The cumulant function is the log Laplace transformation corresponding to the \emph{generating measure} given by 
+$$
+  \lambda(dw) = h(w)dw
+$$ 
+when the random variable is continuous. Under this formulation
+$$
+  c(\theta) = \log\left(\int \exp\left(\langle Y(w),\theta\rangle\right) \lambda(dw)\right).
+$$
+
+
+In our log likelihood based definition of the exponential family \eqref{expolog}, the dropped terms which do not appear in the log likelihood are incorporated into the counting measure (discrete distributions) or Lebesgue measure (continuous distributions).
+
+
