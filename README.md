@@ -6,7 +6,8 @@ See the Syllabus for more details. See the notes directory for course notes.
 
 # News
 
- - Welcome to STAT 528!
+ - HW 1 and 2 posted
+ - Week 2 lectures will cover the middle part of the exponential family notes
 
 
 ## Good Habits
@@ -123,9 +124,9 @@ Upon successful completion of this course students will be able to conduct metho
 
 You have many options to get help for this class:
 
- * Piazza - discussion forum, you can post question either in public or private mode (only instructor can view it).
-
  * Email me at dje13@illinois.edu from your Illinois email account (@illinois.edu). I will not respond to a non-Illinois email account. Be specific with the topic of your question in the subject line.
+
+ * Canvas - discussion forums, you can post questions.
 
  * Office hours - you can go to my office hours as described above.
  
