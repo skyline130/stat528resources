@@ -513,7 +513,7 @@ $$
 \end{defn}
 
 
-Let $Y$ be a univariate regular full exponential family with canonical parameter $\theta$ and \textbf{show that $Y$ is sub-exponential}. Now let $\hat\theta$ be the MLE for the canonical parameter $\theta$. We now show that the MLE of an exponential family obeys sub-exponential concentration. Consider a Taylor expansion of the score function of an exponential family evaluated at the MLE
+Let $Y$ be a scalar canonical statistic regular full exponential family with canonical parameter $\theta$ and \textbf{show that $Y$ is sub-exponential}. Now let $\hat\theta$ be the MLE for the canonical parameter $\theta$. We now show that the MLE of an exponential family obeys sub-exponential concentration. Consider a Taylor expansion of the score function of an exponential family evaluated at the MLE
 \begin{align*}
   0 = \nabla l_n(\hat\theta) &= \nabla l_n(\theta) 
     + \nabla^2l_n(\theta)(\hat\theta - \theta) + R_n	\\
@@ -602,7 +602,7 @@ which implies that we can write
 $$
   g^{-1}\left(\E_\theta(Y)\right) = M\beta.
 $$
-Therefore, a linear function of the canonical submodel parameter vector is linked to the mean of the exponential family through the inverse change-of-parameter mapping $g^{-1}$. This is the basis of exponential family generalized linear models with link function $g^{-1}$. Note that most treatments of GLMs will present $g$ as the link function. Instead we motivated $g$ as the change of parameters mapping from canonical to mean-value parameters. 
+Therefore, a linear function of the canonical submodel parameter vector is linked to the mean of the exponential family through the inverse change-of-parameter mapping $g^{-1}$. This is the basis of exponential family generalized linear models with link function $g^{-1}$. Note that most treatments of GLMs will present $g$ as the link function. Instead we motivated $g$ as the change of parameters mapping from canonical to mean value parameters. 
 
 
 %A concise presentation of the various model parameterizations and how they are related to each other is given in Figure~\ref{Fig1:parameterizations}.
@@ -667,7 +667,7 @@ for some error tolerance $0 < \alpha < 1$.
 
 \subsection*{Deviance, Goodness of Fit, and likelihood ratios}
 
-To motivate the deviance of a statistical model we will revisit the mean-value parameter vector $\mu$ and rewrite the log likelihood in the notation of this parameterization as $l(\mu;y)$. From the observed equals expected property we have that the unrestricted MLE of $\mu$ is $y$. Now consider a canonical submodel (GLM) of the form $\theta = M\beta$. Let $\hat\mu$ be the MLE of $\mu$ restricted to an identifiable canonical submodel ($\hat{\mu} = \nabla c(\hat\theta)$ where $\hat\theta = M\hat\beta$). It follows that
+To motivate the deviance of a statistical model we will revisit the mean value parameter vector $\mu$ and rewrite the log likelihood in the notation of this parameterization as $l(\mu;y)$. From the observed equals expected property we have that the unrestricted MLE of $\mu$ is $y$. Now consider a canonical submodel (GLM) of the form $\theta = M\beta$. Let $\hat\mu$ be the MLE of $\mu$ restricted to an identifiable canonical submodel ($\hat{\mu} = \nabla c(\hat\theta)$ where $\hat\theta = M\hat\beta$). It follows that
 $$
   l(y;y) \geq l(\hat\mu; y).
 $$
@@ -978,7 +978,7 @@ and $g$ is a one-to-one function (if the exponential family is identifiable, whi
 $$
   \theta = g^{-1}(\mu)
 $$
-and, although we do not have a closed form expression for $g^{-1}$, we can evaluate $g^{-1}(\mu)$ for any $\mu$ that is a possible mean-value parameter vector found by optimization. Our use of the maximum entropy argument is a bit peculiar. First we said that we ``knew" the expectations
+and, although we do not have a closed form expression for $g^{-1}$, we can evaluate $g^{-1}(\mu)$ for any $\mu$ that is a possible mean value parameter vector found by optimization. Our use of the maximum entropy argument is a bit peculiar. First we said that we ``knew" the expectations
 $$
   \mu = \E\{t(X)\},
 $$

@@ -155,6 +155,17 @@ Examples include: Binomial, Poisson, Normal, etc.
 
 \begin{frame}{Learning Objectives Today}
 \protect\hypertarget{learning-objectives-today}{}
+\begin{itemize}
+\tightlist
+\item
+  mean value parameters
+\item
+  maximum likelihood estimation (MLE)
+\item
+  asymptotics of MLE
+\item
+  finite sample concentration of MLE
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Mean value parameters}
@@ -249,7 +260,7 @@ can lead to a drastic decrease in the likelihood. Conversely, if
 \(I(\theta)\) is small then small changes in \(\theta\) will not affect
 the likelihood that much.
 
-These heuristics are important when we cover data separation.
+Similar heuristics are important when we cover data separation.
 \end{frame}
 
 \begin{frame}{}
@@ -410,29 +421,45 @@ Then \[
 
 \begin{frame}{}
 \protect\hypertarget{section-6}{}
-We have \[
-  \sqrt{n}\left(\bar{y}_n - p\right) \to N\left(0, I(\theta)\right),
-\] where \begin{align*}
+The expected Fisher information is \begin{align*}
   I(\theta) &= \nabla^2 c(\theta) \\
-    &= \nabla^2 \log(1 + \exp(\theta)) \\ 
-    &= \nabla\left(\frac{\exp(\theta)}{1 + \exp(\theta)}\right) \\
     &= \left(\frac{\exp(\theta)}{1 + \exp(\theta)}\right)\left(\frac{1}{1 + \exp(\theta)}\right) \\
     &= p(1-p).
 \end{align*}
+
+Therefore, \begin{align*}
+ \sqrt{n}\left(\hat{\theta}_n - \theta\right) &\to N\left(0,  I(\theta)^{-1}\right) \\
+   &= N\left(0,  \frac{1}{p(1-p)}\right).
+\end{align*}
+\end{frame}
+
+\begin{frame}{Finite sample concentration of MLE (scalar case)}
+\protect\hypertarget{finite-sample-concentration-of-mle-scalar-case}{}
+\begin{defn}
+A random variable $Y$ with mean $\mu = \text{E}(Y)$ is \emph{sub-exponential} if there exist non-negative numbers $(\lambda,b)$ such that 
+$$
+  E\left(e^{\phi(Y - \mu)}\right) \leq e^{\lambda^2\phi^2/2} 
+    \qquad \text{for all} \; |\phi| < 1/b.
+$$  
+\end{defn}
+
+\vspace{12pt}
+
+Let \(Y\) be a scalar canonical statistic regular full exponential
+family with canonical parameter \(\theta\), then \(Y\) is
+sub-exponential.
 \end{frame}
 
 \begin{frame}{}
 \protect\hypertarget{section-7}{}
-We have, \begin{align*}
-  \sqrt{n}\left(\hat{\theta}_n - \theta\right) &= \sqrt{n}\left(g^{-1}(\bar{y}_n) - g^{-1}(p)\right) \\ 
-    &\to N\left(0,  \nabla g^{-1}(p) I(\theta) \left[\nabla g^{-1}(p)\right]^T\right) \\
-    &= N\left(0,  \left[\nabla g(\theta)\right]^{-1} I(\theta) \nabla \left[\nabla g(\theta)\right]^{-1}\right), 
-\end{align*} where \[
-  [\nabla g(\theta)]^{-1} = [\nabla^2 c(\theta)]^{-1} = I(\theta)^{-1}.
-\] Therefore, \begin{align*}
- \sqrt{n}\left(\hat{\theta}_n - \theta\right) &\to N\left(0,  I(\theta)^{-1}\right) \\
-   &= N\left(0,  \frac{1}{p(1-p)}\right).
-\end{align*}
+We can show the MLE of \(\theta\) exhibits sub-exponential concentration
+following the logic that \((\hat\theta - \theta)\) has the same tail
+bounds as a sub-exponential random variable.
+
+We can use these results to obtain the rate of convergence \[
+  \mathbb{P}\left( (\hat\theta - \theta) \geq \frac{\log(n)}{n}\right) 
+    = O\left(n^{-\frac{A}{2b}}\right),
+\] where \(t = \log(n)/n\) for some numbers \(A\) and \(b\).
 \end{frame}
 
 \end{document}
