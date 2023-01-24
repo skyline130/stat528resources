@@ -122,7 +122,7 @@ can be written in canonical form with
 $$
   c(\theta) = n\log(1 + \exp(\theta)),
 $$
-where $\theta = \log(p/(1-p))$ and $p = \exp(\theta)/(1 = \exp(\theta))$. Now,
+where $\theta = \log(p/(1-p))$ and $p = \exp(\theta)/(1 + \exp(\theta))$. Now,
 $$
   \nabla c(\theta) = n \left(\frac{\exp(\theta)}{1 + \exp(\theta)}\right) = np,
 $$
@@ -340,7 +340,7 @@ $$
 where
 \begin{align*}
   g(\theta) &= \frac{\exp(\theta)}{1 + \exp(\theta)} = p \\
-  g^{-1}(p) &= \log\left(\frac{1}{1-p}\right) = \theta,
+  g^{-1}(p) &= \log\left(\frac{p}{1-p}\right) = \theta,
 \end{align*}
 and 
 $$

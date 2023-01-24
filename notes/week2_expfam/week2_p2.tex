@@ -191,7 +191,7 @@ dropping terms) \[
 \] can be written in canonical form with \[
   c(\theta) = n\log(1 + \exp(\theta)),
 \] where \(\theta = \log(p/(1-p))\) and
-\(p = \exp(\theta)/(1 = \exp(\theta))\). Now, \[
+\(p = \exp(\theta)/(1 + \exp(\theta))\). Now, \[
   \nabla c(\theta) = n \left(\frac{\exp(\theta)}{1 + \exp(\theta)}\right) = np,
 \] and this is \(E_\theta(Y)\).
 \end{frame}
@@ -413,7 +413,7 @@ Then \[
   l_n(\theta) = \langle\sum_{i=1}^n y_i,\theta\rangle - n c(\theta)
 \] where \begin{align*}
   g(\theta) &= \frac{\exp(\theta)}{1 + \exp(\theta)} = p \\
-  g^{-1}(p) &= \log\left(\frac{1}{1-p}\right) = \theta,
+  g^{-1}(p) &= \log\left(\frac{p}{1-p}\right) = \theta,
 \end{align*} and \[
   \hat{p} = \bar{y}_n.
 \]
