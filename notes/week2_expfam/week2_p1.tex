@@ -104,7 +104,7 @@
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
   pdftitle={STAT 528 - Advanced Regression Analysis II},
-  pdfauthor={Exponential family theory},
+  pdfauthor={Exponential family theory (part 2)},
   colorlinks=true,
   linkcolor={Maroon},
   filecolor={Maroon},
@@ -113,7 +113,7 @@
   pdfcreator={LaTeX via pandoc}}
 
 \title{STAT 528 - Advanced Regression Analysis II}
-\author{Exponential family theory}
+\author{Exponential family theory (part 2)}
 \date{}
 \institute{Daniel J. Eck\\
 Department of Statistics\\
@@ -140,223 +140,8 @@ University of Illinois}
 \newtheorem{prop}{Proposition}
 \end{frame}
 
-\begin{frame}{Agenda for today}
-\protect\hypertarget{agenda-for-today}{}
-\begin{itemize}
-\tightlist
-\item
-  Course software and GitHub
-\item
-  Go over basics of exponential family theory
-\item
-  Cover regular full exponential families and their properties
-\item
-  Discuss identifiability
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Exponential family}
-\protect\hypertarget{exponential-family}{}
-An \emph{exponential family of distributions} is a parametric
-statistical model having log likelihood that takes the form
-\begin{equation} \label{expolog}
-    l(\theta) = \langle y,\theta \rangle - c(\theta),
-\end{equation} where \(y\) is a vector statistic and \(\theta\) is a
-vector parameter, and
-
-\begin{itemize}
-\tightlist
-\item
-  \(\langle y,\theta \rangle\) is the usual inner product,
-\item
-  \(c(\theta)\) is the cumulant function.
-\end{itemize}
-
-This uses the convention that terms that do not contain the parameter
-vector can be dropped from a log likelihood; otherwise additional terms
-also appear in \eqref{expolog}.
-
-When the log likelihood can be expressed as \eqref{expolog} we say that
-\(y\) is the \textbf{canonical statistic} and \(\theta\) is the
-\textbf{canonical parameter}.
-\end{frame}
-
-\begin{frame}{Example: Binomial distribution}
-\protect\hypertarget{example-binomial-distribution}{}
-Let \(X \sim\) Binomial(\(n\),\(p\)) where \(0 < p < 1\). We can write
-the log probability mass function for \(X\) \begin{align*}
-  l(p) &= \log\left({n \choose x}\right) +  x\log(p) + (n-x)\log(1-p) \\
-       &\propto  x\log(p) + (n-x)\log(1-p) 
-\end{align*} in exponential family form \[
-  l(\theta) = \langle y,\theta \rangle - c(\theta).
-\]
-\end{frame}
-
-\begin{frame}{Densities}
-\protect\hypertarget{densities}{}
-Let \(w\) represent the full data, then the densities have the form
-\begin{equation} \label{expodens}
-  f_\theta(w) = h(w)\exp\left(\langle Y(w),\theta\rangle - c(\theta)\right)
-\end{equation} and the word ``density'\,' here can refer to a PMF, PDF,
-or to a density with respect to a positive measure.
-
-The \(h(w)\) arises from any term not containing the parameter that is
-dropped in going from log densities to log likelihood as we saw on the
-previous slide.
-
-The function \(h\) has to be nonnegative, and any point \(w\) such that
-\(h(w) = 0\) is not in the support of any distribution in the family.
-\end{frame}
-
-\begin{frame}{Example: Binomial distribution}
-\protect\hypertarget{example-binomial-distribution-1}{}
-Let \(X \sim\) Binomial(\(n\),\(p\)) where \(0 < p < 1\). We can write
-the probability mass function for \(X\) \[
-  f_p(x) = {n \choose x}p^x(1-p)^{n-x}
-\] as an exponential family density \[
- f_{\theta}(w) = h(w)\exp\left( \langle Y(w),\theta \rangle - c(\theta)\right).
-\]
-\end{frame}
-
-\begin{frame}{Example: Normal distribution}
-\protect\hypertarget{example-normal-distribution}{}
-Let \(W \sim N(\mu, \sigma^2)\). Then we can write \[
-    f_{\mu,\sigma^2}(w) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp\left(-\frac{(w-\mu)^2}{2\sigma^2}\right) 
-\] as an exponential family density \[
- f_{\theta}(w) = h(w)\exp\left( \langle Y(w),\theta \rangle - c(\theta)\right),
-\] where \[
-  c(\theta) = \frac{1}{2}\left(\frac{\theta_1^2}{2\theta_2} - \log(2\theta_2)\right).
-\]
-\end{frame}
-
-\begin{frame}{Cumulant functions}
-\protect\hypertarget{cumulant-functions}{}
-Being a density, \eqref{expodens} must sum, integrate, or sum-integrate
-to one. Hence, \begin{align*}
-    1 &= \int f_\theta(w) dw \\ 
-      &= \int \exp\left(\langle Y(w),\theta\rangle - c(\theta)\right) h(w)dw \\
-      &= \exp\left(-c(\theta)\right) \int \exp\left(\langle Y(w),\theta\rangle\right) h(w) dw.
-\end{align*} Rearranging the above implies that \[
-  c(\theta) = \log\left(\int \exp\left(\langle Y(w),\theta\rangle\right) h(w) dw\right).
-\]
-\end{frame}
-
-\begin{frame}{}
-\protect\hypertarget{section}{}
-The cumulant function is the log Laplace transformation corresponding to
-the \emph{generating measure} given by \[
-  \lambda(dw) = h(w)dw
-\] when the random variable is continuous. Under this formulation \[
-  c(\theta) = \log\left(\int \exp\left(\langle Y(w),\theta\rangle\right) \lambda(dw)\right).
-\]
-
-In our log likelihood based definition of the exponential family
-\eqref{expolog}, the dropped terms which do not appear in the log
-likelihood are incorporated into the counting measure (discrete
-distributions) or Lebesgue measure (continuous distributions).
-\end{frame}
-
-\begin{frame}{Full families}
-\protect\hypertarget{full-families}{}
-Define \begin{equation} \label{parmspace}
-  \Theta = \{ \theta : c(\theta) < \infty \}    .
-\end{equation}
-
-Then \eqref{expolog} and \eqref{expodens} define a distribution for all
-\(\theta \in \Theta\).
-
-We say an exponential family is \emph{full} if its canonical parameter
-space is \eqref{parmspace}. Many commonly used statistical models are
-full exponential families.
-\end{frame}
-
-\begin{frame}{Moment generating functions}
-\protect\hypertarget{moment-generating-functions}{}
-We no longer fuss about \(Y(w)\) and will suppress \(w\) when writing
-\(Y\). We still mention the function \(h\) in \eqref{expodens} which is
-now derived with respect to \(Y\) instead of \(w\).
-
-The moment generating function of the canonical statistic, if it exists,
-is given by \begin{equation} \label{mgf}
-\begin{split}
-    M_\theta(t) &= \text{E}_\theta\left(e^{\langle Y, t\rangle}\right) \\
-      &= e^{c(\theta + t) - c(\theta)}.
-\end{split}
-\end{equation}
-
-The moment generating function exists if \(\theta\) is an interior point
-of the full canonical parameter space \eqref{parmspace}.
-\end{frame}
-
-\begin{frame}{}
-\protect\hypertarget{section-1}{}
-By the theory of moment generating functions, if the moment generating
-function exists, then moments of all orders exist and ordinary moments
-are given by the derivatives of \(M_\theta(t)\) evaluated at zero.
-
-In particular, \begin{align*}
-  \text{E}_\theta(Y) &= \nabla M_\theta(0) = \nabla c(\theta) \\  
-  \text{E}_\theta(YY^T) &= \nabla^2 M_\theta(0) = \nabla^2 c(\theta) + [\nabla c(\theta)][\nabla c(\theta)]^T.      
-\end{align*}
-\end{frame}
-
-\begin{frame}{Cumulant generating function}
-\protect\hypertarget{cumulant-generating-function}{}
-A log moment generating function is called a
-\emph{cumulant generating function} and its derivatives evaluated at
-zero are called the \emph{cumulants} of the distribution.
-
-For \(\theta\) in the interior of the full canonical parameter space
-\(\Theta\), the cumulant generating function corresponding to the
-canonical statistic is \begin{equation} \label{cgf}
-  k_\theta(t) = c(t + \theta) - c(\theta),  
-\end{equation} where \(c(\theta)\) is the cumulant function
-corresponding to the exponential family in canonical form.
-\end{frame}
-
-\begin{frame}{}
-\protect\hypertarget{section-2}{}
-The derivatives of \(k_\theta(t)\) evaluated at 0 are the same as the
-cumulant function \(c\) evaluated at \(\theta\). The first and second
-cumulants of the canonical statistic are \begin{equation} \label{cumrel}
-\begin{split}
-    \nabla c(\theta) &= \text{E}_\theta(Y) \\
-    \nabla^2 c(\theta) &= \text{E}_\theta(YY^T) - \left[\text{E}_\theta(Y)\right]\left[\text{E}_\theta(Y)\right]^T = \text{Var}_\theta(Y).  
-\end{split}
-\end{equation}
-\end{frame}
-
-\begin{frame}{Regular exponential families}
-\protect\hypertarget{regular-exponential-families}{}
-An exponential family is regular if its full canonical parameter space
-\eqref{parmspace} is an open set so that the moment and cumulant
-generating functions exist for all \(\theta\).
-
-The formulas in the preceding section hold for all \(\theta\).
-
-Nearly every exponential family that arises in applications is regular.
-We will not discuss non-regular exponential families.
-\end{frame}
-
-\begin{frame}{Example: Binomial distribution}
-\protect\hypertarget{example-binomial-distribution-2}{}
-The Binomial distribution with the standard parameter space
-\(0 < p < 1\) written in canonical form is a regular full exponential
-family.
-
-We already saw that the loglikelihood for the Binomial distribution can
-be written as \[
-  l(\theta) = \langle Y,\theta \rangle - c(\theta).
-\]
-
-The canonical parameter \(\theta\) for this exponential family is
-\(\theta = \log\left(\frac{p}{1-p}\right)\) and this implies that
-\(c(\theta) < \infty\) for all \(\theta \in \mathbb{R}\) and that
-\(\Theta\) is open.
-\end{frame}
-
-\begin{frame}{Take home message}
-\protect\hypertarget{take-home-message}{}
+\begin{frame}{Last time}
+\protect\hypertarget{last-time}{}
 Let \(Y\) be a regular full exponential family in canonical form. Then
 \(Y\) has log likelihood given by \[
   l(\theta) = \langle Y,\theta \rangle - c(\theta),
@@ -364,138 +149,317 @@ Let \(Y\) be a regular full exponential family in canonical form. Then
     \text{E}_\theta(Y) &= \nabla c(\theta),  \\
     \text{Var}_\theta(Y) &= \nabla^2 c(\theta).   
 \end{align*}
+
+Examples include: Binomial, Poisson, Normal, etc.
 \end{frame}
 
-\begin{frame}{Identifiability}
-\protect\hypertarget{identifiability}{}
-A statistical model is \emph{identifiable} if any two distinct parameter
-values correspond to distinct distributions.
-
-An exponential family fails to be identifiable if there are two distinct
-canonical parameter values \(\theta\) and \(\psi\) such that the density
-\eqref{expodens} of one with respect to the other is equal to one with
-probability one.
-
-This happens if \(Y^T(\theta - \psi)\) is equal to a constant with
-probability one.
-
-And this says that the canonical statistic \(Y\) is concentrated on a
-hyperplane and the vector \(\theta - \psi\) is perpendicular to this
-hyperplane.
+\begin{frame}{Learning Objectives Today}
+\protect\hypertarget{learning-objectives-today}{}
+\begin{itemize}
+\tightlist
+\item
+  mean value parameters
+\item
+  maximum likelihood estimation (MLE)
+\item
+  asymptotics of MLE
+\item
+  finite sample concentration of MLE
+\end{itemize}
 \end{frame}
 
-\begin{frame}{}
-\protect\hypertarget{section-3}{}
-Conversely, if the canonical statistic \(Y\) is concentrated on a
-hyperplane \begin{equation}\label{hyperplane}
+\begin{frame}{Mean value parameters}
+\protect\hypertarget{mean-value-parameters}{}
+The mean of the canonical statistic \(\text{E}_\theta(Y)\) is also a
+parameter.
+
+It is given as a function \(g\) of the canonical parameter \(\theta\),
+\begin{equation} \label{mvp}
+  g(\theta) = \nabla c(\theta) = \text{E}_\theta(Y) = \mu.    
+\end{equation}
+
+We will refer to \(g:\theta\to\mu\) as the change-of-parameter map (or
+change-of-parameter) from canonical parameter \(\theta\) to mean value
+parameter \(\mu\).
+\end{frame}
+
+\begin{frame}{Example: Binomial}
+\protect\hypertarget{example-binomial}{}
+Recall that the log likelihood for the binomial distribution (after
+dropping terms) \[
+  y\log(p) + (n-y)\log(1-p)
+\] can be written in canonical form with \[
+  c(\theta) = n\log(1 + \exp(\theta)),
+\] where \(\theta = \log(p/(1-p))\) and
+\(p = \exp(\theta)/(1 + \exp(\theta))\). Now, \[
+  \nabla c(\theta) = n \left(\frac{\exp(\theta)}{1 + \exp(\theta)}\right) = np,
+\] and this is \(E_\theta(Y)\).
+\end{frame}
+
+\begin{frame}{Mean value parameters}
+\protect\hypertarget{mean-value-parameters-1}{}
+\begin{thm} \label{thm-mvp}
+For a regular full exponential family, the change-of-parameter from canonical to mean value parameter is invertible if the model is identifiable. Moreover both the change-of-parameter and its inverse are infinitely differentiable.
+\end{thm}
+
+\vspace*{12pt}
+
+See notes for proof.
+\end{frame}
+
+\begin{frame}{Mean value parameters}
+\protect\hypertarget{mean-value-parameters-2}{}
+Recall from last time that an exponential family is identifiable if and
+only if the canonical statistic is NOT concentrated on a hyperplane
+\begin{equation}\label{hyperplane}
   H = \{y : y^Tv = a\}  
-\end{equation} for some non-zero vector \(v\), then for any scalar \(s\)
-\[
-  c(\theta + sv) = sa + c(\theta),
-\] which immediately implies that \[
-  l(\theta + sv) = l(\theta).
-\]
-\end{frame}
+\end{equation}
 
-\begin{frame}{}
-\protect\hypertarget{section-4}{}
+\vspace*{12pt}
+
 \begin{thm}
 An exponential family fails to be identifiable if and only if the canonical statistic is concentrated on a hyperplane. If that hyperplane is given by \eqref{hyperplane} and the family is full, then $\theta$ and $\theta+sv$ are in the full canonical parameter space and correspond to the same distribution for every canonical parameter value $\theta$ and every scalar $s$.     
 \end{thm}
+\end{frame}
+
+\begin{frame}{Multivariate monotone}
+\protect\hypertarget{multivariate-monotone}{}
+The change-of-parameter mapping \(g:\theta\to\mu\) is multivariate
+monotone, \begin{equation} \label{multiparm}
+  (g(\theta_1) + g(\theta_2))'(\theta_1 - \theta_2) \geq 0,
+\end{equation} where \(g(\theta_i) = \mu_i\), \(i = 1,2\).
+
+If we rewrite \eqref{multiparm} using subscripts and consider
+\(\theta_1\) and \(\theta_2\) that differ in only one coordinate, say
+the \(k\)th, then we get \[
+  (\mu_{1k} - \mu_{2k})(\theta_{1k} - \theta_{2k}) > 0,
+\] which says
+\emph{if we increase one component of the canonical parameter vector, leaving the other components fixed, then the corresponding component of the mean value parameter vector also increases, and the other components can go any which way}.
+\end{frame}
+
+\begin{frame}{MLE}
+\protect\hypertarget{mle}{}
+The derivative of the log likelihood is \[
+  \nabla l(\theta) = y - \nabla c(\theta).
+\] The second derivative is \[
+  \nabla^2 l(\theta) = -\nabla^2 c(\theta).
+\] Hence observed and expected Fisher information for the canonical
+parameter vector \(\theta\) are the same \begin{equation} \label{FI}
+    I(\theta) = \nabla^2 c(\theta).
+\end{equation}
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section}{}
+\textbf{Note}: Fisher information measures the expected curvature of the
+log likelihood around the true parameter value.
+
+If the likelihood is sharply curved around \(\theta\) -- the expected
+information \(I(\theta)\) is large -- then a small change in \(\theta\)
+can lead to a drastic decrease in the likelihood. Conversely, if
+\(I(\theta)\) is small then small changes in \(\theta\) will not affect
+the likelihood that much.
+
+Similar heuristics are important when we cover data separation.
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-1}{}
+When
 
 \begin{itemize}
 \tightlist
 \item
-  The direction \(sv\) along a vector \(v\) in the parameter space such
-  that \(\theta\) and \(\theta + sv\) always correspond to the same
-  distribution is called a \emph{direction of constancy}.
+  the model is identifiable
 \item
-  The theorem says that \(v\) is such a vector if and only if \(Y^Tv\)
-  is constant with probability one.
+  the canonical statistic vector \(Y\) is not concentrated on a
+  hyperplane
 \item
-  It is clear from this that the set of all such vectors is closed under
-  vector addition and scalar multiplication, hence is a vector subspace.
-  This subspace is called the \emph{constancy space} of the family.
+  the second derivative is negative definite everywhere.
 \end{itemize}
+
+Hence the log likelihood is strictly concave, hence the maximum
+likelihood estimate is unique if it exists. Thus, \[
+  y = \nabla c(\hat{\theta}),
+\] and \[
+  \hat{\theta} = g^{-1}(y).
+\]
 \end{frame}
 
-\begin{frame}{Note}
-\protect\hypertarget{note}{}
-It is always possible to choose the canonical statistic and parameter so
-the family is identifiable.
+\begin{frame}{Observed equals expected}
+\protect\hypertarget{observed-equals-expected}{}
+The MLE, if it exists, must be a point where the first derivative is
+zero, that is, a \(\theta\) that satisfies \[
+  y = \nabla c(\theta) = \text{E}_\theta(Y).
+\] The MLE is the (unique if the model is identifiable) parameter value
+that makes the observed value of the canonical statistic equal to its
+expected value.
 
-\(Y\) being concentrated on a hyperplane means some components are
-affine functions of other components with probability one, and this
-relation can be used to eliminate components of the canonical statistic
-vector until one gets to an identifiable choice of canonical statistic
-and parameter.
-
-But this is not always advisable. Prematurely enforcing identifiability
-may complicate many theoretical issues.
-\end{frame}
-
-\begin{frame}{Example: Multinomial distribution}
-\protect\hypertarget{example-multinomial-distribution}{}
-We will show that a nonidentifiable parameterization allows for a
-relatively routine argument to show that the multinomial distribution
-can be written in canonical form.
-
-First, some background on ratios of densities:
-
-When we look at a ratio of two exponential family densities with
-canonical parameter vectors \(\theta\) and \(\psi\), the \(h(w)\) term
-cancels, and \begin{equation} \label{Radon}
-    f_{\theta;\psi}(w) = \frac{f_{\theta}(w)}{f_{\psi}(w)} = e^{\langle y,\theta - \psi\rangle - c(\theta) + c(\psi)}   
-\end{equation} is a density of the distribution with canonical parameter
-\(\theta\) taken with respect to the distribution with canonical
-parameter \(\psi\) (a Radon-Nikodym derivate in probability theory).
+We call this the \textbf{observed equals expected} property of maximum
+likelihood in exponential families.
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-5}{}
-In the same vein as \eqref{Radon}, we obtain the identity
-\begin{equation} \label{cumident}
-    c(\theta) = c(\psi) + \log\left(\mathrm{E}_{\psi}\left(e^{\langle Y, \theta - \psi \rangle}\right)\right)
-\end{equation} Then \eqref{cumident} gives the following for the
-multinomial distribution \begin{align*}
-  c(\theta) &= c(\psi) + \log\left(\mathrm{E}_{\psi}\left(e^{\langle Y, \theta - \psi \rangle}\right)\right) \\
-  &= c(\psi) + n\log\left(\sum_{i=1}^d p_ie^{\theta_i - \psi_i}\right),
-\end{align*} where the last equality follows from the multinomial
-theorem.
+\protect\hypertarget{section-2}{}
+This property is even simpler to express in terms of the mean value
+parameter. By invariance of maximum likelihood under
+change-of-parameter, the MLE for \(\mu\) is \[
+  \hat\mu = g(\hat\theta) = \nabla c(\hat\theta)
+\] and the observed equals expected property is therefore
+\begin{equation} \label{obsequalsexp}
+  y = \hat\mu.  
+\end{equation}
 \end{frame}
 
-\begin{frame}{}
-\protect\hypertarget{section-6}{}
-Then \eqref{Radon} gives \begin{align*}
-  f_{\theta}(y) &= f_{\psi}(y)e^{\langle y,\theta-\psi\rangle - c(\theta) + c(\psi)} \\
-    &= {n \choose y} \left(\prod_{i=1}^d\left[p_ie^{\theta_i-\psi_i}\right]^{y_i}\right)\left(\sum_{i=1}^d p_ie^{\theta_i-\psi_i}\right)^{-n} \\
-    &= {n \choose y} \prod_{i=1}^d \left(\frac{p_ie^{\theta_i-\psi_i}}{\sum_{j=1}^dp_je^{\theta_j-\psi_j}}\right)^{y_i}.
-\end{align*}
+\begin{frame}{Non-Existence of the MLE}
+\protect\hypertarget{non-existence-of-the-mle}{}
+We cannot prove the maximum likelihood estimate (for the canonical
+parameter) exists.
+
+Consider the binomial distribution. The MLE for the usual
+parameterization is \(\hat p = y/n\).
+
+The canonical parameter is \(\theta = \text{logit}(p)\).
+
+But \(\hat \theta = \text{logit}(\hat p)\) does not exist when
+\(\hat p = 0\) or \(\hat p = 1\), which is when we observe zero
+successes or when we observe \(n\) successes in \(n\) trials.
+
+We will revisit this topic when we discuss GLMs.
 \end{frame}
 
-\begin{frame}{}
-\protect\hypertarget{section-7}{}
-We simplify the above by choosing \(p\) to be the vector with all
-components \(1/d\) and \(\psi\) to be the zero vector. We will also
-choose \(c(\psi) = n\log(d)\), so that \[
-  c(\theta) = n\log\left(\sum_{i=1}^d e^{\theta_i}\right).
-\] Thus, \[
-  f_{\theta}(y) = {n \choose y}\prod_{i=1}^d \left(\frac{e^{\theta_i}}{\sum_{j=1}^d e^{\theta_j}}\right)^{y_i},
-\] and this is the PMF of the multinomial distribution with sample size
-\(n\) and probability vector having components \[
-  p_i(\theta) = \frac{e^{\theta_i}}{\sum_{j=1}^d e^{\theta_j}}.
+\begin{frame}{IID Data}
+\protect\hypertarget{iid-data}{}
+Suppose \(y_1, \ldots, y_n\) are independent and identically distributed
+(IID) from some distribution in an exponential family.
+
+The log likelihood for sample size \(n\) is \begin{equation} \label{iid}
+    l_n(\theta) = \sum_{i=1}^n\left[\langle y_i,\theta\rangle - c(\theta)\right] 
+      = \langle\sum_{i=1}^n y_i, \theta\rangle - n c(\theta),
+\end{equation} and we see that the above log likelihood is an
+exponential family with:
+
+\begin{itemize}
+\tightlist
+\item
+  canonical statistic \(\sum_{i=1}^n y_i\),
+\item
+  cumulant function \(\theta \mapsto n c(\theta)\), and
+\item
+  canonical parameter \(\theta\) and full canonical parameter space
+  \(\Theta\) the same as the originally given family from which every
+  observation is a member.
+\end{itemize}
+
+Thus IID sampling gives us a new exponential family, but still an
+exponential family.
+\end{frame}
+
+\begin{frame}{Asymptotics of MLE for regular full exponential family}
+\protect\hypertarget{asymptotics-of-mle-for-regular-full-exponential-family}{}
+Rewrite \eqref{iid} as \[
+  l_n(\theta) = n\left[\langle \bar y_n, \theta\rangle - c(\theta)\right]
+\] so that \[
+  \nabla l_n(\theta) = n\left[\bar y_n - \nabla c(\theta)\right].
+\] From which we see that for an identifiable regular full exponential
+family where the MLE must be a point where the first derivative is zero,
+we can write \begin{align*}
+    \nabla l_n(\theta) = n\left[\bar y_n - \nabla c(\theta)\right] &= 0, \\
+    \bar y_n - \nabla c(\hat\theta) &= 0.
+\end{align*} And this yields \[
+  \bar y_n = \nabla c(\hat\theta).
 \]
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-8}{}
-This is not an identifiable parameterization.
+\protect\hypertarget{section-3}{}
+Recall the change-of-parameters mapping \(g:\theta \mapsto \mu\) is
+invertible when the model is identifiable. We can write
+\begin{equation} \label{MVPg}
+  \hat\theta_n = g^{-1}(\bar y_n),  
+\end{equation} when the MLE exists.
 
-The components of \(y\) sum to \(n\) so \(Y\) is concentrated on a
-hyperplane to which the vector \((1,1, \cdots, 1)^T\) is perpendicular.
+When the MLE does not exist, \(\bar y_n\) is not in the domain of
+\(g^{-1}\).
+\end{frame}
 
-Eliminating a component of \(Y\) to get an identifiability would destroy
-symmetry of formulas and make everything harder and messier.
+\begin{frame}{}
+\protect\hypertarget{section-4}{}
+By the multivariate central limit theorem (CLT) \[
+  \sqrt{n}\left(\bar y_n - \mu\right) \to N\left(0, I(\theta)\right)
+\] and we know that \(g^{-1}\) is differentiable (Theorem \ref{thm-mvp}
+in this slide deck) with the derivative given by \[
+  \nabla g^{-1}(\mu) = \left[\nabla g(\theta)\right]^{-1},
+\] where \[
+  \mu = g(\theta) \;\;\; \text{and} \;\;\; \theta = g^{-1}(\mu).
+\]
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-5}{}
+So the usual asymptotics of maximum likelihood
+\begin{equation} \label{asymptoticsMLE}
+    \sqrt{n}\left(\hat\theta_n - \theta\right) \to N\left(0, I(\theta)^{-1}\right)
+\end{equation} is just the multivariate delta method applied to the
+multivariate CLT.
+\end{frame}
+
+\begin{frame}{Example: Bernoulli distribution}
+\protect\hypertarget{example-bernoulli-distribution}{}
+Let \(y_1,\ldots,y_n \overset{iid}{\sim}\) Bernoulli(\(p\)) where
+\(0 < p < 1\).
+
+Then \[
+  l_n(\theta) = \langle\sum_{i=1}^n y_i,\theta\rangle - n c(\theta)
+\] where \begin{align*}
+  g(\theta) &= \frac{\exp(\theta)}{1 + \exp(\theta)} = p \\
+  g^{-1}(p) &= \log\left(\frac{p}{1-p}\right) = \theta,
+\end{align*} and \[
+  \hat{p} = \bar{y}_n.
+\]
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-6}{}
+The expected Fisher information is \begin{align*}
+  I(\theta) &= \nabla^2 c(\theta) \\
+    &= \left(\frac{\exp(\theta)}{1 + \exp(\theta)}\right)\left(\frac{1}{1 + \exp(\theta)}\right) \\
+    &= p(1-p).
+\end{align*}
+
+Therefore, \begin{align*}
+ \sqrt{n}\left(\hat{\theta}_n - \theta\right) &\to N\left(0,  I(\theta)^{-1}\right) \\
+   &= N\left(0,  \frac{1}{p(1-p)}\right).
+\end{align*}
+\end{frame}
+
+\begin{frame}{Finite sample concentration of MLE (scalar case)}
+\protect\hypertarget{finite-sample-concentration-of-mle-scalar-case}{}
+\begin{defn}
+A random variable $Y$ with mean $\mu = \text{E}(Y)$ is \emph{sub-exponential} if there exist non-negative numbers $(\lambda,b)$ such that 
+$$
+  E\left(e^{\phi(Y - \mu)}\right) \leq e^{\lambda^2\phi^2/2} 
+    \qquad \text{for all} \; |\phi| < 1/b.
+$$  
+\end{defn}
+
+\vspace{12pt}
+
+Let \(Y\) be a scalar canonical statistic regular full exponential
+family with canonical parameter \(\theta\), then \(Y\) is
+sub-exponential.
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-7}{}
+We can show the MLE of \(\theta\) exhibits sub-exponential concentration
+following the logic that \((\hat\theta - \theta)\) has the same tail
+bounds as a sub-exponential random variable.
+
+We can use these results to obtain the rate of convergence \[
+  \mathbb{P}\left( (\hat\theta - \theta) \geq \frac{\log(n)}{n}\right) 
+    = O\left(n^{-\frac{A}{2b}}\right),
+\] where \(t = \log(n)/n\) for some numbers \(A\) and \(b\).
 \end{frame}
 
 \end{document}

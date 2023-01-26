@@ -1,6 +1,6 @@
 ---
 title: "STAT 528 - Advanced Regression Analysis II"
-author: "Exponential family theory (part 2)"
+author: "Exponential family theory (part 3)"
 institute: |
   | Daniel J. Eck
   | Department of Statistics  
@@ -77,22 +77,6 @@ dark_theme = theme(plot.background   = element_blank(),
 
 ## Last time 
 
-Let $Y$ be a regular full exponential family in canonical form. Then $Y$ has log likelihood given by
-$$
-  l(\theta) = \langle Y,\theta \rangle - c(\theta),
-$$
-and 
-\begin{align*} 
-	\E_\theta(Y) &= \nabla c(\theta),  \\
-	\Var_\theta(Y) &= \nabla^2 c(\theta).	
-\end{align*}
-
-Examples include: Binomial, Poisson, Normal, etc.
-
-
-
-## Learning Objectives Today
-
 - mean value parameters
 - maximum likelihood estimation (MLE)
 - asymptotics of MLE
@@ -100,298 +84,172 @@ Examples include: Binomial, Poisson, Normal, etc.
 
 
 
-## Mean value parameters 
+## Learning Objectives Today
 
-The mean of the canonical statistic $\E_\theta(Y)$ is also a parameter. 
-
-It is given as a function $g$ of the canonical parameter $\theta$,
-\begin{equation} \label{mvp}
-  g(\theta) = \nabla c(\theta) = \E_\theta(Y) = \mu.	
-\end{equation}
-
-We will refer to $g:\theta\to\mu$ as the change-of-parameter map (or change-of-parameter) from canonical parameter $\theta$ to mean value parameter $\mu$.
+- generalized linear models (GLMs)
+- different parameterizations
 
 
-## Example: Binomial
+## Canonical linear submodels: intro to GLMs
 
-Recall that the log likelihood for the binomial distribution (after dropping terms) 
+We now motivate generalized linear models (GLMs) within the context of exponential theory.
+
+A canonical affine submodel of an exponential family is a submodel having parameterization
 $$
-  y\log(p) + (n-y)\log(1-p)
+  \theta = a + M\beta
 $$
-can be written in canonical form with 
-$$
-  c(\theta) = n\log(1 + \exp(\theta)),
-$$
-where $\theta = \log(p/(1-p))$ and $p = \exp(\theta)/(1 + \exp(\theta))$. Now,
-$$
-  \nabla c(\theta) = n \left(\frac{\exp(\theta)}{1 + \exp(\theta)}\right) = np,
-$$
-and this is $E_\theta(Y)$.
+where: 
 
-
-## Mean value parameters 
-
-\begin{thm} \label{thm-mvp}
-For a regular full exponential family, the change-of-parameter from canonical to mean value parameter is invertible if the model is identifiable. Moreover both the change-of-parameter and its inverse are infinitely differentiable.
-\end{thm}
-
-\vspace*{12pt}
-
-See notes for proof.
-
-
-## Mean value parameters 
-
-Recall from last time that an exponential family is identifiable if and only if the canonical statistic is NOT concentrated on a hyperplane
-\begin{equation}\label{hyperplane}
-  H = \{y : y^Tv = a\}	
-\end{equation}
-
-\vspace*{12pt}
-
-\begin{thm}
-An exponential family fails to be identifiable if and only if the canonical statistic is concentrated on a hyperplane. If that hyperplane is given by \eqref{hyperplane} and the family is full, then $\theta$ and $\theta+sv$ are in the full canonical parameter space and correspond to the same distribution for every canonical parameter value $\theta$ and every scalar $s$. 	
-\end{thm}
-
-
-
-## Multivariate monotone
-
-The change-of-parameter mapping $g:\theta\to\mu$ is multivariate monotone,
-\begin{equation} \label{multiparm}
-  (g(\theta_1) + g(\theta_2))'(\theta_1 - \theta_2) \geq 0,
-\end{equation}
-where $g(\theta_i) = \mu_i$, $i = 1,2$.
-
-If we rewrite \eqref{multiparm} using subscripts and consider $\theta_1$ and $\theta_2$ that differ in only one coordinate, say the $k$th, then we get
-$$
-  (\mu_{1k} - \mu_{2k})(\theta_{1k} - \theta_{2k}) > 0,
-$$
-which says \emph{if we increase one component of the canonical parameter vector, leaving the other components fixed, then the corresponding component of the mean value parameter vector also increases, and the other components can go any which way}.
-
-
-
-## MLE 
-
-The derivative of the log likelihood is 
-$$
-  \nabla l(\theta) = y - \nabla c(\theta).
-$$
-The second derivative is 
-$$
-  \nabla^2 l(\theta) = -\nabla^2 c(\theta).
-$$
-Hence observed and expected Fisher information for the canonical parameter vector $\theta$ are the same
-\begin{equation} \label{FI}
-	I(\theta) = \nabla^2 c(\theta).
-\end{equation}
-
-
-## 
-
-**Note**: Fisher information measures the expected curvature of the log likelihood around the true parameter value. 
-
-If the likelihood is sharply curved around $\theta$ -- the expected information $I(\theta)$ is large -- then a small change in $\theta$ can lead to a drastic decrease in the likelihood. Conversely, if $I(\theta)$ is small then small changes in $\theta$ will not affect the likelihood that much. 
-
-Similar heuristics are important when we cover data separation.
+ - $\theta \in \R^n$ is the canonical parameter vector
+ - $\beta \in \R^p$ is the canonical parameter vector for the submodel 
+ - $a \in \R^n$ is a known offset vector
+ - $M \in \R^{n\times p}$ is a known *model matrix*. 
 
 
 ##
 
-When 
-
-- the model is identifiable 
-- the canonical statistic vector $Y$ is not concentrated on a hyperplane 
-- the second derivative is negative definite everywhere. 
-
-Hence the log likelihood is strictly concave, hence the maximum likelihood estimate is unique if it exists. Thus,
+In most applications the offset vector is not used giving parameterization 
 $$
-  y = \nabla c(\hat{\theta}),
+  \theta = M\beta,
+$$  
+in which case we say the submodel is a *canonical linear submodel*. 
+
+We will restrict attention to the canonical linear submodel in this class. 
+
+
+## 
+
+The canonical linear submodel log likelihood is given by
+\begin{equation} \label{subloglike}
+\begin{split}
+  l(\theta) &= \langle y,\theta\rangle - c(\theta) \\
+    &= \langle y,M\beta\rangle - c(M\beta) \\
+    &= \langle M'y,\beta\rangle - c_\beta(\beta), 	
+\end{split}
+\end{equation}
+and we see that we again have an exponential family with
+
+ - canonical statistic $M'y$
+ - cumulant function $\beta \mapsto c_\beta(\beta) = c(M\beta)$
+ - submodel canonical parameter vector $\beta$
+
+
+
+## 
+
+Let's step back a bit. 
+
+In applications $n$ denotes the sample size. $\theta \in \R^n$ is an arbitrary vector specifying one parameter for individual. This is a saturated model.
+
+For a model to be useful, we need dimension reduction
 $$
-and
+  \theta = M\beta.
 $$
-  \hat{\theta} = g^{-1}(y).
+In other words, $\theta \in \text{span}(M)$.
+
+
+## Full regular submodels
+
+If the originally given full canonical parameter space was $\Theta$, then the full submodel canonical parameter space is 
+$$
+  B = \{\beta : M\beta \in \Theta\}.
 $$
 
+Thus a canonical linear submodel gives us a new exponential family, with lower-dimensional canonical parameter and statistic. 
+
+The submodel exponential family is full regular if the original exponential family was full regular.
+
+<!-- Notice that $\beta$ value does not determine the submodel uniquely. -->
 
 
-## Observed equals expected
+## Parameterizations
 
-<!-- For a regular full exponential family, the MLE cannot be on the boundary of the canonical parameter space (regular means the boundary is empty), and  -->
-The MLE, if it exists, must be a point where the first derivative is zero, that is, a $\theta$ that satisfies
-$$
-  y = \nabla c(\theta) = \E_\theta(Y).
-$$
-The MLE is the (unique if the model is identifiable) parameter value that makes the observed value of the canonical statistic equal to its expected value. 
+Now we have four parameters: 
 
-We call this the **observed equals expected** property of maximum likelihood in exponential families.
+ - the saturated model canonical and mean value parameters $\theta$ and $\mu$ 
+ - the canonical linear submodel canonical and mean value parameters $\beta$ and $\tau = M^T\mu$. 
+ 
+The observed equals expected property for the submodel is
+\begin{equation} \label{submodelmvp}
+	\hat\tau = M^T\hat\mu = M^Ty.
+\end{equation}
+ 
 
+## 
+ 
+A depiction of the transformations necessary to change between parameterizations. 
+
+![](transformations.png)
 
 
 ##
 
-This property is even simpler to express in terms of the mean value parameter. By invariance of maximum likelihood under change-of-parameter, the MLE for $\mu$ is 
+**Note**: $\mu \to M^T\mu$ is usually not one-to-one (when $n > p$ and $M$ is full column rank). 
+
+Hence we cannot determine $\hat\theta$ and $\hat\beta$ from them either. 
+
+The only way to determine the MLEs is to maximize the log likelihood \eqref{subloglike} to obtain $\hat\beta$ and then 
+
+- $\hat\theta = M\hat\beta$ 
+- $\hat\mu = \nabla c(\hat\theta)$ 
+- $\hat\tau = M^T\hat\mu$.
+
+
+
+## GLMs and link functions 
+
+Recall that the saturated model canonical parameter vector $\theta$ is *linked* to the saturated model mean value parameter vector through the change-of-parameter mappings $g(\theta)$. 
+
+We can reparameterize $\theta = M\beta$ and write
 $$
-  \hat\mu = g(\hat\theta) = \nabla c(\hat\theta)
+ \mu = \E_\theta(Y) = g(M\beta) 
 $$
-and the observed equals expected property is therefore
-\begin{equation} \label{obsequalsexp}
-  y = \hat\mu.	
-\end{equation}
-
-
-
-## Non-Existence of the MLE
-
-We cannot prove the maximum likelihood estimate (for the canonical parameter) exists. 
-
-Consider the binomial distribution. The MLE for the usual parameterization is $\hat p = y/n$. 
-
-The canonical parameter is $\theta = \text{logit}(p)$. 
-
-But $\hat \theta = \text{logit}(\hat p)$ does not exist when $\hat p = 0$ or $\hat p = 1$, which is when we observe zero successes or when we observe $n$ successes in $n$ trials.
-
-We will revisit this topic when we discuss GLMs.
-
-
-## IID Data 
-
-Suppose $y_1, \ldots, y_n$ are independent and identically distributed (IID) from some distribution in an exponential family. 
-
-The log likelihood for sample size $n$ is
-\begin{equation} \label{iid}
-	l_n(\theta) = \sum_{i=1}^n\left[\langle y_i,\theta\rangle - c(\theta)\right] 
-	  = \langle\sum_{i=1}^n y_i, \theta\rangle - n c(\theta),
-\end{equation}
-and we see that the above log likelihood is an exponential family with:  
-
-- canonical statistic $\sum_{i=1}^n y_i$,
-- cumulant function $\theta \mapsto n c(\theta)$, and
-- canonical parameter $\theta$ and full canonical parameter space $\Theta$ the same as the originally given family from which every observation is a member.
-
-
-Thus IID sampling gives us a new exponential family, but still an exponential family.
-
-
-## Asymptotics of MLE for regular full exponential family
-
-Rewrite \eqref{iid} as 
+which implies that we can write
 $$
-  l_n(\theta) = n\left[\langle \bar y_n, \theta\rangle - c(\theta)\right]
-$$
-so that
-$$
-  \nabla l_n(\theta) = n\left[\bar y_n - \nabla c(\theta)\right].
-$$
-From which we see that for an identifiable regular full exponential family where the MLE must be a point where the first derivative is zero, we can write
-\begin{align*}
-  	\nabla l_n(\theta) = n\left[\bar y_n - \nabla c(\theta)\right] &= 0, \\
-  	\bar y_n - \nabla c(\hat\theta) &= 0.
-\end{align*}
-And this yields
-$$
-  \bar y_n = \nabla c(\hat\theta).
+  g^{-1}\left(\E_\theta(Y)\right) = M\beta.
 $$
 
 ## 
 
-Recall the change-of-parameters mapping $g:\theta \mapsto \mu$ is invertible when the model is identifiable. We can write
-\begin{equation} \label{MVPg}
-  \hat\theta_n = g^{-1}(\bar y_n),	
-\end{equation}
-when the MLE exists. 
+Therefore, a linear function of the canonical submodel parameter vector is linked to the mean of the exponential family through the inverse change-of-parameter mapping $g^{-1}$. 
 
-When the MLE does not exist, $\bar y_n$ is not in the domain of $g^{-1}$.
+This is the basis of exponential family generalized linear models with link function $g^{-1}$. 
 
-
-## 
-
-By the multivariate central limit theorem (CLT)
-$$
-  \sqrt{n}\left(\bar y_n - \mu\right) \to N\left(0, I(\theta)\right)
-$$
-and we know that $g^{-1}$ is differentiable (Theorem \ref{thm-mvp} in this slide deck) with the derivative given by 
-$$
-  \nabla g^{-1}(\mu) = \left[\nabla g(\theta)\right]^{-1},
-$$
-where
-$$
-  \mu = g(\theta) \;\;\; \text{and} \;\;\; \theta = g^{-1}(\mu).
-$$
-
-##
-
-So the usual asymptotics of maximum likelihood
-\begin{equation} \label{asymptoticsMLE}
-	\sqrt{n}\left(\hat\theta_n - \theta\right) \to N\left(0, I(\theta)^{-1}\right)
-\end{equation}
-is just the multivariate delta method applied to the multivariate CLT.
-
-
-
-## Example: Bernoulli distribution
-
-Let $y_1,\ldots,y_n \overset{iid}{\sim}$ Bernoulli($p$) where $0 < p < 1$. 
-
-Then 
-$$
-  l_n(\theta) = \langle\sum_{i=1}^n y_i,\theta\rangle - n c(\theta)
-$$
-where
-\begin{align*}
-  g(\theta) &= \frac{\exp(\theta)}{1 + \exp(\theta)} = p \\
-  g^{-1}(p) &= \log\left(\frac{p}{1-p}\right) = \theta,
-\end{align*}
-and 
-$$
-  \hat{p} = \bar{y}_n.
-$$
-
-## 
-
-The expected Fisher information is
-\begin{align*}
-  I(\theta) &= \nabla^2 c(\theta) \\
-    &= \left(\frac{\exp(\theta)}{1 + \exp(\theta)}\right)\left(\frac{1}{1 + \exp(\theta)}\right) \\
-    &= p(1-p).
-\end{align*}
-
-Therefore, 
-\begin{align*}
- \sqrt{n}\left(\hat{\theta}_n - \theta\right) &\to N\left(0,  I(\theta)^{-1}\right) \\
-   &= N\left(0,  \frac{1}{p(1-p)}\right).
-\end{align*}
+Note that most treatments of GLMs will present $g^{-1}$ as the link function. Instead we motivated a change of parameters mapping from canonical to mean value parameters. 
 
 
 
 
-## Finite sample concentration of MLE (scalar case)
 
 
-\begin{defn}
-A random variable $Y$ with mean $\mu = \E(Y)$ is \emph{sub-exponential} if there exist non-negative numbers $(\lambda,b)$ such that 
-$$
-  E\left(e^{\phi(Y - \mu)}\right) \leq e^{\lambda^2\phi^2/2} 
-    \qquad \text{for all} \; |\phi| < 1/b.
-$$	
-\end{defn}
-
-\vspace{12pt}
-
-Let $Y$ be a scalar canonical statistic regular full exponential family with canonical parameter $\theta$, then $Y$ is sub-exponential.
 
 
-## 
 
-We can show the MLE of $\theta$ exhibits sub-exponential concentration following the logic that $(\hat\theta - \theta)$ has the same tail bounds as a sub-exponential random variable. 
+<!-- ## Example: logistic regression -->
+
+<!-- Let $M$ have rows $x_i'$, $i = 1$, $\ldots$, $n$. Then $\theta_i = x_i'\beta$ and -->
+
+<!-- $$ -->
+<!--   x_i'\beta = \log\left(\frac{p_i}{1 - p_i}\right) \qquad \text{and} \qquad p_i = \left(\frac{\exp(x_i'\beta)}{ 1 + \exp(x_i'\beta)}\right), -->
+<!-- $$ -->
+<!-- where -->
+<!-- \begin{align*} -->
+<!--   &\sum_{i=1}^n\left[y_i\log(p_i) - (1 - y_i)\log(p_i) \right] -->
+<!--    = \sum_{i=1}^n\left[y_ix_i'\beta - \log(1 + \exp(x_i'\beta))\right] \\ -->
+<!--     &= \sum_{i=1}^n\left[\langle y_i, x_i'\beta \rangle - \log(1 + \exp(x_i'\beta)) \right] \\ -->
+<!--     &= \langle y, \theta \rangle - \sum_{i=1}^n \log(1 + \exp(\theta_i)) \\ -->
+<!--     &= \langle y, \theta \rangle - c(\theta). \\ -->
+<!-- \end{align*} -->
 
 
-We can use these results to obtain the rate of convergence
-$$
-  \Prob\left( (\hat\theta - \theta) \geq \frac{\log(n)}{n}\right) 
-    = O\left(n^{-\frac{A}{2b}}\right),
-$$
-where $t = \log(n)/n$ for some numbers $A$ and $b$.
+<!-- ##  -->
+<!-- Alternatively,  -->
+<!-- \begin{align*} -->
+<!--   &\sum_{i=1}^n\left[\langle y_i, x_i'\beta \rangle - \log(1 + \exp(x_i'\beta)) \right] \\ -->
+<!--   &= \langle \sum_{i=1}^n y_i x_i, \beta \rangle - \sum_{i=1}^n\log(1 + \exp(x_i'\beta)) \\ -->
+<!--   &= \langle M'y, \beta \rangle - c_\beta(\beta)   -->
+<!-- \end{align*} -->
+
 
 
 

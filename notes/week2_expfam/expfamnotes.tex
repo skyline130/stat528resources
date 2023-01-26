@@ -592,11 +592,11 @@ The observed equals expected property for the submodel is
 \end{equation}
 We cannot actually solve these equations for $\hat\mu$ because the mapping $\mu \to M^T\mu$ is usually not one-to-one (the $n > p$ case where $M \in \R^{n \times p}$ and is full column rank). Hence we cannot determine $\hat\theta$ and $\hat\beta$ from them either. The only way to determine the MLE is to maximize the log likelihood \eqref{subloglike} for $\beta$ to obtain $\hat\beta$ and then $\hat\theta = M\hat\beta$ and $\hat\mu = \nabla c(\hat\theta)$ and $\hat\tau = M^T\hat\mu$. But the observed equals expected property is nevertheless very important. %It is the only simple property of maximum likelihood that can be used in interpretation of exponential families (more on this later).
 
-\vspace{0.5cm}\noindent{\bf Derive the asymptotic distribution for the MLE of $\hat{\beta}$ and $\hat{\tau}$.}
+\vspace{0.5cm}\noindent{\bf Derive the asymptotic distribution for the MLE of $\hat{\tau}$.}
 
 \vspace{0.5cm}Recall that the saturated model canonical parameter vector $\theta$ is ``linked'' to the saturated model mean value parameter vector through the change-of-parameter mappings $g(\theta)$. We can reparameterize $\theta = M\beta$ and write
 $$
- \E_\theta(Y) = \mu = g(M\beta) 
+ \mu = \E_\theta(Y) = g(M\beta) 
 $$
 which implies that we can write
 $$
@@ -606,10 +606,6 @@ Therefore, a linear function of the canonical submodel parameter vector is linke
 
 
 %A concise presentation of the various model parameterizations and how they are related to each other is given in Figure~\ref{Fig1:parameterizations}.
-
-
-
-
 
 
 \begin{figure}[t]
