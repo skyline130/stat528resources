@@ -88,6 +88,9 @@ dark_theme = theme(plot.background   = element_blank(),
 
 - generalized linear models (GLMs)
 - different parameterizations
+- motivation of logistic regression
+- inference
+
 
 
 ## Canonical linear submodels: intro to GLMs
@@ -135,11 +138,11 @@ and we see that we again have an exponential family with
 
 
 
-## 
+## Stepping back a bit
 
-Let's step back a bit. 
+In practice $n$ denotes the sample size. 
 
-In applications $n$ denotes the sample size. $\theta \in \R^n$ is an arbitrary vector specifying one parameter for individual. This is a saturated model.
+$\theta \in \R^n$ is an arbitrary unrestricted vector specifying one parameter for individual. This is a saturated model.
 
 For a model to be useful, we need dimension reduction
 $$
@@ -200,6 +203,8 @@ The only way to determine the MLEs is to maximize the log likelihood \eqref{subl
 
 Recall that the saturated model canonical parameter vector $\theta$ is *linked* to the saturated model mean value parameter vector through the change-of-parameter mappings $g(\theta)$. 
 
+
+\vspace{12pt}
 We can reparameterize $\theta = M\beta$ and write
 $$
  \mu = \E_\theta(Y) = g(M\beta) 
@@ -213,42 +218,239 @@ $$
 
 Therefore, a linear function of the canonical submodel parameter vector is linked to the mean of the exponential family through the inverse change-of-parameter mapping $g^{-1}$. 
 
+\vspace{12pt}
 This is the basis of exponential family generalized linear models with link function $g^{-1}$. 
 
+\vspace{12pt}
 Note that most treatments of GLMs will present $g^{-1}$ as the link function. Instead we motivated a change of parameters mapping from canonical to mean value parameters. 
 
 
 
 
+## Example: logistic regression
+
+Logistic regression is a different form of regression with binary outcomes.
+
+\vspace{12pt}
+Data is observed in independent pairs $(y_i,x_i')$, $i = 1$,$\ldots$,$n$ where the covariates are assumed to be known. 
+
+\vspace{12pt}
+The idea is the probability of success changes with covariates in the following manner
+$$
+  p_i = P(Y_i|x_i) = f(x_i'\beta)
+$$
+where $f:\R\to (0,1)$ is continuous and monotone.
+
+\vspace{12pt}
+We will study linear regression using $f = g$. Other choices of $f$ will be considered later.
 
 
 
+##
+Let $M$ have rows $x_i'$, $i = 1$, $\ldots$, $n$. 
+
+Then $\theta_i = x_i'\beta$,
+$$
+  g(x_i'\beta) = \left(\frac{\exp(x_i'\beta)}{ 1 + \exp(x_i'\beta)}\right) = p_i,
+$$
+and
+$$
+  g^{-1}(p_i) = \log\left(\frac{p_i}{1 - p_i}\right) =  x_i'\beta. 
+$$
 
 
-<!-- ## Example: logistic regression -->
-
-<!-- Let $M$ have rows $x_i'$, $i = 1$, $\ldots$, $n$. Then $\theta_i = x_i'\beta$ and -->
-
-<!-- $$ -->
-<!--   x_i'\beta = \log\left(\frac{p_i}{1 - p_i}\right) \qquad \text{and} \qquad p_i = \left(\frac{\exp(x_i'\beta)}{ 1 + \exp(x_i'\beta)}\right), -->
-<!-- $$ -->
-<!-- where -->
-<!-- \begin{align*} -->
-<!--   &\sum_{i=1}^n\left[y_i\log(p_i) - (1 - y_i)\log(p_i) \right] -->
-<!--    = \sum_{i=1}^n\left[y_ix_i'\beta - \log(1 + \exp(x_i'\beta))\right] \\ -->
-<!--     &= \sum_{i=1}^n\left[\langle y_i, x_i'\beta \rangle - \log(1 + \exp(x_i'\beta)) \right] \\ -->
-<!--     &= \langle y, \theta \rangle - \sum_{i=1}^n \log(1 + \exp(\theta_i)) \\ -->
-<!--     &= \langle y, \theta \rangle - c(\theta). \\ -->
-<!-- \end{align*} -->
+## 
+We can write the log likelihood in canonical form in the saturated model parameterization starting from the log likelihood of independent Bernoulli trials:
+\begin{align*}
+  &\sum_{i=1}^n\left[y_i\log(p_i) - (1 - y_i)\log(1 - p_i) \right] 
+  %= \sum_{i=1}^n\left[y_ix_i'\beta - \log(1 + \exp(x_i'\beta))\right] \\
+  %  &= \sum_{i=1}^n\left[\langle y_i, x_i'\beta \rangle - \log(1 + \exp(x_i'\beta)) \right] \\
+  %  &= \langle y, \theta \rangle - \sum_{i=1}^n \log(1 + \exp(\theta_i)) \\
+  = \langle y, \theta \rangle - c(\theta). 
+\end{align*}
 
 
-<!-- ##  -->
-<!-- Alternatively,  -->
-<!-- \begin{align*} -->
-<!--   &\sum_{i=1}^n\left[\langle y_i, x_i'\beta \rangle - \log(1 + \exp(x_i'\beta)) \right] \\ -->
-<!--   &= \langle \sum_{i=1}^n y_i x_i, \beta \rangle - \sum_{i=1}^n\log(1 + \exp(x_i'\beta)) \\ -->
-<!--   &= \langle M'y, \beta \rangle - c_\beta(\beta)   -->
-<!-- \end{align*} -->
+##
+Alternatively, we can write the log likelihood in canonical form in the submodel parameterization starting from the log likelihood of independent Bernoulli trials:
+\begin{align*}
+  &\sum_{i=1}^n\left[y_i\log(p_i) - (1 - y_i)\log(p_i) \right] 
+  %&\sum_{i=1}^n\left[\langle y_i, x_i'\beta \rangle - \log(1 + \exp(x_i'\beta)) \right] \\
+  %&= \langle \sum_{i=1}^n y_i x_i, \beta \rangle - \sum_{i=1}^n\log(1 + \exp(x_i'\beta)) \\
+  = \langle M'y, \beta \rangle - c_\beta(\beta)
+\end{align*}
+
+
+## Difference in symmantics
+
+$$
+  \nabla_\beta c(\theta) = \nabla_\beta c(M\beta) = M^T\left[\nabla_\theta c(\theta)|_{\theta = M\beta}\right]
+$$
+vs 
+\begin{align*}
+   \nabla_\beta c_\beta(\beta) = %\nabla_\beta \left[\sum_{i=1}^n\log(1 + \exp(x_i'\beta))\right] \\
+     %&= \sum_{i=1}^n x_i \left[\frac{\exp(x_i'\beta)}{1 + \exp(x_i'\beta)}\right] \\ 
+     %&= \sum_{i=1}^n x_i\left[\nabla_{\theta_i} c(\theta_i)|_{\theta_i = x_i'\beta}\right] \\ 
+     %&= 
+     M^T\left[\nabla_\theta c(\theta)|_{\theta = M\beta}\right].
+\end{align*}
+
+
+## Inference
+
+We have a regular full exponential family submodel with log likelihood written in canonical form
+$$
+	l(\beta) = \langle M^Ty,\beta \rangle - c(M\beta)
+$$
+
+
+From here, we have that the asymptotic distribution of the MLE $\hat\beta$ takes the form
+$$
+  \sqrt{n}\left(\hat\beta - \beta\right) \overset{d}{\to} N(0, \Sigma^{-1})
+$$
+where $\Sigma = \E\left(-\nabla_\beta^2 l(\beta)\right)$ is the Fisher information matrix corresponding to the canonical linear submodel.
+
+
+
+## Wald inference for $\beta$
+
+Let $\widehat\Sigma$ be estimated $\Sigma$ using the MLE $\hat\beta$ in place of $\beta$. In particular, the $j$th element $\hat\beta_j$ of $\hat\beta$ is asymptotically normal with asymptotic variance
+$$
+  \widehat{\Var}(\hat\beta_j) = jth \; \text{diagonal element of} \; \widehat\Sigma.
+$$
+
+\vspace*{12pt}
+The Wald $Z$ statistic for testing $H_o:\beta_j = \beta_{jo}$ is 
+$$
+  z_W = \frac{\hat\beta_j - \beta_{jo}}{\text{se}(\hat\beta_j)} \quad \overset{H_o}{\sim} \quad N(0,1)
+$$
+where se$(\hat\beta_j) = \sqrt{\widehat{\Var}(\hat\beta_j)}$. 
+
+
+##
+We can construct $(1-\alpha)\times 100\%$ Wald based confidence intervals of the form
+$$
+  \hat\beta_j \pm z_{\alpha/2}\text{se}(\hat\beta_j)
+$$
+for some error tolerance $0 < \alpha < 1$.
+
+
+
+## Inference for mean value parameters
+
+One could consider a function $f:\beta\to\mu$ and then estimate the variance of $\hat{\mu}$ via the Delta method. One could then use Wald inference. 
+
+\vspace{12pt}
+Alternatively, we could use the change of parameters map and plug-in:
+$$
+  \left[g(\hat\beta - z_{\alpha/2}\text{se}(\hat\beta), g(\hat\beta + z_{\alpha/2}\text{se}(\hat\beta) \right]
+$$
+
+\vspace{12pt}
+- The former has the advantage that it is derived from principles. 
+- The latter has the advantage that it will always return valid values for mean value parameters.
+
+
+
+## Deviance, goodness of fit, and likelihood inference 
+
+To motivate the deviance of a statistical model we will rewrite the log likelihood as $l(\mu;y)$.
+
+The unrestricted MLE of $\mu$ is $y$. Now consider a canonical submodel (GLM) of the form $\theta = M\beta$. 
+
+Let $\hat\mu$ be the MLE of $\mu$ restricted to an identifiable canonical submodel ($\hat{\mu} = \nabla c(\hat\theta)$ where $\hat\theta = M\hat\beta$). It follows that
+$$
+  l(y;y) \geq l(\hat\mu; y).
+$$
+
+The \emph{deviance} of the GLM is
+$$
+  D(y;\hat\mu) = -2\left(l(\hat\mu;y) - l(y;y)\right).
+$$
+
+## 
+The deviance statistic has approximate distribution
+$$
+  D(y;\hat\mu) \; \overset{H_o}{\sim} \; \chi^2_{\text{df}}
+$$
+where $H_o$ is that the canonical submodel is correct and the alternative test is that the canonical submodel is incorrect but the saturated model is correct where
+
+- df = $n - p$
+- $n$ is the sample size 
+- $p$ is the number of parameters in the canonical submodel. 
+
+
+
+##
+We reject correctness of the canonical submodel when
+$$
+  D(y;\hat\mu) \; > \: \chi^2_{\text{df}}(\alpha).
+$$
+(Note that the $\chi^2$ approximation can be poor.)
+
+
+\vspace{12pt}
+Wait, isn't this backwards?
+
+
+## A brief look at sufficiency 
+
+\begin{lem}
+The canonical statistic vector of an exponential family is a sufficient statistic.
+\end{lem}
+
+\vspace{12pt}
+In other words, if $\theta = M\beta$ yields
+$$
+  D(y;\hat\mu) \; < \: \chi^2_{\text{df}}(\alpha),
+$$
+then we have sufficient dimension reduction from $n$ to $p$.
+
+
+## Deviance testing for nested submodels 
+
+Let $\mathcal{M}_0$ and $\mathcal{M}_1$ both be canonical submodels. 
+
+\vspace{12pt}
+We say that $\mathcal{M}_0$ is \emph{nested} within $\mathcal{M}_1$  when every distribution in $\mathcal{M}_0$ is also in $\mathcal{M}_1$ but not vice-versa. 
+
+\vspace{12pt}
+That is, $\mu$ is more restricted under $\mathcal{M}_0$ than under $\mathcal{M}_1$. Another way to look at it is that 
+$$
+  M_1 = \left[M_0, A \right],
+$$
+where 
+
+- $M_0$ is the model matrix for model $\mathcal{M}_0$
+- $M_1$ is the model matrix for model $\mathcal{M}_1$
+- $A$ represents additional covariates collected for all individuals
+
+
+##
+Let 
+
+ - $\hat\mu_0$ be the MLE of $\mu$ under $\mathcal{M}_0$
+ - $\hat\mu_1$ be the MLE of $\mu$ under $\mathcal{M}_1$. 
+
+\vspace{12pt} 
+We can use this framework for testing
+$$
+  H_0:\mathcal{M}_0 \; \text{true} \qquad H_a:\mathcal{M}_1 \; \text{true, but not} \; \mathcal{M}_0
+$$
+using the likelihood ratio $\chi^2$ statistic given by 
+\begin{align*}
+ -2\left[l(\hat\mu_0;y) - l(\hat\mu_1;y)\right] %&= -2\left[l(\hat\mu_0;y) - l(y;y)\right] 
+   %- \left\{-2\left[l(\hat\mu_1;y) - l(y;y)\right]\right\} \\
+   %&= D(y;\hat\mu_0) - D(y;\hat\mu_1) \\ 
+   &\approx \chi^2_{\text{df}},	
+\end{align*}
+where 
+
+ - df = $p_1 - p_0$
+ - $p_1$ is the number of parameters in $\mathcal{M}_1$ 
+ - $p_0$ is the number of parameters in $\mathcal{M}_0$. 
+ 
+(Note that the $\chi^2$ approximation is often adequate here even it isn't adequate for the saturated model provided that $\mathcal{M}_1$ is not too close to saturated.)
+
 
 
 

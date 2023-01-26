@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  25 JAN 2023 21:20
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  26 JAN 2023 09:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1167,7 +1167,7 @@ LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <6> not available
 <transformations.png, id=87, 219.82124pt x 173.64874pt>
 File: transformations.png Graphic file (type png)
 <use transformations.png>
-Package pdftex.def Info: transformations.png  used on input line 293.
+Package pdftex.def Info: transformations.png  used on input line 296.
 (pdftex.def)             Requested size: 219.8274pt x 173.65361pt.
 [11
 
@@ -1181,6 +1181,54 @@ Package pdftex.def Info: transformations.png  used on input line 293.
 
 ] [16
 
+] [17
+
+] [18
+
+] [19
+
+] [20
+
+]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <14.4> on input line 454.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 454.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 454.
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <14.4> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 454.
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 454.
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <7> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 454.
+LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <14.4> not available
+(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 454.
+
+LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <10> not available
+(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 454.
+
+LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <7> not available
+(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 454.
+
+[21
+
+] [22
+
+] [23
+
+] [24
+
+] [25
+
+] [26
+
+] [27
+
+] [28
+
+] [29
+
 ]
 \tf@nav=\write5
 \openout5 = `week2_p2.nav'.
@@ -1193,34 +1241,35 @@ Package pdftex.def Info: transformations.png  used on input line 293.
 
 (./week2_p2.aux) ) 
 Here is how much of TeX's memory you used:
- 28974 strings out of 478268
- 584267 string characters out of 5846347
- 882123 words of memory out of 5000000
- 46452 multiletter control sequences out of 15000+600000
- 530141 words of font info for 107 fonts, out of 8000000 for 9000
+ 29215 strings out of 478268
+ 587888 string characters out of 5846347
+ 880123 words of memory out of 5000000
+ 46575 multiletter control sequences out of 15000+600000
+ 581567 words of font info for 176 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 128i,16n,122p,1005b,408s stack positions out of 10000i,1000n,20000p,200000b,200000s
-{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-rm.
-enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/
-local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/
-2022/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2022/texmf
+ 128i,16n,122p,1005b,459s stack positions out of 10000i,1000n,20000p,200000b,200000s
+{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mat
+hit.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/
+local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/local/texl
+ive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/2022/texmf
 -dist/fonts/enc/dvips/lm/lm-mathsy.enc}</usr/local/texlive/2022/texmf-dist/font
 s/type1/public/lm/lmex10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/pu
 blic/lm/lmmi10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lm
-mi8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss10.pfb></
-usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss12.pfb></usr/local/
-texlive/2022/texmf-dist/fonts/type1/public/lm/lmss8.pfb></usr/local/texlive/202
-2/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></usr/local/texlive/2022/texmf-
-dist/fonts/type1/public/lm/lmsso10.pfb></usr/local/texlive/2022/texmf-dist/font
-s/type1/public/lm/lmsso8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/pu
-blic/lm/lmsy10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lm
-sy8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbols
-/msam10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/sym
-bols/msbm10.pfb>
-Output written on week2_p2.pdf (16 pages, 189878 bytes).
+mi12.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></
+usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss10.pfb></usr/local/
+texlive/2022/texmf-dist/fonts/type1/public/lm/lmss12.pfb></usr/local/texlive/20
+22/texmf-dist/fonts/type1/public/lm/lmss8.pfb></usr/local/texlive/2022/texmf-di
+st/fonts/type1/public/lm/lmssbx10.pfb></usr/local/texlive/2022/texmf-dist/fonts
+/type1/public/lm/lmsso10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/pu
+blic/lm/lmsso8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lm
+sy10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></
+usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pf
+b></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm1
+0.pfb>
+Output written on week2_p2.pdf (29 pages, 215290 bytes).
 PDF statistics:
- 209 PDF objects out of 1000 (max. 8388607)
- 153 compressed objects within 2 object streams
- 49 named destinations out of 1000 (max. 500000)
- 36912 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 302 PDF objects out of 1000 (max. 8388607)
+ 230 compressed objects within 3 object streams
+ 88 named destinations out of 1000 (max. 500000)
+ 67632 words of extra memory for PDF output out of 74296 (max. 10000000)
 
