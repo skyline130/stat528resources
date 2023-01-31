@@ -1,0 +1,408 @@
+---
+title: "STAT 528 - Advanced Regression Analysis II"
+author: "Exponential family theory (part 4)"
+institute: |
+  | Daniel J. Eck
+  | Department of Statistics  
+  | University of Illinois
+date: ""
+output: 
+    beamer_presentation:
+        keep_tex: true
+        fig_width: 11
+        fig_height: 7.5
+        includes:
+bibliography: ../note_sources.bib
+urlcolor: blue
+header-includes:
+- \usepackage{graphicx}
+- \usepackage{bm}
+- \usepackage{array}
+- \usepackage{amsmath}
+- \usepackage{amsthm}
+- \usepackage{amsfonts}
+- \usepackage{amssymb}
+- \usepackage{tikz-cd}
+- \usepackage{url}
+- \definecolor{foreground}{RGB}{255,255,255}
+- \definecolor{background}{RGB}{34,28,54}
+- \definecolor{title}{RGB}{105,165,255}
+- \definecolor{gray}{RGB}{175,175,175}
+- \definecolor{lightgray}{RGB}{225,225,225}
+- \definecolor{subtitle}{RGB}{232,234,255}
+- \definecolor{hilight}{RGB}{112,224,255}
+- \definecolor{vhilight}{RGB}{255,111,207}
+- \setbeamertemplate{footline}[page number]
+---
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Proj}{\textbf{P}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\rootn}{\sqrt{n}}
+\newcommand{\p}{\mathbf{p}}
+\newcommand{\E}{\text{E}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+
+\newtheorem{cor}{Corollary}
+\newtheorem{lem}{Lemma}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{prop}{Proposition}
+
+
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy.opts=list(width.cutoff=40))
+library(ggplot2)
+
+mycols     = c("chartreuse3", "orangered", "deepskyblue3", "darkorchid1", "yellow")
+dark_theme = theme(plot.background   = element_blank(), 
+                   panel.background  = element_blank(),
+                   #legend.background = element_blank(), legend.key = element_blank(),
+                   axis.title.x      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(10,0,0,0)),
+                   axis.title.y      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(0,20,0,0)),
+                   axis.text         = element_text(size=18, color = "grey80"), 
+                   text              = element_text(size=20),
+                   axis.title        = element_text(size = 26),
+                   legend.title      = element_text(size = 26, colour = "grey80"),
+                   panel.border      = element_blank(),
+                   panel.grid.major  = element_line(colour = "grey50"), 
+                   panel.grid.minor  = element_line(colour = "grey30"))
+```
+
+
+## Last time 
+
+- generalized linear models (GLMs)
+- different parameterizations
+- motivation of logistic regression
+- inference for model parameters 
+- comparing models
+
+
+
+## Learning Objectives Today
+
+- Optimization 
+- Sufficiency 
+- Maximum Entropy
+- Overdispersion
+- Wrap-up
+
+
+## Background 
+
+We start with a regular full exponential family with log likelihood 
+$$
+  \langle y,\theta \rangle - c(\theta)
+$$
+where $\theta,y \in \R^n$. We have a canonical linear submodel where 
+
+- $\theta = M\beta$
+- $\beta \in \R^p$
+- $p < n$ 
+
+and log likelihood 
+$$
+  \langle M'y, \beta \rangle - c_\beta(\beta).
+$$
+
+
+## 
+ 
+A depiction of the transformations necessary to change between parameterizations. 
+
+![](transformations.png)
+
+
+
+## 
+
+The only way to determine the MLEs is to maximize the log likelihood 
+$$
+  \langle M'y, \beta \rangle - c_\beta(\beta).
+$$
+to obtain $\hat\beta$ and then 
+
+- $\hat\theta = M\hat\beta$ 
+- $\hat\mu = \nabla c(\hat\theta)$ 
+- $\hat\tau = M^T\hat\mu$.
+
+
+
+## 
+
+Our goal is to compute
+$$
+  \text{argmax}_\beta \left( \langle M'y, \beta \rangle - c_\beta(\beta)  \right)
+$$
+We will discuss a few ways of computing the above: 
+
+- Newton-Raphson 
+- Fisher scoring
+- Iteratively reweighted least squares (IRLS)
+
+
+
+## Newton-Raphson 
+
+A classic algorithm for handling iterative solutions of nonlinear systems of equations is the *Newton-Raphson algorithm*: 
+
+- Start with an initial guess $\beta_0$ for the solution. 
+- Obtain a second guess by approximating the function to be maximized in a neighborhood of the initial guess by a second-degree polynomial and then finding the location of the polynomial's maximum value. 
+- Repeat until the discrepancy in successive evaluations of the objective function evaluate along the sequence of iterates is smaller than some convergence threshold. 
+
+The sequence of iterates that this algorithm generates converge to a solution $\hat\beta$ when the optimization function is suitable (full rank properly conditioned Fisher Information matrix) and/or the initial guess is good.
+
+
+## 
+
+Let 
+
+- $U(\beta) = \nabla l(\beta)$ be the score function 
+- $H(\beta) = \nabla^2 l(\beta)$ denote the Hessian matrix. 
+
+
+\vspace{12pt}
+At iteration $k$, consider the following second order Taylor series approximation of $l(\beta)$,
+\begin{equation} \label{NR}
+  l(\beta) \approx l(\beta_k) + U(\beta_k)^T(\beta - \beta_k) 
+    + \frac{(\beta-\beta_k)^TH(\beta_k)(\beta - \beta_k)}{2}.
+\end{equation}
+Now solving
+$$
+  U(\beta) \approx U(\beta_k) + H(\beta_k)(\beta - \beta_k) = 0
+$$
+for $\beta$ yields the next guess. That guess is
+\begin{equation} \label{NRupdates}
+	\beta_{k+1} = \beta_k - H(\beta_k)^{-1}U(\beta_k).
+\end{equation}
+
+
+##
+
+This algorithm is locally fast, exhibits quadratic convergence, provided that it converges. 
+
+\vspace{12pt}
+Convergence is likely in identifiable models where $H(\beta_{0})$ is positive definite. 
+
+\vspace{12pt}
+However, the Newton-Raphson method can be quite sensitive to the choice of starting values $\beta_{0}$. 
+
+\vspace{12pt}
+For many identifiable GLMs with full rank model matrices the Hessian is negative definite and the log likelihood is a strictly concave function. The maximum likelihood estimators of model parameters exist and are unique under quite general conditions.  
+
+<!-- \citep{wedderburn1976existence}. -->
+
+
+## Fisher scoring algorithm
+
+The *Fisher scoring algorithm* is an alternative optimization method. 
+
+\vspace{12pt}
+It resembles the Newton-Raphson algorithm, the distinction being with the Hessian matrix used in the Newton updates. 
+
+\vspace{12pt}
+Fisher scoring uses the expected Fisher information matrix instead of the Hessian which is the observed Fisher information matrix. 
+
+
+##
+
+We will let $\Hcal$ be the expected information matrix so that $\Hcal(\beta) = -\E\left\{\nabla^2 l(\beta)\right\}$. 
+
+\vspace{12pt}
+The Newton update step for the Fisher scoring method is 
+$$
+  \beta_{k+1} = \beta_k + \left\{\Hcal(\beta_k)\right\}^{-1} U(\beta_k).
+$$
+
+
+
+
+## Notes 
+
+The chain rule allows us to write $\Hcal(\beta) = M^TW(\beta)M$ where 
+$$
+  W(\beta) = \left\{\nabla_\theta^2 c(\theta^*)\right\}|_{\theta^* = M\beta}.
+$$
+
+
+The estimated asymptotic covariance matrix $\Hcal^{-1}$ of $\hat{\beta}$ occurs as a by-product of this algorithm as $\left\{\Hcal(\beta_k)\right\}^{-1}$ 
+
+<!-- where $k$ is an iteration number at which convergence is deemed to have occurred.  -->
+
+
+
+## 
+
+For GLMs with canonical link (the entirety of this class), we have that the observed and expected information are the same. 
+
+\vspace{12pt}
+For both Fisher scoring and Newton-Raphson, the score function $U(\beta)$ can be written as
+$$
+  U(\beta) = \nabla l(\beta) = M^T\left\{Y - \nabla_\theta c(\theta^*)|_{\theta^* = M\beta}\right\}. 
+$$
+
+
+\vspace{12pt}
+For noncanonical link models (which we see later), Fisher scoring has the advantages that it produces the asymptotic covariance matrix as a by-product
+
+
+
+## Iteratively reweighted least squares (IRLS)
+
+Recall the linear regression set up where
+$$
+  Z = M\beta + \varepsilon
+$$
+where $V$ is the covariance matrix of $\epsilon$.
+
+\vspace{12pt}
+The *weighted least-squares (WLS)* estimator of $\beta$ is 
+$$
+  \hat\beta_{\text{WLS}} = \left(M^TV^{-1}M\right)^{-1}M^TV^{-1}Z.
+$$
+
+
+## 
+
+We can write 
+$$
+  \Hcal(\beta) = M'W(\beta)M
+$$
+and the score function as
+$$
+  U(\beta) = M' W(\beta) W^{-1}(\beta)(y - \mu(\beta)). 
+$$
+
+\vspace{12pt}
+The "response" $Z(\beta)$ can be written as 
+$$
+  Z(\beta) = M'\beta + W^{-1}(\beta)(y - \mu(\beta))
+$$
+where $\mu(\beta)$ is the mean value parameter defined as a function of $\beta$.
+
+
+
+## 
+
+The Newton update step of the Fisher scoring method can be written as 
+\begin{equation} \label{eq:FS}
+  \Hcal(\beta_k)\beta_{k+1} = \Hcal(\beta_k)\beta_k + U(\beta_k).
+\end{equation}
+
+
+The right hand side of \eqref{eq:FS} can be rewritten as 
+$$
+  \Hcal(\beta_k)\beta_k + U(\beta_k) = M^T W(\beta_k) z(\beta_k).
+$$
+Thus, 
+$$
+  (M^TW(\beta_k)M)\beta_{k+1} = M^T W(\beta_k) z(\beta_k)
+$$
+
+\vspace{12pt}
+The above equation has a solution of the form
+$$
+  \beta_{k+1} = (M^TW(\beta_k)M)^{-1}M^T W(\beta_k) z(\beta_k), 
+$$
+
+
+
+## Sufficiency 
+
+A (possibly vector-valued) statistic is *sufficient* if the conditional distribution of the full data given this statistic does not depend on the parameter. 
+
+\vspace{12pt}
+The interpretation is that the full data provides no information about the parameter that is not already provided by the sufficient statistic. 
+
+\vspace{12pt}
+The principle of sufficiency follows: *all inference should depend on the data only through sufficient statistics.*
+
+
+
+## 
+
+The Fisher-Neyman factorization criterion says that a statistic is sufficient if and only if the likelihood depends on the whole data only through that statistic.
+
+\vspace{12pt}
+\begin{lem}
+The canonical statistic vector of an exponential family is a sufficient statistic.
+\end{lem}
+
+
+
+##
+
+Sufficient dimension reduction is a whole field of study. However, the *OG* "sufficient dimension reduction" theory was about exponential families. 
+
+\vspace{12pt}
+The so-called Pitman-Koopman-Darmois theorem (proved independently by three different persons in 1935 and 1936) says that 
+
+\vspace{12pt}
+> When we have IID sampling from a statistical model, all distributions in the model have the same support which does not depend on the parameter, and all distributions in the model are continuous, then there is a sufficient statistic whose dimension does not depend on the parameter if and only if the statistical model is an exponential family of distributions.	
+
+
+\vspace{12pt}
+[Why is this theorem is written this way? Your humble instructor is still working on his writing.](http://users.stat.umn.edu/~geyer/math.pdf)
+
+
+
+## Notes 
+
+This theorem was responsible for the interest in exponential families early in the twentieth century.
+
+\vspace{12pt}
+The condition of the Pitman-Koopman-Darmois theorem that the support does not depend on the parameter is essential.
+
+\vspace{12pt}
+The condition that the statistical model has to be continuous is ugly. Later theorems covered discrete distributions. 
+
+\vspace{12pt}
+Sufficient dimension reduction for canonical linear submodels remains important.
+
+
+
+## Maximum entropy 
+
+Edwin Jaynes, a physicist, introduced the *maximum entropy formalism* that describes exponential families in terms of entropy.
+
+\vspace{12pt}
+Suppose we have a big exponential family (a *saturated model*) and are interested in submodels. The maximum entropy argument says the canonical linear submodels are the submodels that, *subject to constraining the means of their submodel canonical statistics, leave all other aspects of the data as random as possible*, where "as random as possible" means maximum entropy. 
+
+\vspace{12pt}
+When we specify $\theta = M\beta$ we are, in effect, modeling only the the distribution of the submodel canonical statistic $t(y) = M' y$, leaving all other aspects of the distribution of $y$ as random as possible given the control over the distribution of $t(y)$.
+
+
+## 
+
+The relative entropy of a distribution with PMF $f$ to a distribution with PMF $m$ is defined to be 
+$$
+  -\sum_{x\in S} f(x)\log\left(\frac{f(x)}{m(x)}\right),
+$$
+where $S$ is the support of the distribution with PMF $m$.
+
+
+\vspace{12pt}
+Suppose we know the value of some expectations
+$$
+  \mu_j = \E\left(t_j(X)\right) = \sum_{x\in S} t_j(x)f(x), \qquad j \in J.
+$$
+
+
+##
+Suppose we want $f$ to maximize entropy subject to these constraints plus the constraints that $f$ is nonnegative and sums to one:
+\begin{align*}
+	\text{maximize} \;& -\sum_{x \in S} f(x)\log\left(\frac{f(x)}{m(x)}\right) \\
+	\text{subject to} \;& \sum_{x\in S} t_j(x)f(x) = \mu_j, \qquad j \in J \\
+	&\sum_{x \in S} f(x) = 1 \\
+	&f(x) \geq 0, \qquad x \in S.
+\end{align*}
+
+\vspace{12pt}
+The maximizer of $f$ is an exponential family!
+

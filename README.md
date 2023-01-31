@@ -7,7 +7,7 @@ See the Syllabus for more details. See the notes directory for course notes.
 # News
 
  - HW 1 and 2 posted
- - Week 2 lectures will cover the middle part of the exponential family notes
+ - We are wrapping up our discussion on exponential family theory
 
 
 ## Good Habits
