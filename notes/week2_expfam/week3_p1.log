@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  31 JAN 2023 08:31
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  31 JAN 2023 12:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1157,7 +1157,7 @@ LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <6> not available
 <transformations.png, id=54, 219.82124pt x 173.64874pt>
 File: transformations.png Graphic file (type png)
 <use transformations.png>
-Package pdftex.def Info: transformations.png  used on input line 218.
+Package pdftex.def Info: transformations.png  used on input line 216.
 (pdftex.def)             Requested size: 219.8274pt x 173.65361pt.
 [6
 
@@ -1235,7 +1235,7 @@ ic/lm/lmsy6.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy8
 .pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbols/ms
 am10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbol
 s/msbm10.pfb>
-Output written on week3_p1.pdf (25 pages, 190887 bytes).
+Output written on week3_p1.pdf (25 pages, 190878 bytes).
 PDF statistics:
  274 PDF objects out of 1000 (max. 8388607)
  208 compressed objects within 3 object streams
