@@ -6,8 +6,8 @@ See the Syllabus for more details. See the notes directory for course notes.
 
 # News
 
- - HW 1 and 2 posted
- - We are wrapping up our discussion on exponential family theory
+ - We will begin discussion on binary and count regression
+ - New file naming convention in the notes directory
 
 
 ## Good Habits
