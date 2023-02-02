@@ -572,6 +572,7 @@ and then obtain $\hat{\beta}$ by maximizing the above. From here:
 
 \vspace{12pt}
 For example we can compute $\hat\theta$ using the predict function or by hand.
+\vspace{12pt}
 \tiny
 ```{r}
 theta <- m1$x %*% coef(m1)
