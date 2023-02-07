@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  7 FEB 2023 09:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  7 FEB 2023 12:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1197,7 +1197,7 @@ LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/ts1lmtt.fd
 File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ))
-Overfull \vbox (4.15747pt too high) detected at line 351
+Overfull \vbox (4.15747pt too high) detected at line 360
  []
 
 [7
@@ -1950,7 +1950,7 @@ nput line 14.
 \openout4 = `week4_p1.vrb'.
 
 (./week4_p1.vrb)
-Overfull \vbox (264.58575pt too high) detected at line 672
+Overfull \vbox (264.58575pt too high) detected at line 681
  []
 
 [21
@@ -1963,21 +1963,13 @@ Overfull \vbox (264.58575pt too high) detected at line 672
 
 ] [25
 
-]
-Overfull \hbox (3.07797pt too wide) detected at line 770
-[][] \OT1/lmss/m/n/10.95 = [][] [] \T1/lmss/m/sl/10.95 w[]A[]Y[] \OMS/lmsy/m/n/
-10.95 ^^@ [][] [] \T1/lmss/m/sl/10.95 w[]\OT1/lmss/m/n/10.95 (\T1/lmss/m/n/10.9
-5 1 \OMS/lmsy/m/n/10.95 ^^@ \T1/lmss/m/sl/10.95 A[]\OT1/lmss/m/n/10.95 )\T1/lms
-s/m/sl/10.95 Y[]\OML/lmm/m/it/10.95 :
- []
-
-[26
+] [26
 
 ]
 \openout4 = `week4_p1.vrb'.
 
 (./week4_p1.vrb)
-Overfull \vbox (4.56158pt too high) detected at line 823
+Overfull \vbox (4.56158pt too high) detected at line 828
  []
 
 [27
@@ -2373,7 +2365,7 @@ Package pdftex.def Info: week4_p1_files/figure-beamer/heatmap_prop_model-1.pdf
 Here is how much of TeX's memory you used:
  29714 strings out of 478268
  596160 string characters out of 5846347
- 1462246 words of memory out of 5000000
+ 1462106 words of memory out of 5000000
  47076 multiletter control sequences out of 15000+600000
  533118 words of font info for 123 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -2399,7 +2391,7 @@ xlive/2022/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2022
 /fonts/type1/public/lm/lmtti10.pfb></usr/local/texlive/2022/texmf-dist/fonts/ty
 pe1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2022/texmf-dist/font
 s/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on week4_p1.pdf (32 pages, 380408 bytes).
+Output written on week4_p1.pdf (32 pages, 379730 bytes).
 PDF statistics:
  376 PDF objects out of 1000 (max. 8388607)
  287 compressed objects within 3 object streams

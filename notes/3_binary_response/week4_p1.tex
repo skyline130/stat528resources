@@ -210,6 +210,15 @@ University of Illinois}
 
 \begin{frame}{Learning Objectives Today}
 \protect\hypertarget{learning-objectives-today}{}
+\begin{itemize}
+\tightlist
+\item
+  basic diagnostics
+\item
+  probit regression and threshold modeling
+\item
+  basic causal inference
+\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Example: CCSO data}
@@ -760,11 +769,7 @@ model.
 \begin{frame}{}
 \protect\hypertarget{section-13}{}
 We consider an alternative (the classical IPW) stable estimator of the
-ATE which is of the form \[
- \widehat{\text{ATE}}_{\text{alt}} = 
-   \left(\sum_{i=1}^n\frac{A_i}{\hat{p}_i}\right)^{-1}\sum_{i=1}^nw_iA_iY_i - 
-   \left(\sum_{i=1}^n\frac{1-A_i}{1-\hat{p}_i}\right)^{-1}\sum_{i=1}^nw_i(1-A_i)Y_i.
-\] where \[
+ATE with weights of the form \[
   w_i = \frac{\frac{A_i}{\hat{p}_i}}{\sum_{i=j}^n\frac{A_j}{\hat{p}_j}} + \frac{\frac{1-A_i}{1 -\hat{p}_i}}{\sum_{j=1}^n\frac{1-A_j}{1-\hat{p}_j}}.
 \]
 \end{frame}

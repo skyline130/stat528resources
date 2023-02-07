@@ -88,6 +88,9 @@ dark_theme = theme(plot.background   = element_blank(),
 
 ## Learning Objectives Today
 
+- basic diagnostics
+- probit regression and threshold modeling
+- basic causal inference
 
 
 
