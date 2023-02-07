@@ -6,6 +6,7 @@ See the Syllabus for more details. See the notes directory for course notes.
 
 # News
 
+ - Homework 3 is now posted
  - We will begin discussion on binary and count regression
  - New file naming convention in the notes directory
 

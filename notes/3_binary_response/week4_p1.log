@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  7 FEB 2023 12:29
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  7 FEB 2023 13:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1946,16 +1946,16 @@ nput line 14.
 
 ] [20
 
+] [21
+
 ]
 \openout4 = `week4_p1.vrb'.
 
 (./week4_p1.vrb)
-Overfull \vbox (264.58575pt too high) detected at line 681
+Overfull \vbox (3.75748pt too high) detected at line 684
  []
 
-[21
-
-] [22
+[22
 
 ] [23
 
@@ -1965,14 +1965,16 @@ Overfull \vbox (264.58575pt too high) detected at line 681
 
 ] [26
 
+] [27
+
 ]
 \openout4 = `week4_p1.vrb'.
 
 (./week4_p1.vrb)
-Overfull \vbox (4.56158pt too high) detected at line 828
+Overfull \vbox (4.56158pt too high) detected at line 831
  []
 
-[27
+[28
 
 ]
 \openout4 = `week4_p1.vrb'.
@@ -2324,7 +2326,7 @@ Overfull \hbox (20286.03584pt too wide) in paragraph at lines 19--19
 ==============| 100%[] 
  []
 
-<week4_p1_files/figure-beamer/heatmap_prop_model-1.pdf, id=229, 718.685pt x 255
+<week4_p1_files/figure-beamer/heatmap_prop_model-1.pdf, id=235, 718.685pt x 255
 .95625pt>
 File: week4_p1_files/figure-beamer/heatmap_prop_model-1.pdf Graphic file (type 
 pdf)
@@ -2332,14 +2334,9 @@ pdf)
 Package pdftex.def Info: week4_p1_files/figure-beamer/heatmap_prop_model-1.pdf 
  used on input line 21.
 (pdftex.def)             Requested size: 307.29585pt x 109.44196pt.
-) [28
+) [29
 
  <./week4_p1_files/figure-beamer/heatmap_prop_model-1.pdf>]
-\openout4 = `week4_p1.vrb'.
-
-(./week4_p1.vrb) [29
-
-]
 \openout4 = `week4_p1.vrb'.
 
 (./week4_p1.vrb) [30
@@ -2349,7 +2346,12 @@ Package pdftex.def Info: week4_p1_files/figure-beamer/heatmap_prop_model-1.pdf
 
 (./week4_p1.vrb) [31
 
-] [32
+]
+\openout4 = `week4_p1.vrb'.
+
+(./week4_p1.vrb) [32
+
+] [33
 
 ]
 \tf@nav=\write6
@@ -2363,10 +2365,10 @@ Package pdftex.def Info: week4_p1_files/figure-beamer/heatmap_prop_model-1.pdf
 
 (./week4_p1.aux) ) 
 Here is how much of TeX's memory you used:
- 29714 strings out of 478268
- 596160 string characters out of 5846347
- 1462106 words of memory out of 5000000
- 47076 multiletter control sequences out of 15000+600000
+ 29719 strings out of 478268
+ 596205 string characters out of 5846347
+ 1462170 words of memory out of 5000000
+ 47078 multiletter control sequences out of 15000+600000
  533118 words of font info for 123 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  128i,11n,122p,27048b,455s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -2391,10 +2393,10 @@ xlive/2022/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2022
 /fonts/type1/public/lm/lmtti10.pfb></usr/local/texlive/2022/texmf-dist/fonts/ty
 pe1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2022/texmf-dist/font
 s/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on week4_p1.pdf (32 pages, 379730 bytes).
+Output written on week4_p1.pdf (33 pages, 379939 bytes).
 PDF statistics:
- 376 PDF objects out of 1000 (max. 8388607)
- 287 compressed objects within 3 object streams
- 95 named destinations out of 1000 (max. 500000)
+ 383 PDF objects out of 1000 (max. 8388607)
+ 293 compressed objects within 3 object streams
+ 98 named destinations out of 1000 (max. 500000)
  36922 words of extra memory for PDF output out of 42996 (max. 10000000)
 

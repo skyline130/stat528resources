@@ -345,6 +345,7 @@ $$
 **Note**: The Newton-Raphson algorithm yields the same MLE estimates but slightly different standard errors. For the information matrix inverted to obtain the asymptotic covariance matrix, Newton-Raphson uses observed information, whereas Fisher scoring uses expected information. These differ for link functions other than the canonical link.
 
 
+##
 
 \vspace{12pt}
 We return to our CCSO example and refit the logistic regression model with a probit link function.

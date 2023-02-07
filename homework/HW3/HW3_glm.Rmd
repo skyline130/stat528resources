@@ -27,20 +27,24 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-\noindent{\bf Problem 1}: Manually write your own Fisher scoring algorithm which maximizes the logistic regression log likelihood for the CCSO example in the notes. Report $\hat\beta$ and reproduce the summary table (up to convergence tolerance differences) without using the \texttt{glm} or \texttt{summary} commands. You can ignore deviance residuals.
+This homework set will cover problems concerning binary and count regression models. Point totals for specific problems are given, 10 points will be reserved for correct submission of the homework assignment.
 
 \vspace*{1cm}
 
-\noindent{\bf Problem 2}: Manually write your own Fisher scoring algorithm which maximizes the Poisson regression log likelihood for the Galapagos example in the notes. Report $\hat\beta$ and reproduce the summary table (up to convergence tolerance differences) without using the \texttt{glm} or \texttt{summary} commands. You can ignore deviance residuals.
+\noindent{\bf Problem 1} [10 points]: Manually write your own Fisher scoring algorithm which maximizes the logistic regression log likelihood for the CCSO example in the notes. Report $\hat\beta$ and reproduce the summary table (up to convergence tolerance differences) without using the \texttt{glm} or \texttt{summary} commands. You can ignore deviance residuals.
 
 \vspace*{1cm}
 
-\noindent{\bf Problem 3}: Derive the log-odds ratio of $x+ 1$ to $x$ when $Y= 1$, and observe that the log-odds ratio does not depend on $x$. Comment on this finding.
+\noindent{\bf Problem 2} [10 points]: Manually write your own Fisher scoring algorithm which maximizes the Poisson regression log likelihood for the Galapagos example in the notes. Report $\hat\beta$ and reproduce the summary table (up to convergence tolerance differences) without using the \texttt{glm} or \texttt{summary} commands. You can ignore deviance residuals.
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 3} [5 points]: Derive the log-odds ratio of $x+ 1$ to $x$ when $Y= 1$, and observe that the log-odds ratio does not depend on $x$. Comment on this finding.
 
 
 \vspace*{1cm}
 
-\noindent{\bf Problem 4}: Complete the following parts:
+\noindent{\bf Problem 4} [10 points]: Complete the following parts:
 \begin{itemize}
 \item[(a)] Explain important findings and model information from the summary table produced by a call to summary(m1) in the CCSO example in the logistic regression notes. Keep in mind that we restricted attention to "other traffic offenses" in the CCSO example, and that this data is observational.
 \item[(b)] Explain important findings and model information from the summary table produced by a call to summary(m1) in the Galapagos islands example in the count regression notes.
@@ -48,15 +52,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 \vspace*{1cm}
 
-\noindent{\bf Problem 5}: Derive expressions and compute standard errors se($\hat\mu$) in the logistic regression CCSO example without using \texttt{predict.glm}. Then construct Wald based confidence intervals for the estimated mean value parameters. Also construct confidence intervals $( g(\hat\beta - z_{\alpha/2}\text{s}e(\hat{\beta})), g(\hat\beta + z_{\alpha/2}\text{s}e(\hat{\beta})) )$. Comment on the differences between these two confidence intervals for $\hat{\mu}$.
+\noindent{\bf Problem 5} [10 points]: Derive expressions and compute standard errors se($\hat\mu$) in the logistic regression CCSO example without using \texttt{predict.glm}. Then construct Wald based confidence intervals for the estimated mean value parameters. Also construct confidence intervals $( g(\hat\beta - z_{\alpha/2}\text{s}e(\hat{\beta})), g(\hat\beta + z_{\alpha/2}\text{s}e(\hat{\beta})) )$. Comment on the differences between these two confidence intervals for $\hat{\mu}$.
  
 \vspace*{1cm}
 
-\noindent{\bf Problem 6}: Construct a nonparametric bootstrap procedure that estimates the uncertainty associated with both estimates of the average treatment effect (ATE) of online learning in the logistic regression notes. Do the conclusions change when we factor in the uncertainty obtained from the nonparametric bootstrap procedure? Explain.
+\noindent{\bf Problem 6} [10 points]: Construct a nonparametric bootstrap procedure that estimates the uncertainty associated with both estimates of the average treatment effect (ATE) of online learning in the logistic regression notes. Do the conclusions change when we factor in the uncertainty obtained from the nonparametric bootstrap procedure? Explain.
 
 \vspace*{1cm}
 
-\noindent{\bf Problem 7}: Use the \texttt{dvisits} data in the \texttt{faraway} package to answer the follow parts:
+\noindent{\bf Problem 7} [15 points]: Use the \texttt{dvisits} data in the \texttt{faraway} package to answer the follow parts:
 \begin{itemize}
 	\item[(a)] Make plots which show the relationship between the response variable,
 doctorco, and the potential predictors, age and illness.
@@ -71,6 +75,6 @@ doctorco, and the potential predictors, age and illness.
 
 \vspace*{1cm}
 
-\noindent{\bf Problem 8}: Analyze the CCSO data set with Days in Jail as the response variable. You are allowed to dichotomize the response into a binary variable. Restrict attention to other traffic offenses as done in class. Your analysis needs to consider the variables considered in class as well as repeat offenders, multiple offenses, released reason, and agency. The determination of repeat offenders and multiple offenses can be done via the jacket number variable. Report interesting significant and null findings and determine that your final model is appropriate. You are allowed to use other inferential techniques than GLM. If you do so, then you need to justify your choices.
+\noindent{\bf Problem 8} [20 points]: Analyze the CCSO data set with Days in Jail as the response variable. You are allowed to dichotomize the response into a binary variable. Restrict attention to other traffic offenses as done in class. Your analysis needs to consider the variables considered in class as well as repeat offenders, multiple offenses, released reason, and agency. The determination of repeat offenders and multiple offenses can be done via the jacket number variable. Report interesting significant and null findings and determine that your final model is appropriate. You are allowed to use other inferential techniques than GLM. If you do so, then you need to justify your choices.
 
 \vspace*{1cm}

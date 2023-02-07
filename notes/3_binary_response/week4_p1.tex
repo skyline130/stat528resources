@@ -609,7 +609,7 @@ The probit model has log likelihood \[
 \]
 \end{frame}
 
-\begin{frame}[fragile]{}
+\begin{frame}{}
 \protect\hypertarget{section-10}{}
 When the link function is not the canonical link there is no reduction
 of the data in the form of Fisher's notion of sufficieny.
@@ -633,7 +633,10 @@ matrix inverted to obtain the asymptotic covariance matrix,
 Newton-Raphson uses observed information, whereas Fisher scoring uses
 expected information. These differ for link functions other than the
 canonical link.
+\end{frame}
 
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-11}{}
 \vspace{12pt}
 
 We return to our CCSO example and refit the logistic regression model
@@ -703,7 +706,7 @@ simultaneously receive the treatment and the control.
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-11}{}
+\protect\hypertarget{section-12}{}
 When the study is randomized this difficulty is mitigated because
 randomization ensures (when \(n\) is large enough) that baseline
 covariates which may influence the response have the same distribution
@@ -747,7 +750,7 @@ in-person course with recorded lectures is the control.
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-12}{}
+\protect\hypertarget{section-13}{}
 We estimate the causal effect of online learning (or absence of
 in-person lecture) by estimating the ATE using inverse propensity score
 weighting methods. The form of this estimator of the ATE is \[
@@ -767,7 +770,7 @@ model.
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-13}{}
+\protect\hypertarget{section-14}{}
 We consider an alternative (the classical IPW) stable estimator of the
 ATE with weights of the form \[
   w_i = \frac{\frac{A_i}{\hat{p}_i}}{\sum_{i=j}^n\frac{A_j}{\hat{p}_j}} + \frac{\frac{1-A_i}{1 -\hat{p}_i}}{\sum_{j=1}^n\frac{1-A_j}{1-\hat{p}_j}}.
@@ -775,7 +778,7 @@ ATE with weights of the form \[
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-14}{}
+\protect\hypertarget{section-15}{}
 Let's load in the data and try it out.
 
 \vspace{12pt}
@@ -828,7 +831,7 @@ estimated propensity scores.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-15}{}
+\protect\hypertarget{section-16}{}
 \tiny
 
 \begin{Shaded}
@@ -860,7 +863,7 @@ estimated propensity scores.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-16}{}
+\protect\hypertarget{section-17}{}
 We now obtain the weights for the stabilized estimator and we check for
 the balance of weights in the online and in-person groups across the
 Gender and International variables
@@ -910,7 +913,7 @@ Gender and International variables
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-17}{}
+\protect\hypertarget{section-18}{}
 We now estimate the ATE corresponding to these weights.
 
 \begin{Shaded}
@@ -927,7 +930,7 @@ We now estimate the ATE corresponding to these weights.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-18}{}
+\protect\hypertarget{section-19}{}
 In the notes we also considered a
 \href{https://www.tandfonline.com/doi/abs/10.1080/01621459.1994.10476818}{double
 robust (DR) estimator} estimator which may alleviate concerns with
