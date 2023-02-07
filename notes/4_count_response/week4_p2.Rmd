@@ -1,0 +1,186 @@
+---
+title: "STAT 528 - Advanced Regression Analysis II"
+author: "Count response regression (part I)"
+institute: |
+  | Daniel J. Eck
+  | Department of Statistics  
+  | University of Illinois
+date: ""
+output: 
+    beamer_presentation:
+        keep_tex: true
+        fig_width: 11
+        fig_height: 7.5
+        includes:
+bibliography: ../note_sources.bib
+urlcolor: blue
+header-includes:
+- \usepackage{graphicx}
+- \usepackage{bm}
+- \usepackage{array}
+- \usepackage{amsmath}
+- \usepackage{amsthm}
+- \usepackage{amsfonts}
+- \usepackage{amssymb}
+- \usepackage{tikz-cd}
+- \usepackage{url}
+- \definecolor{foreground}{RGB}{255,255,255}
+- \definecolor{background}{RGB}{34,28,54}
+- \definecolor{title}{RGB}{105,165,255}
+- \definecolor{gray}{RGB}{175,175,175}
+- \definecolor{lightgray}{RGB}{225,225,225}
+- \definecolor{subtitle}{RGB}{232,234,255}
+- \definecolor{hilight}{RGB}{112,224,255}
+- \definecolor{vhilight}{RGB}{255,111,207}
+- \setbeamertemplate{footline}[page number]
+---
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Proj}{\textbf{P}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\rootn}{\sqrt{n}}
+\newcommand{\p}{\mathbf{p}}
+\newcommand{\E}{\text{E}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\mubf}{\bm{\mu}}
+\newcommand{\logit}{\text{logit}}
+
+\newtheorem{cor}{Corollary}
+\newtheorem{lem}{Lemma}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{prop}{Proposition}
+
+
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy.opts=list(width.cutoff=40))
+library(ggplot2)
+
+mycols     = c("chartreuse3", "orangered", "deepskyblue3", "darkorchid1", "yellow")
+dark_theme = theme(plot.background   = element_blank(), 
+                   panel.background  = element_blank(),
+                   #legend.background = element_blank(), legend.key = element_blank(),
+                   axis.title.x      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(10,0,0,0)),
+                   axis.title.y      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(0,20,0,0)),
+                   axis.text         = element_text(size=18, color = "grey80"), 
+                   text              = element_text(size=20),
+                   axis.title        = element_text(size = 26),
+                   legend.title      = element_text(size = 26, colour = "grey80"),
+                   panel.border      = element_blank(),
+                   panel.grid.major  = element_line(colour = "grey50"), 
+                   panel.grid.minor  = element_line(colour = "grey30"))
+```
+
+
+## Last time 
+
+- basic diagnostics for binary response models
+- probit regression and threshold modeling
+- basic causal inference
+
+
+
+## Learning Objectives Today
+
+- Poisson regression
+
+
+## Background 
+
+We suppose that we have a sample of data $(y_i,x_i)$, $i = 1,\ldots, n$ where 
+
+- $y_i$ is a scalar response variable 
+- $x_i$ is a vector of predictors. 
+
+
+Recall from the exponential family notes that the log likelihood of the exponential family is of the form
+\begin{equation} \label{expolog}
+	l(\theta) = \langle y, \theta \rangle - c(\theta),
+\end{equation}
+where 
+
+- $y \in \R^n$ is a vector statistic having components 
+- $\theta \in \R^n$ is the canonical parameter vector. 
+
+In those notes $\theta$ is unconstrained and the likelihood \eqref{expolog} corresponds to a saturated regression model, one parameter for every observation.
+
+
+## 
+
+A canonical linear submodel of an exponential family is a submodel having parameterization
+$$
+  \theta = M\beta,
+$$
+and log likelihood
+\begin{equation} \label{subloglike}
+  l(\beta) = \langle M'y, \beta \rangle - c(M\beta).
+\end{equation}
+
+In an exponential family GLM, the saturated model canonical parameter vector $\theta$ is ``linked'' to the saturated model mean value parameter vector through the change-of-parameter mappings $g(\theta)$. 
+
+\vspace{12pt}
+We can write
+$$
+ \mu = \E_\theta(Y) = g(M\beta) 
+$$
+which implies that we can write
+$$
+  g^{-1}\left(\E_\theta(Y)\right) = M\beta.
+$$
+
+
+## Poisson regression model 
+
+The Poisson regression model [and its variants] is one of the more widely used and studied exponential family GLMs in practice. 
+
+\vspace{12pt}
+The Poisson regression model is used for analyzing a count response variable, $y_i \in \{0,1,2,3,\ldots\}$.
+
+
+\vspace{12pt}
+The Poisson regression model allows for users to model the rate as a function of covariates. 
+
+
+
+## 
+
+For a count response variable $Y$ and a vector of predictors $X$, let $\mu(x) = \E(Y|X = x)$. The Poisson regression model is then 
+\begin{equation} \label{loglink}
+  \mu(x) = \E(Y|X = x) = \exp\left(x'\beta\right).
+\end{equation}
+Equivalently, 
+$$
+  \log\left(\mu(x)\right) = x'\beta.
+$$
+In vector notation, we can express the above as 
+$$
+  \mubf = \exp(M\beta) \quad \text{and} \quad \text{log}(\mubf) = M\beta
+$$
+where the above $\exp(\cdot)$ and log$(\cdot)$ operations are understood as componentwise operations.
+
+
+
+## 
+
+Let's consider the log likelihood of a sample of independent Poisson random variables 
+\begin{align*}
+  \sum_{i=1}^n y_i\log(\mu_i) - \mu_i 
+    &=  \sum_{i=1}^n y_i\theta_i - \exp(\theta_i)
+\end{align*}
+where 
+$$
+  \theta_i = \log\left(\mu_i\right) \qquad \text{and} \qquad \mu_i = \exp(\theta_i) = g(\theta_i).
+$$
+
+
+We see that the Poisson regression model with log link is the same as the canonical linear submodel of an exponential family. 
+
+\vspace{12pt}
+The link function $g^{-1}$ is the logarithmic function. Hence the name log-linear models. 
+
+

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  7 FEB 2023 15:42
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  7 FEB 2023 16:35
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1135,7 +1135,7 @@ texmf-dist/fonts/type1/public/lm/lmtko10.pfb></usr/local/texlive/2022/texmf-dis
 t/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2022/texmf-dist/fonts/ty
 pe1/public/lm/lmtti10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/publi
 c/amsfonts/symbols/msbm10.pfb>
-Output written on count_regression.pdf (22 pages, 455323 bytes).
+Output written on count_regression.pdf (22 pages, 455327 bytes).
 PDF statistics:
  368 PDF objects out of 1000 (max. 8388607)
  278 compressed objects within 3 object streams

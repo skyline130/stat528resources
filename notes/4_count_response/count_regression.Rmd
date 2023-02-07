@@ -121,7 +121,7 @@ We see that the Poisson regression model with log link is the same as the canoni
 $$
   \E(Y|X = x) = g\left(x^T\beta\right) \qquad \text{and} \qquad g^{-1}\left(\E(Y|X = x)\right) = x^T\beta
 $$
-where the link function $g^{-1}$ is the logarithmic function, the inverse-link function (change of parameters map) is the exponential function. Hence, the name log-linear models. 
+where the link function $g^{-1}$ is the logarithmic function, the inverse-link function (change of parameters map) is the exponential function. Hence the name log-linear models. 
 
 Therefore, a linear function of the canonical submodel parameter vector is linked to the mean of the Poisson distribution through a change-of-parameter mapping $g(\theta)$. As stated before, this is the basis of exponential family generalized linear models with link function $g^{-1}$. The familiar presentation of the various model parameterizations and how they are related to each other is given in Figure 1.
 
