@@ -1,0 +1,530 @@
+---
+title: "STAT 528 - Advanced Regression Analysis II"
+author: "Binary response regression (part II)"
+institute: |
+  | Daniel J. Eck
+  | Department of Statistics  
+  | University of Illinois
+date: ""
+output: 
+    beamer_presentation:
+        keep_tex: true
+        fig_width: 11
+        fig_height: 7.5
+        includes:
+bibliography: ../note_sources.bib
+urlcolor: blue
+header-includes:
+- \usepackage{graphicx}
+- \usepackage{bm}
+- \usepackage{array}
+- \usepackage{amsmath}
+- \usepackage{amsthm}
+- \usepackage{amsfonts}
+- \usepackage{amssymb}
+- \usepackage{tikz-cd}
+- \usepackage{url}
+- \definecolor{foreground}{RGB}{255,255,255}
+- \definecolor{background}{RGB}{34,28,54}
+- \definecolor{title}{RGB}{105,165,255}
+- \definecolor{gray}{RGB}{175,175,175}
+- \definecolor{lightgray}{RGB}{225,225,225}
+- \definecolor{subtitle}{RGB}{232,234,255}
+- \definecolor{hilight}{RGB}{112,224,255}
+- \definecolor{vhilight}{RGB}{255,111,207}
+- \setbeamertemplate{footline}[page number]
+---
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Proj}{\textbf{P}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\rootn}{\sqrt{n}}
+\newcommand{\p}{\mathbf{p}}
+\newcommand{\E}{\text{E}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\pibf}{\bm{\pi}}
+\newcommand{\logit}{\text{logit}}
+
+
+\newtheorem{cor}{Corollary}
+\newtheorem{lem}{Lemma}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{prop}{Proposition}
+
+
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy.opts=list(width.cutoff=40))
+library(ggplot2)
+
+mycols     = c("chartreuse3", "orangered", "deepskyblue3", "darkorchid1", "yellow")
+dark_theme = theme(plot.background   = element_blank(), 
+                   panel.background  = element_blank(),
+                   #legend.background = element_blank(), legend.key = element_blank(),
+                   axis.title.x      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(10,0,0,0)),
+                   axis.title.y      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(0,20,0,0)),
+                   axis.text         = element_text(size=18, color = "grey80"), 
+                   text              = element_text(size=20),
+                   axis.title        = element_text(size = 26),
+                   legend.title      = element_text(size = 26, colour = "grey80"),
+                   panel.border      = element_blank(),
+                   panel.grid.major  = element_line(colour = "grey50"), 
+                   panel.grid.minor  = element_line(colour = "grey30"))
+```
+
+
+## Last time 
+
+- logistic regression
+- data analysis
+- connecting theory to application
+
+
+
+## Learning Objectives Today
+
+
+
+
+## Example: CCSO data
+
+We are continuing with our demonstration of logistic regression modeling on the [Champaign County Sheriff's Office (CCSO) data frame](https://github.com/CUHackNight/JailData). 
+
+\vspace{12pt}
+We now load in the CCSO data frame using the fread (**f**ast **read**) function from the \texttt{data.table} package (can also use read\_csv in the \texttt{tidyverse}) and perform most of our data wrangling operations using \texttt{dplyr}.
+
+\vspace{12pt}
+```{r, warnings = FALSE, message = FALSE}
+rm(list = ls())
+library(tidyverse)
+library(data.table)
+```
+
+
+
+##
+
+Let's load in and wrangle the data as before.
+
+\tiny
+```{r loaddata, cache = TRUE}
+## load in data
+system.time(CCSO <- fread("https://uofi.box.com/shared/static/9elozjsg99bgcb7gb546wlfr3r2gc9b7.csv"))
+dim(CCSO)
+
+## data wrangling
+CCSO_small <- CCSO %>% rename(Days = "Days in Jail", Age = "Age at Arrest", 
+                        Date = "BOOKING DATE", Sex = "SEX", Race = "RACE",
+                        Crime = "CRIME CODE", Agency = "ARREST AGENCY") %>% 
+  mutate(atleastone = ifelse(Days > 0,1,0)) %>% 
+  filter(Crime == "OTHER TRAFFIC OFFENSES") %>%  
+  filter(Race %in% c("Asian/Pacific Islander","Black","White","Hispanic")) %>% 
+  filter(Sex %in% c("Female","Male")) %>% 
+  dplyr::select(atleastone, Age, Sex, Date, Race) %>%  
+  mutate(Race = fct_drop(Race), Sex = fct_drop(Sex))
+CCSO_small <- CCSO_small[complete.cases(CCSO_small), ]
+
+head(CCSO_small, 5)
+dim(CCSO_small)
+```
+
+
+## 
+
+We will continue on with our main effects only model.
+
+\vspace{12pt}
+\tiny
+```{r}
+m1 <- glm(atleastone ~ -1 + Race + Sex + Age, data = CCSO_small, 
+          family = "binomial", x = "TRUE")
+p1 <- predict(m1, type = "response", se.fit = TRUE)
+
+summary(m1)
+```
+
+
+
+
+## Diagnostics 
+
+Model diagnostics for logistic regression fits are not as prevalent as those in linear regression. 
+
+\vspace{12pt}
+We will discuss a straightforward binary response regression diagnostic method ([Esarey and Pierce  (2012)](https://econpapers.repec.org/article/cuppolals/v_3a20_3ay_3a2012_3ai_3a04_3ap_3a480-500_5f01.htm)). More comprehensive diagnostics for GLMs will be discussed later.
+
+\vspace{12pt}
+This method compares a model's predicted probability $\Prob(Y = 1)$  to the observed frequency of $Y=1$ in the data set. 
+
+\vspace{12pt}
+If the model is a good fit to the data, subsets of the data with $\Prob(Y = 1) \approx m$ should have about $m$ proportion of cases for which $Y = 1$. This is the basis of Esarey and Pierce's method.
+
+
+
+
+## 
+
+
+Esarey and Pierce's method is implemented in the \texttt{heatmap.fit} function within the \texttt{heatmapFit} package.
+
+```{r, eval = FALSE}
+library(heatmapFit)
+y <- CCSO_small$atleastone
+heatmap.fit(y, p1$fit)
+```
+
+
+
+## 
+
+\tiny
+```{r heatmap, echo = FALSE, warning = FALSE, message = FALSE, cache = TRUE, fig.height=4}
+library(heatmapFit)
+y <- CCSO_small$atleastone
+heatmap.fit(y, p1$fit)
+```
+
+
+## 
+
+Recall our smaller model that considers whether an individual was black or not.
+
+\vspace{12pt}
+\tiny
+```{r}
+CCSO_small <- CCSO_small %>% mutate(isBlack = ifelse(Race == "Black",1,0))
+m2 <- glm(atleastone ~ isBlack + Sex + Age, data = CCSO_small, 
+          family = "binomial", x = "TRUE")
+anova(m1, m2, test = "LRT")
+```
+
+
+##
+
+\tiny
+```{r heatmap2, echo = FALSE, warning = FALSE, message = FALSE, cache = TRUE, fig.height=4}
+CCSO_small <- CCSO_small %>% mutate(isBlack = ifelse(Race == "Black",1,0))
+m2 <- glm(atleastone ~ isBlack + Sex + Age, data = CCSO_small, 
+          family = "binomial", x = "TRUE")
+heatmap.fit(y, predict(m2, se.fit = FALSE, type = "response"))
+```
+
+
+## Probit regression 
+
+In this class we have focused on exponential theory, canonical links, and generalized linear models that arise from this perspective. 
+
+\vspace{12pt}
+We now present an alternative to this paradigm in the form of the probit link function (inverse normal cdf) for binary response variables. 
+
+\vspace{12pt}
+Probit regression arises from normal latent variable models. 
+
+
+## 
+
+Recall that we are interested in modeling $\pi(x) = \Prob(Y = 1|X = x)$ in the form
+$$
+  g^{-1}(\pi(x)) = x'\beta
+$$
+where $g^{-1}$ is not the logit function. 
+
+\vspace{12pt}
+In probit regression we specify $g = \Phi$ where $\Phi$ is the CDF of a standard normal distribution so that
+$$
+  \Phi^{-1}(\pi(x)) = x'\beta.
+$$
+
+
+
+##
+
+A related latent variable approach, referred to as a threshold model or liability-threshold model, also specifies the probit model (See [Wright (1934)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1208511/). 
+
+\vspace{12pt}
+This model assumes that there is an unobserved continuous response $y^*$ such that the observed response $y = 0$ if $y^* \leq \tau$ and $y = 1$ if $y^* > \tau$. 
+
+\vspace{12pt}
+Suppose that $y^* = \mu + \varepsilon$, where $\mu = x'\beta$ and where $\varepsilon_i$ are independent realizations from a $N(0,\sigma^2)$ distribution. Then,
+\begin{align*}
+  \Prob(Y = 1\mid X = x) &= \Prob(Y^* > \tau\mid X = x) \\ 
+    &= \Prob(x'\beta + \varepsilon > \tau\mid X = x) \\
+    &= \Prob(-\varepsilon < x'\beta - \tau\mid X = x) \\
+    &= \Phi\left((x'\beta - \tau)/\sigma\right)
+\end{align*}
+where it is noted that $\varepsilon \overset{d}{=} -\varepsilon$. 
+
+
+## 
+
+There is no information in the data about $\sigma$ or the threshold $\tau$. An equivalent model results if we multiply $(\beta',\sigma,\tau)$ by any positive constant. 
+
+\vspace{12pt}
+For identifiability, we set $\sigma = 1$ and $\tau = 0$, and the probit model results. 
+
+\vspace{12pt}
+This origin story of the probit model is well articulated in [Gianola (1982)](https://academic.oup.com/jas/article-abstract/54/5/1079/4661768?redirectedFrom=fulltext). Note that Daniel Gianola was at University of Illinois when he wrote this paper.
+
+<!-- \cite{gianola1982theory} chronicled the development of the liability-threshold model in \cite{wright1934analysis} and their connection with probit models \citep{bliss1934probitsa, bliss1934probitsb}. In a binary response regression context, the probit regression model is very similar to the logistic regression model. While the logistic model uses the the canonical logit link function arising naturally from exponential family theory, the probit model uses the inverse standard normal distribution function arising from a liability-threshold model as its link function. These link functions are different, but not terribly so despite their very different origin stories. In this paper our focus is on the logit link function since the mathematical properties of canonical exponential family models allows for inference for mean-value parameters when data separation exists. The logistic regression models also arises from a liability-threshold model with the standard normal distribution replaced with the logistic distribution.  -->
+
+
+
+## What do we think about this?
+
+The probit model ([Bliss (1934a)](https://www.science.org/doi/pdf/10.1126/science.79.2037.38?casa_token=tvZZcb5udQ8AAAAA:in5nFvRZcC5nMa1nLBZy6vX74HWPlkLItoVXaXEPJBeyrfbkXh0EQ15ZyJa3DmIl1aogpqgI9RZmDb4) and [Bliss (1934b)](https://www.science.org/doi/pdf/10.1126/science.79.2053.409?casa_token=dacDGcK21xMAAAAA:fBSJpMPx6lhiIG9HEOrauhcVYci_qjBq_KGy2xJG1wPZtPLjC4Rajb_RZOmr_d6LQn-6ZhoYziUTTZw)) and threshold model origin story ([Wright (1934)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1208511/) came before the celebrated Pitman-Koopman-Darmois theorem (proved independently by three different persons in 1935 and 1936). 
+
+
+\vspace{12pt}
+The probit model predates exponential family GLMs (see [Nelder and Wedderburn (1972)](https://rss.onlinelibrary.wiley.com/doi/abs/10.2307/2344614?casa_token=WoS6w5XhILwAAAAA:KwIYkqavUBTKOt2gE79Z815vQ4FKtUrzduzpPcBh472-X-Rntqiwqdt5XQNo-uDNw8EYigIrkGRUyBHi)) and logistic regression.
+
+
+\vspace{12pt}
+One comment from a referee at a quantitative genetics journal: "There is nothing sacrosanct about the logistic link function."
+
+
+## Logistic Regression strikes back 
+
+The threshold model origin story of probit regression can be told through logistic regression.
+
+\vspace{12pt}
+Consider the logistic distribution with cdf
+$$
+  F(x; \mu,s) = \frac{1}{1 + \exp\left(-\frac{(x-\mu)}{s}\right)}
+$$
+and set $\mu = 0$ and $s = 1$. With these specifications, the logistic pdf is
+$$
+  f(x; 0,1) = \frac{\exp(-x)}{\left(1 + \exp(-x)\right)^2}.
+$$
+This distribution is symmetric and it forms a location-scale family.
+
+
+## 
+
+What do we think about all of this?
+
+
+
+## Probit model fitting
+
+The probit model has log likelihood
+$$
+  l(\beta) = \log\left\{\prod_{i=1}^n\left[\Phi\left(\sum_j \beta_jx_{ij}\right)\right]^{y_i}
+  \left[1 - \Phi\left(\sum_j \beta_jx_{ij}\right)\right]^{n_i - y_i}\right\}.
+$$
+Differentiation with respect to $\beta_j$ leads to,
+$$
+  \sum_{i}\left\{\left[\frac{n_i\left[y_i - \Phi\left(\sum_j\beta_j x_{ij}\right)\right]x_{ij}}
+  {\Phi\left(\sum_j\beta_j x_{ij}\right)\left[1 - \Phi\left(\sum_j\beta_j x_{ij}\right)\right]}\right] \phi\left(\sum_j\beta_j x_{ij}\right)\right\} = 0,
+$$
+
+##
+
+When the link function is not the canonical link there is no reduction of the data in the form of Fisher's notion of sufficieny. 
+
+\vspace{12pt}
+The estimated asymptotic covariance matrix of $\hat\beta$ has the form 
+$$
+  \widehat{\text{cov}}(\hat\beta) = \left(M^T\widehat{W}M\right)^{-1}.
+$$
+For probit models, $\widehat{W}$ is the diagonal matrix with elements 
+$$
+  w_i =\frac{n_i\left[\phi\left(\sum_j\hat\beta_j x_{ij}\right)\right]^2}
+  {\left\{\Phi\left(\sum_j\hat\beta_j x_{ij}\right)\left[1 - \Phi\left(\hat\beta_j x_{ij}\right)\right]\right\}}.
+$$
+
+
+\vspace{12pt}
+**Note**: The Newton-Raphson algorithm yields the same MLE estimates but slightly different standard errors. For the information matrix inverted to obtain the asymptotic covariance matrix, Newton-Raphson uses observed information, whereas Fisher scoring uses expected information. These differ for link functions other than the canonical link.
+
+
+
+\vspace{12pt}
+We return to our CCSO example and refit the logistic regression model with a probit link function.
+
+\tiny
+```{r}
+m1_probit <- glm(atleastone ~ -1 + Race + Sex + Age, data = CCSO_small, 
+          family = binomial(link = "probit"))
+summary(m1_probit)
+```
+
+
+
+
+## Inverse propensity score weighting (IPW) in Causal Inference
+
+One of the central goals of causal inference is to estimate the average treatment effect (ATE).
+
+\vspace{12pt}
+In its most simple presentation, we will assume that the treatment variable is binary. 
+
+\vspace{12pt}
+The ATE measures the difference in mean outcomes between individuals assigned to the treatment and individuals assigned to the control. 
+
+\vspace{12pt}
+However, there is a difficulty with estimation since individuals do not simultaneously receive the treatment and the control.
+
+
+## 
+
+When the study is randomized this difficulty is mitigated because randomization ensures (when $n$ is large enough) that baseline covariates which may influence the response have the same distribution in both the treatment and control groups. 
+
+\vspace{12pt}
+In observational studies this may not be so, and the researcher may have no information about the treatment assignment mechanism.
+
+\vspace{12pt}
+One technique for estimating the ATE in causal studies is through *inverse propensity score weighting (IPW)*. The IPW technique makes use of a treatment assignment model. In the simple setting we will take a logistic regression model as our model for treatment assignment. 
+
+\vspace{12pt}
+The idea of IPW is to create a pseudo population that exhibits balance in baseline covariates in an effort to mimic random assignment up to measured confounders. 
+
+
+## Example
+
+We will now go through an example. In this example we estimate the [causal effect of online learning in STAT 200 at UIUC](https://arxiv.org/abs/2101.06755). 
+
+\vspace{12pt}
+The response variable $Y$ is the comprehensive 3-hour Final that was Scantron graded at the end of each semester, and the treatment variable $A$ is the presence or absence of in-person lectures. 
+
+\vspace{12pt}
+The online only course is considered the treatment and the regular in-person course with recorded lectures is the control. 
+
+
+## 
+
+We estimate the causal effect of online learning (or absence of in-person lecture) by estimating the ATE using inverse propensity score weighting methods. The form of this estimator of the ATE is
+$$
+ \widehat{\text{ATE}} = \frac{1}{n}\sum_{i=1}^n \left(w_iA_iY_i - w_i(1-A_i)Y_i\right),
+$$
+where the weights $w_i$ are a functions of the propensity scores $\hat{p}_i = \widehat{P}(A_i = 1|X_i)$, $i = 1,\ldots,n$. 
+
+\vspace{12pt}
+The propensity scores are each subjects conditional probability of belonging to the treatment group given their covariate information. 
+
+\vspace{12pt}
+We will estimate the propensity scores using a logistic regression model.
+
+
+
+## 
+
+We consider an alternative (the classical IPW) stable estimator of the ATE with weights of the form
+$$
+  w_i = \frac{\frac{A_i}{\hat{p}_i}}{\sum_{i=j}^n\frac{A_j}{\hat{p}_j}} + \frac{\frac{1-A_i}{1 -\hat{p}_i}}{\sum_{j=1}^n\frac{1-A_j}{1-\hat{p}_j}}.
+$$
+
+
+## 
+Let's load in the data and try it out.
+
+\vspace{12pt}
+\tiny
+```{r}
+dat <- read.csv("online.csv", header = TRUE)[, -1]
+head(dat)
+```
+
+\vspace{12pt}
+\normalsize
+We specify the propensity score logistic regression model and obtain the estimated propensity scores.
+
+
+\vspace{12pt}
+\tiny
+```{r}
+dat_small <- dat %>% 
+  dplyr::select(Online, ACTMath, ACTMajor, ACT, Gender,
+                International, F17, S18, S19, Fa19, FR, SO, JR)
+
+# prop score model
+m <- glm(Online ~., data = dat_small, family = "binomial")
+preds <- predict(m, type = "response")
+```
+
+
+## 
+
+\tiny
+```{r heatmap_prop_model, warning = FALSE, message = FALSE, cache = TRUE, fig.height=4}
+trt <- dat_small$Online
+heatmap.fit(trt, preds)
+```
+
+
+
+## 
+
+We now obtain the weights for the stabilized estimator and we check for the balance of weights in the online and in-person groups across the Gender and International variables 
+
+\vspace{12pt}
+\tiny
+```{r, message = FALSE}
+# estimate the stabilized IPW weights  
+weights_alt_trt <- 1 / sum(trt / preds) * trt /preds
+weights_alt_notrt <- 1 / sum((1 - trt)/(1 - preds)) * (1-trt)/(1-preds)
+dat <- data.frame(dat, weights = weights_alt_trt - weights_alt_notrt)
+
+# check balance for gender and international (other variables are also balanced)
+dat %>% group_by(Gender, Online) %>% summarise(sum(weights))
+dat %>% group_by(International, Online) %>% summarise(sum(weights))
+```
+
+
+## 
+
+We now estimate the ATE corresponding to these weights.
+
+```{r}
+ATE_alt <- sum(weights_alt_trt * dat$ObjExam) - 
+  sum(weights_alt_notrt * dat$ObjExam)
+ATE_alt
+```
+
+
+## 
+
+In the notes we also considered a [double robust (DR) estimator](https://www.tandfonline.com/doi/abs/10.1080/01621459.1994.10476818) estimator which may alleviate concerns with misspecification of the propensity score model.
+
+\vspace{12pt}
+\tiny
+```{r}
+# estimate DR version ATE 
+m_trt <- lm(ObjExam ~ ACTMath + ACTMajor + ACT + International + Gender + 
+            FR + SO + JR + F17 + S18 + S19, 
+            data = dat[trt == 1, ])
+Y_trt <- predict(m_trt, newdata = dat)
+m_notrt <- lm(ObjExam ~ ACTMath + ACTMajor + ACT + International + Gender + 
+              FR + SO + JR + F17 + S18 + S19, 
+              data = dat[trt == 0, ])
+Y_notrt <- predict(m_notrt, newdata = dat)
+ATE_DR <- mean( (dat$ObjExam * trt - (trt - preds) * Y_trt) / preds - 
+  (dat$ObjExam * (1 - trt) + (trt - preds)*Y_notrt) / (1 - preds))
+ATE_DR
+```
+
+
+
+## Notes 
+
+The actual analysis of this data considered: 
+
+- multiple linear regression (no causal analysis)
+- the stable IPW estimator considered here 
+- a double robust estimator considered here 
+- an [outcome highly adaptive lasso (OHAL)](https://onlinelibrary.wiley.com/doi/full/10.1111/biom.13121?casa_token=ddW0avPzm40AAAAA%3ANIe-rtFH88rz9jwsxFgkyPf8UN2za50rfIXkF5Y1f0VJgt9HH9qYNfQH_ud7kGYlAZzKm2LzImIhjdUw) approach that is robust to model misspecification
+
+
+\vspace{12pt}
+All of these approaches yielded similar results.
+
+\vspace{12pt}
+Detailed investigations of interactions and missing confounding variables were also considered.
+
+
+
+

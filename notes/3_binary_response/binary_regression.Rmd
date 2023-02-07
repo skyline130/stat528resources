@@ -425,7 +425,7 @@ all.equal(p1.fit, foo)
 
 \vspace*{0.5cm}\noindent Standard errors \text{se}($\hat\mu$) that are computed from `predict.glm` also follow from straighforward exponential family results. \textbf{This is left as a homework assignment. Hint: check your results against what is produced by a call to predict.glm with the argument se.fit = TRUE.}
 
-There are noted problems with Wald based confidence intervals for mean value parameters in logistic regression (the success probability). See [here for more details in the context of binomial sampling proportions](https://projecteuclid.org/journals/statistical-science/volume-16/issue-2/Interval-Estimation-for-a-Binomial-Proportion/10.1214/ss/1009213286.full). \textbf{HW: construct Wilson and Wald based confidence intervals for the estimated mean value parameters. Compare the average lengths of these intervals. Compare the lengths of these intervals for the smallest 10 estimated mean-value parameters.}
+There are noted problems with Wald based confidence intervals for mean value parameters in logistic regression (the success probability). See [here for more details in the context of binomial sampling proportions](https://projecteuclid.org/journals/statistical-science/volume-16/issue-2/Interval-Estimation-for-a-Binomial-Proportion/10.1214/ss/1009213286.full).
 
 
 
@@ -501,7 +501,7 @@ A related latent variable (referred to as a threshold model) also specifies the 
   \Prob(Y = 1\mid X = x) &= \Prob(Y^* > \tau\mid X = x) = \Prob(x^T\beta + \varepsilon > \tau\mid X = x) \\
     &= \Prob(-\varepsilon < x^T\beta - \tau\mid X = x) = \Phi\left((x^T\beta - \tau)/\sigma\right)
 \end{align*}
-where it is noted that $\varepsilon \overset{d}{=} -\varepsilon$. There is no information in the data about $\sigma$ or the threshold $\tau$. An equivalent model results if we multiply $(\beta^T,\sigma,\tau)$ by any positive constant. For identifiability, we set $\sigma = 1$ and $\tau = 0$, and the probit model results. 
+where it is noted that $\varepsilon \overset{d}{=} -\varepsilon$. There is no information in the data about $\sigma$ or the threshold $\tau$. An equivalent model results if we multiply $(\beta^T,\sigma,\tau)$ by any positive constant. For identifiability, we set $\sigma = 1$ and $\tau = 0$, and the probit model results. It should be noted that the same latent variable threshold model story can be told by the logistic regression model. To see this, replace the normal distribution specification for $\varepsilon$ in the above with with a [logistic distribution](https://en.wikipedia.org/wiki/Logistic_distribution) with $\mu = 0$ and $s = 1$.
 
 \vspace*{0.5cm}\noindent Another latent variable interpretation of the probit model is based on utility functions. Consider the choice between two options, such as two brands. Let $U_0$ denote the utility of outcome $y = 0$ and let $U_1$ denote the utility of outcome $y = 1$. For $y \in \{0,1\}$, suppose that $U_y = x^T\beta_y + \varepsilon_y$. A particular subject selects $y=1$ when $U_1 > U_0$. Now suppose that $\varepsilon_0$ and $\varepsilon_1$ are independent $N(0,1)$ random variables. Then,
 \begin{align*}
@@ -554,7 +554,7 @@ Summarise these results.
 
 # Inverse propensity score weighting (IPW) in Causal Inference
 
-One of the central goals of causal inference is to estimate the average treatment effect (ATE). In its most simple presentation, we will assume that the treatment variable is binary. The ATE measures the difference in mean outcomes between individuals assigned to the treatment and individuals assigned to the control. However, there is a difficulty with estimation since individuals do not simultaneously receive the treatment and the control. When the study is randomized this difficuly is mitigated because randomization ensures (when $n$ is large enough) that baseline covariates which may influence the response have the same distribution in both the treatment and control groups. In observational studies this may not be so, and the researcher may have no information about the treatment assignment mechanism. In the observational setting, the collected covariates could confound the relationship between the treatment variable and the response variable.
+One of the central goals of causal inference is to estimate the average treatment effect (ATE). In its most simple presentation, we will assume that the treatment variable is binary. The ATE measures the difference in mean outcomes between individuals assigned to the treatment and individuals assigned to the control. However, there is a difficulty with estimation since individuals do not simultaneously receive the treatment and the control. When the study is randomized this difficulty is mitigated because randomization ensures (when $n$ is large enough) that baseline covariates which may influence the response have the same distribution in both the treatment and control groups. In observational studies this may not be so, and the researcher may have no information about the treatment assignment mechanism. In the observational setting, the collected covariates could confound the relationship between the treatment variable and the response variable.
 
 One technique for estimating the ATE in causal studies is through inverse propensity score weighting (IPW). The IPW technique makes use of a treatment assignment model. In the simple setting we will take a logistic regression model as our model for treatment assignment. The idea of IPW is to create a pseudo population that exhibits balance in baseline covariates through the weighting of individuals corresponding to how likely they belong to either the treatment or control group given their covariate profile. Thus IPW can mimic random assignment up to measured confounders. 
 
@@ -575,8 +575,10 @@ This estimator is unstable, it does not create balanced pseudo populations, and 
 $$
  \widehat{\text{ATE}}_{\text{alt}} = 
    \left(\sum_{i=1}^n\frac{A_i}{\hat{p}_i}\right)^{-1}\sum_{i=1}^nw_iA_iY_i - 
-   \left(\sum_{i=1}^n\frac{1-A_i}{1-\hat{p}_i}\right)^{-1}\sum_{i=1}^nw_i(1-A_i)Y_i.
+   \left(\sum_{i=1}^n\frac{1-A_i}{1-\hat{p}_i}\right)^{-1}\sum_{i=1}^nw_i(1-A_i)Y_i
 $$
+where $w_i$ in the above are basic IPW weights.
+
 
 The estimators $\widehat{\text{ATE}}$ and $\widehat{\text{ATE}}_{\text{alt}}$ are consistent if the propensity score model is correctly specified, so should be approximately unbiased in finite samples. We will also consider a [double robust (DR) estimator](https://www.tandfonline.com/doi/abs/10.1080/01621459.1994.10476818) of the ATE. This estimator is 
 $$
@@ -623,9 +625,17 @@ trt <- dat_small$Online
 preds <- predict(m, type = "response")
 ```
 
+
+The propensity score model seems to align well with the observed data.
+```{r heatmap_prop_model, warning = FALSE, message = FALSE, cache = TRUE}
+trt <- dat_small$Online
+heatmap.fit(trt, preds)
+```
+
+
 We now obtain the weights for the stabilized estimator
 $$
-  w_i = \frac{\frac{A_i}{\hat{p}_i}}{\sum_{i=j}^n\frac{A_j}{\hat{p}_j}} + \frac{\frac{1-A_i}{1 -\hat{p}_i}}{\sum_{j=1}^n\frac{1-A_j}{1-\hat{p}_j}}
+  \widetilde{w}_i =  \frac{\frac{A_i}{\hat{p}_i}}{\sum_{i=j}^n\frac{A_j}{\hat{p}_j}} + \frac{\frac{1-A_i}{1 -\hat{p}_i}}{\sum_{j=1}^n\frac{1-A_j}{1-\hat{p}_j}}
 $$
 and we check for the balance of weights in the online and in-person groups across the Gender and International variables 
 ```{r}
@@ -674,54 +684,5 @@ The two quantities are essentially the same, both estimates of the ATE show that
 
 \bibliographystyle{plainnat}
 \bibliography{../note_sources}
-
-
-```{r, echo = FALSE, eval = FALSE}
-n <- nrow(M)
-summary(m1)
-anova(m1, test = "LRT")
-
-m_null <- glm(atleastone ~ 1, family = "binomial", data = CCSO_small)
-anova(m_null, m1, test = "LRT")
-pchisq(66.355, df = 5, lower = FALSE)
-
-pchisq(sum(residuals(m1,type = "pearson")^2), df = n - 6, lower = FALSE)
-
-pchisq(deviance(m1), df = n - 6, lower = FALSE)
-
-(1-exp((m1$deviance - m1$null.deviance)/n))/(1-exp(-m1$null.deviance/n))
-
-
-
-
-## load in data
-system.time(CCSO2 <- fread("https://uofi.box.com/shared/static/9elozjsg99bgcb7gb546wlfr3r2gc9b7.csv"))
-
-
-## data wrangling
-CCSO_small2 <- CCSO2 %>% rename(Days = "Days in Jail", Age = "Age at Arrest", 
-                        Date = "BOOKING DATE", Sex = "SEX", Race = "RACE",
-                        Crime = "CRIME CODE", Agency = "ARREST AGENCY", 
-                        School = "SCHOOL") %>% 
-  dplyr::select(Days, Age, Sex, Date, Race, Crime, Agency, School) %>%
-  mutate(atleastone = ifelse(Days > 0,1,0)) %>% 
-  filter(Crime == "THEFT: OVER $300") %>%  
-  filter(Race %in% c("Asian/Pacific Islander","Black","White","Hispanic")) %>% 
-  filter(Sex %in% c("Female","Male")) %>% 
-  mutate(Crime = fct_drop(Crime), Race = fct_drop(Race), Sex = fct_drop(Sex))
-CCSO_small2 <- CCSO_small2[complete.cases(CCSO_small2), ]
-dim(CCSO_small2)
-
-m1 <- glm(atleastone ~ Race + Sex + Age + School, 
-          data = CCSO_small2, family = "binomial")
-
-y <- CCSO_small$atleastone
-p1 <- predict(m1, type = "response")
-par(mfrow = c(1,2))
-plot(p1, (y - p1) / sqrt(p1*(1-p1)))
-plot(p1, (y - p1))
-```
-
-
 
 
