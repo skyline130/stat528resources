@@ -1294,14 +1294,15 @@ Can play around with the model to improve performance
 
 \begin{frame}[fragile]{}
 \protect\hypertarget{section-26}{}
-This model offers improvements
+This model offers improvements in residual magnitude and we see that
+problems are occurring for small species counts.
 
 \vspace{12pt}
 \tiny
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{foo }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(}\FunctionTok{abs}\NormalTok{(resid))) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{head}\NormalTok{(}\DecValTok{10}\NormalTok{)}
+\NormalTok{foo }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(}\FunctionTok{abs}\NormalTok{(resid))) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{head}\NormalTok{(}\DecValTok{11}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1317,6 +1318,7 @@ This model offers improvements
 ## Espanola     Espanola      97  58.06115  4.656808
 ## Marchena     Marchena      51  89.57405 -4.438200
 ## Tortuga       Tortuga      16  38.53710 -4.116449
+## Onslow         Onslow       2  14.26763 -4.083611
 \end{verbatim}
 
 \begin{Shaded}
@@ -1339,6 +1341,34 @@ This model offers improvements
 ## SantaMaria 202.49381     285       73 170.92       640     2.6  49.2     0.10
 ## Tortuga     38.53710      16        8   1.24       186     6.8  50.9    17.95
 \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-27}{}
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{log}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m3)),}\FunctionTok{log}\NormalTok{((gala}\SpecialCharTok{$}\NormalTok{Species}\SpecialCharTok{{-}}\FunctionTok{fitted}\NormalTok{(m3))}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{), }
+     \AttributeTok{xlab=} \FunctionTok{expression}\NormalTok{(}\FunctionTok{hat}\NormalTok{(mu)),}\AttributeTok{ylab=}\FunctionTok{expression}\NormalTok{((y}\SpecialCharTok{{-}}\FunctionTok{hat}\NormalTok{(mu))}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{), }\AttributeTok{pch =} \DecValTok{19}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{week4_p2_files/figure-beamer/unnamed-chunk-27-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{theta }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(m3}\SpecialCharTok{$}\NormalTok{x }\SpecialCharTok{\%*\%} \FunctionTok{coef}\NormalTok{(m3))}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(theta, }\FunctionTok{residuals}\NormalTok{(m3), }\AttributeTok{xlab =} \StringTok{"theta"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Deviance residuals"}\NormalTok{, }\AttributeTok{pch =} \DecValTok{19}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(theta, }\FunctionTok{residuals}\NormalTok{(m3, }\StringTok{"pearson"}\NormalTok{), }\AttributeTok{pch =} \DecValTok{19}\NormalTok{,  }
+     \AttributeTok{xlab =} \StringTok{"theta"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Pearson residuals"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{week4_p2_files/figure-beamer/unnamed-chunk-28-1.pdf}
 \end{frame}
 
 \end{document}

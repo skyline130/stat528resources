@@ -749,12 +749,12 @@ head(cbind(foo %>% arrange(desc(Species)) %>% pull(names),
 
 ##
 
-This model offers improvements
+This model offers improvements in residual magnitude and we see that problems are occurring for small species counts.
 
 \vspace{12pt}
 \tiny
 ```{r}
-foo %>% arrange(desc(abs(resid))) %>% head(10)
+foo %>% arrange(desc(abs(resid))) %>% head(11)
 ```
 
 
@@ -763,3 +763,24 @@ cbind(foo$pred, gala[, -8])[which(abs(foo$resid) > 4), ]
 
 ```
 
+
+
+## 
+
+
+\vspace{12pt}
+\tiny
+```{r}
+plot(log(fitted(m3)),log((gala$Species-fitted(m3))^2), 
+     xlab= expression(hat(mu)),ylab=expression((y-hat(mu))^2), pch = 19)
+abline(0,1)
+```
+
+
+```{r}
+theta <- as.numeric(m3$x %*% coef(m3))
+par(mfrow = c(1,2))
+plot(theta, residuals(m3), xlab = "theta", ylab = "Deviance residuals", pch = 19)
+plot(theta, residuals(m3, "pearson"), pch = 19,  
+     xlab = "theta", ylab = "Pearson residuals")
+```

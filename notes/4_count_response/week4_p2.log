@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  9 FEB 2023 10:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  9 FEB 2023 10:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1444,6 +1444,33 @@ Overfull \hbox (3.14174pt too wide) in paragraph at lines 21--21
 (./week4_p2.vrb) [45
 
 ]
+\openout4 = `week4_p2.vrb'.
+
+(./week4_p2.vrb
+<week4_p2_files/figure-beamer/unnamed-chunk-27-1.pdf, id=340, 765.86125pt x 465
+.74pt>
+File: week4_p2_files/figure-beamer/unnamed-chunk-27-1.pdf Graphic file (type pd
+f)
+<use week4_p2_files/figure-beamer/unnamed-chunk-27-1.pdf>
+Package pdftex.def Info: week4_p2_files/figure-beamer/unnamed-chunk-27-1.pdf  u
+sed on input line 14.
+(pdftex.def)             Requested size: 307.28564pt x 186.86833pt.
+<week4_p2_files/figure-beamer/unnamed-chunk-28-1.pdf, id=341, 761.84625pt x 465
+.74pt>
+File: week4_p2_files/figure-beamer/unnamed-chunk-28-1.pdf Graphic file (type pd
+f)
+<use week4_p2_files/figure-beamer/unnamed-chunk-28-1.pdf>
+Package pdftex.def Info: week4_p2_files/figure-beamer/unnamed-chunk-28-1.pdf  u
+sed on input line 26.
+(pdftex.def)             Requested size: 307.27893pt x 187.84904pt.
+)
+Overfull \vbox (200.75467pt too high) detected at line 1372
+ []
+
+[46
+
+ <./week4_p2_files/figure-beamer/unnamed-chunk-27-1.pdf> <./week4_p2_files/figu
+re-beamer/unnamed-chunk-28-1.pdf>]
 \tf@nav=\write6
 \openout6 = `week4_p2.nav'.
 
@@ -1455,10 +1482,10 @@ Overfull \hbox (3.14174pt too wide) in paragraph at lines 21--21
 
 (./week4_p2.aux) ) 
 Here is how much of TeX's memory you used:
- 30035 strings out of 478268
- 600565 string characters out of 5846347
- 906149 words of memory out of 5000000
- 47230 multiletter control sequences out of 15000+600000
+ 30056 strings out of 478268
+ 601402 string characters out of 5846347
+ 907149 words of memory out of 5000000
+ 47244 multiletter control sequences out of 15000+600000
  606407 words of font info for 211 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  128i,11n,122p,1005b,451s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -1485,10 +1512,10 @@ pe1/public/lm/lmtt8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/
 lm/lmtt9.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/sy
 mbols/msam10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfont
 s/symbols/msbm10.pfb>
-Output written on week4_p2.pdf (45 pages, 397754 bytes).
+Output written on week4_p2.pdf (46 pages, 413048 bytes).
 PDF statistics:
- 465 PDF objects out of 1000 (max. 8388607)
- 358 compressed objects within 4 object streams
- 137 named destinations out of 1000 (max. 500000)
- 81978 words of extra memory for PDF output out of 89155 (max. 10000000)
+ 489 PDF objects out of 1000 (max. 8388607)
+ 375 compressed objects within 4 object streams
+ 140 named destinations out of 1000 (max. 500000)
+ 81988 words of extra memory for PDF output out of 89155 (max. 10000000)
 
