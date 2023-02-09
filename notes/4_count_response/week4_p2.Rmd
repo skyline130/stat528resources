@@ -443,7 +443,7 @@ $$
 where 
 
 - $\hat{\mu_1}$ corresponds to a smaller model than that which led to estimation of $\hat{\mu}_2$
-- df = $p_1 - p_2$
+- df = $p_2 - p_1$
 
 
 ## 
