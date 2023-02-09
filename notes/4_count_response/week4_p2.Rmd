@@ -777,6 +777,11 @@ abline(0,1)
 ```
 
 
+
+## 
+
+\vspace{12pt}
+\tiny
 ```{r}
 theta <- as.numeric(m3$x %*% coef(m3))
 par(mfrow = c(1,2))
