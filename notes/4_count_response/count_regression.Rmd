@@ -214,7 +214,7 @@ where this distributional relationship holds under the null hypothesis $\beta_j 
 $$
   \hat\beta_j \pm z_{\alpha/2}\text{se}(\hat\beta_j)
 $$
-where $0 < \alpha < 1$ is some error threshold. The $(1 - \alpha)\times 100\%$ Wald confidence interval for the response variable $\log(\mu(x))$ at a particular $x$ follows from the Delta method. We have that $\log(\mu(x)) = x^T\beta$ which implies that $\nabla_{\beta}\log(\mu(x)) = x$, and we have that 
+where $0 < \alpha < 1$ is some error threshold. The $(1 - \alpha)\times 100\%$ Wald confidence interval for the log response variable $\log(\mu(x))$ at a particular $x$ follows from the Delta method. We have that $\log(\mu(x)) = x^T\beta$ which implies that $\nabla_{\beta}\log(\mu(x)) = x$, and we have that 
 $$
   \sqrt{n}(\hat\beta - \beta) \overset{d}{\to} N(0, \Sigma^{-1})
 $$
@@ -363,7 +363,7 @@ head(residuals(m1, "pearson"))
 
 \vspace*{0.5cm}\noindent For linear models, the residuals vs. fitted values plot is probably the single most valuable graphic. For GLMs, we must decide on the appropriate scale for the fitted values. Usually, it is better to plot on the scale of the linear predictors ($\theta$) than on the fitted responses ($\mu$). 
 
-We are looking for features in these residuals vs. fitted values plots. First of all, is there any nonlinear relationship between the residuals and the fitted values? If so, this would be an indication of a lack of fit that might be rectified by a change in the model. For a linear model, we may transform the response variable but this is likely impractical for a GLM since it would change the assumed distribution of the response variable. We might also consider changing the link function, but often this undesirable since the canonical link functions faciliate desirable theoretical properties and yield models which are relatively easy to interpret. 
+We are looking for features in these residuals vs. fitted values plots. First of all, is there any nonlinear relationship between the residuals and the fitted values? If so, this would be an indication of a lack of fit that might be rectified by a change in the model. For a linear model, we may transform the response variable but this is likely impractical for a GLM since it would change the assumed distribution of the response variable. We might also consider changing the link function, but often this undesirable since the canonical link functions facilitate desirable theoretical properties and yield models which are relatively easy to interpret. 
 
 It is best to make a change in the choice of predictors or transformations to these predictors since this involves the least disruption to the GLM theoretical foundations. 
 
@@ -388,7 +388,7 @@ plot(predict(m1, type = "response"), residuals(m1, "pearson"),
 ```
 
 
-\vspace*{0.5cm}\noindent A half-normal plot of the residuals of the Poisson model is shown on the left and the relationship between the mean and the variance is shown on the right. A line showing that the variance increases linearly in the mean (not a perfect slope of 1) is also shown.
+\vspace*{0.5cm}\noindent A [half-normal plot](https://www.stat.cmu.edu/technometrics/59-69/VOL-01-04/v0104311.pdf) of the residuals of the Poisson model is shown on the left and the relationship between the mean and the variance is shown on the right. A line showing that the variance increases linearly in the mean (not a perfect slope of 1) is also shown.
 ```{r}
 par(mfrow = c(1,2))
 halfnorm(residuals(m1), pch = 19)

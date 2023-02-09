@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  7 FEB 2023 16:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  9 FEB 2023 10:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1058,48 +1058,48 @@ type pdf)
 Package pdftex.def Info: count_regression_files/figure-latex/unnamed-chunk-19-1
 .pdf  used on input line 820.
 (pdftex.def)             Requested size: 436.63019pt x 248.92938pt.
-<count_regression_files/figure-latex/unnamed-chunk-20-1.pdf, id=97, 436.63126pt
+<count_regression_files/figure-latex/unnamed-chunk-20-1.pdf, id=98, 436.63126pt
  x 250.9375pt>
 File: count_regression_files/figure-latex/unnamed-chunk-20-1.pdf Graphic file (
 type pdf)
 <use count_regression_files/figure-latex/unnamed-chunk-20-1.pdf>
 Package pdftex.def Info: count_regression_files/figure-latex/unnamed-chunk-20-1
-.pdf  used on input line 840.
+.pdf  used on input line 842.
 (pdftex.def)             Requested size: 436.63019pt x 250.93687pt.
 [10 <./count_regression_files/figure-latex/unnamed-chunk-19-1.pdf>] [11 <./coun
 t_regression_files/figure-latex/unnamed-chunk-20-1.pdf>] [12]
-<count_regression_files/figure-latex/unnamed-chunk-23-1.pdf, id=129, 440.64626p
+<count_regression_files/figure-latex/unnamed-chunk-23-1.pdf, id=130, 440.64626p
 t x 260.975pt>
 File: count_regression_files/figure-latex/unnamed-chunk-23-1.pdf Graphic file (
 type pdf)
 <use count_regression_files/figure-latex/unnamed-chunk-23-1.pdf>
 Package pdftex.def Info: count_regression_files/figure-latex/unnamed-chunk-23-1
-.pdf  used on input line 1035.
+.pdf  used on input line 1037.
 (pdftex.def)             Requested size: 440.65189pt x 260.97833pt.
 [13]
-<count_regression_files/figure-latex/unnamed-chunk-24-1.pdf, id=137, 440.64626p
+<count_regression_files/figure-latex/unnamed-chunk-24-1.pdf, id=138, 440.64626p
 t x 248.93pt>
 File: count_regression_files/figure-latex/unnamed-chunk-24-1.pdf Graphic file (
 type pdf)
 <use count_regression_files/figure-latex/unnamed-chunk-24-1.pdf>
 Package pdftex.def Info: count_regression_files/figure-latex/unnamed-chunk-24-1
-.pdf  used on input line 1054.
+.pdf  used on input line 1056.
 (pdftex.def)             Requested size: 440.65189pt x 248.93317pt.
 [14 <./count_regression_files/figure-latex/unnamed-chunk-23-1.pdf>]
 
 Package amsmath Warning: Foreign command \atopwithdelims;
 (amsmath)                \frac or \genfrac should be used instead
-(amsmath)                 on input line 1091.
+(amsmath)                 on input line 1093.
 
 [15 <./count_regression_files/figure-latex/unnamed-chunk-24-1.pdf>] [16] [17] [
 18]
-<count_regression_files/figure-latex/unnamed-chunk-32-1.pdf, id=185, 422.57875p
+<count_regression_files/figure-latex/unnamed-chunk-32-1.pdf, id=186, 422.57875p
 t x 250.9375pt>
 File: count_regression_files/figure-latex/unnamed-chunk-32-1.pdf Graphic file (
 type pdf)
 <use count_regression_files/figure-latex/unnamed-chunk-32-1.pdf>
 Package pdftex.def Info: count_regression_files/figure-latex/unnamed-chunk-32-1
-.pdf  used on input line 1376.
+.pdf  used on input line 1378.
 (pdftex.def)             Requested size: 422.5906pt x 250.94452pt.
 [19 <./count_regression_files/figure-latex/unnamed-chunk-32-1.pdf>] [20] [21] (
 ./count_regression.bbl) [22] (./count_regression.aux) ) 
@@ -1135,10 +1135,10 @@ texmf-dist/fonts/type1/public/lm/lmtko10.pfb></usr/local/texlive/2022/texmf-dis
 t/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2022/texmf-dist/fonts/ty
 pe1/public/lm/lmtti10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/publi
 c/amsfonts/symbols/msbm10.pfb>
-Output written on count_regression.pdf (22 pages, 455327 bytes).
+Output written on count_regression.pdf (22 pages, 455391 bytes).
 PDF statistics:
- 368 PDF objects out of 1000 (max. 8388607)
- 278 compressed objects within 3 object streams
+ 369 PDF objects out of 1000 (max. 8388607)
+ 279 compressed objects within 3 object streams
  56 named destinations out of 1000 (max. 500000)
  49304 words of extra memory for PDF output out of 51595 (max. 10000000)
 
