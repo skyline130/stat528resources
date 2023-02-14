@@ -1,0 +1,721 @@
+---
+title: "STAT 528 - Advanced Regression Analysis II"
+author: "Count response regression (part II)"
+institute: |
+  | Daniel J. Eck
+  | Department of Statistics  
+  | University of Illinois
+date: ""
+output: 
+    beamer_presentation:
+        keep_tex: true
+        fig_width: 11
+        fig_height: 7.5
+        includes:
+bibliography: ../note_sources.bib
+urlcolor: blue
+header-includes:
+- \usepackage{graphicx}
+- \usepackage{bm}
+- \usepackage{array}
+- \usepackage{amsmath}
+- \usepackage{amsthm}
+- \usepackage{amsfonts}
+- \usepackage{amssymb}
+- \usepackage{tikz-cd}
+- \usepackage{url}
+- \definecolor{foreground}{RGB}{255,255,255}
+- \definecolor{background}{RGB}{34,28,54}
+- \definecolor{title}{RGB}{105,165,255}
+- \definecolor{gray}{RGB}{175,175,175}
+- \definecolor{lightgray}{RGB}{225,225,225}
+- \definecolor{subtitle}{RGB}{232,234,255}
+- \definecolor{hilight}{RGB}{112,224,255}
+- \definecolor{vhilight}{RGB}{255,111,207}
+- \setbeamertemplate{footline}[page number]
+---
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Proj}{\textbf{P}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\rootn}{\sqrt{n}}
+\newcommand{\p}{\mathbf{p}}
+\newcommand{\E}{\text{E}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\mubf}{\bm{\mu}}
+\newcommand{\logit}{\text{logit}}
+
+\newtheorem{cor}{Corollary}
+\newtheorem{lem}{Lemma}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{prop}{Proposition}
+
+
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy.opts=list(width.cutoff=40))
+library(ggplot2)
+
+mycols     = c("chartreuse3", "orangered", "deepskyblue3", "darkorchid1", "yellow")
+dark_theme = theme(plot.background   = element_blank(), 
+                   panel.background  = element_blank(),
+                   #legend.background = element_blank(), legend.key = element_blank(),
+                   axis.title.x      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(10,0,0,0)),
+                   axis.title.y      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(0,20,0,0)),
+                   axis.text         = element_text(size=18, color = "grey80"), 
+                   text              = element_text(size=20),
+                   axis.title        = element_text(size = 26),
+                   legend.title      = element_text(size = 26, colour = "grey80"),
+                   panel.border      = element_blank(),
+                   panel.grid.major  = element_line(colour = "grey50"), 
+                   panel.grid.minor  = element_line(colour = "grey30"))
+```
+
+
+## Last time
+
+- Poisson regression
+- Residual diagnostics 
+- Data analysis
+
+
+## Learning Objectives Today
+
+- Overdispersion
+- gala data analysis
+- Negative Binomial regression
+- Zero Inflated Count Models 
+
+
+
+
+##
+
+When the mechanism is not known, we can introduce a dispersion parameter $\phi$ such that $\mathrm{Var}(Y) = \phi \mathrm{E}(Y) = \phi\mu$. This decouples the variance from the mean.
+
+\vspace{12pt}
+The case $\phi = 1$ is the regular Poisson regression case, while $\phi > 1$ is overdispersion and $\phi < 1$ is underdispersion.
+
+\vspace{12pt}
+A common explanation for large deviance (or poor fit) is the presence of a few outliers. 
+
+\vspace{12pt}
+When large number of points are identified as outliers, they become unexceptional, and it may be the case that the error distribution is misspecified. 
+
+
+##
+
+In the presence of overdispersion, the exponential family takes on a different functional form
+\begin{equation} \label{expofamdisp}
+  f(y|\theta,\phi) = \exp\left(\frac{\langle y,\theta\rangle- c(\theta)}{a(\phi)} - b(y,\phi) \right),
+\end{equation}
+where 
+
+- $y$, $\theta$, and $c(\theta)$ are as before
+- $\phi$ is a dispersion parameter 
+- $b(y,\phi)$ is a function of the data $y$ and the dispersion parameter $\phi$. 
+
+\vspace{12pt}
+Notice that the density \eqref{expofamdisp} is a generalization of the exponential family density which specifies that $a(\phi) = 1$ and $b(y,\phi) = \log(h(y))$. 
+
+\vspace{12pt}
+This is not a canonical exponential family model. What happens to sufficiency?
+
+##
+
+Note that the dispersion parameter can be estimated using
+$$
+  \hat{\phi} = \frac{\sum_{i=1}^n(y - \hat\mu_i)^2/\hat\mu_i}{n-p}.
+$$
+Notice that the estimation of the dispersion and the regression parameters is independent, so choosing a dispersion other than one has no effect on the regression parameter estimates.
+
+
+
+
+## 
+
+
+We investigate the overdispersed Poisson regression model with respect to the Galapogas data.
+
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(faraway)
+gala <- gala %>% 
+  mutate(Size = as.factor(1 + ifelse(Area > 1,1,0) + ifelse(Area > 25,1,0)))
+m1 <- glm(Species ~ Elevation + Nearest + Scruz + Adjacent + Size, 
+          family = "poisson", data = gala, x = TRUE)
+```
+
+\vspace{12pt}
+```{r}
+n <- nrow(gala)
+p <- length(coef(m1))
+y <- gala$Species
+
+## estimate dispersion directly
+fits <- predict(m1, type = "response")
+dp <- sum((y - fits)^2/fits) / (n - p)
+dp
+```
+
+
+##
+
+\tiny
+```{r}
+summary(m1, dispersion = dp)
+```
+
+
+##
+
+\tiny
+```{r}
+m2 <- glm(Species ~ Elevation + Nearest + Scruz + Adjacent + Size, 
+          family = "quasipoisson", data = gala, x = TRUE)
+summary(m2)
+```
+
+
+
+##
+
+In this case the dispersion is quite large leading to an increase in standard errors of over a factor of 5 
+
+\vspace{12pt}
+\tiny
+```{r}
+c(dp, sqrt(dp))
+
+se <- function(model) sqrt(diag(vcov(model)))
+round(data.frame(coef.m1=coef(m1), coef.m2=coef(m2), se.m1=se(m1), se.m2=se(m2), 
+                 ratio=se(m2)/se(m1)), 4)
+```
+
+
+##
+
+The overdispersed Poisson model clearly offers improvements to the residuals vs fitted values plot
+
+\vspace{12pt}
+\tiny
+```{r, echo = FALSE}
+# dispersion
+par(mfrow = c(1,2))
+plot(predict(m1), (gala$Species - fitted(m1))^2, 
+     xlab= expression(hat(theta)),ylab=expression((y-hat(mu))^2), 
+     pch = 19, main = "dispersion")
+lines(sort(predict(m1)), dp*sort(fitted(m1)), lty="dashed")
+
+# no dispersion
+plot(predict(m1), (gala$Species - fitted(m1))^2, 
+     xlab= expression(hat(theta)),ylab=expression((y-hat(mu))^2), 
+     pch = 19, main = "no dispersion")
+lines(sort(predict(m1)), sort(fitted(m1)), lty="dashed")
+```
+
+
+##
+
+```{r, echo = FALSE}
+# log mean-value scale with dispersion (this distorts the success)
+par(mfrow = c(1,2))
+plot(log(fitted(m1)), log((gala$Species - fitted(m1))^2), 
+     xlab= expression(hat(theta)),ylab=expression((y-hat(mu))^2), 
+     pch = 19, main = "dispersion")
+lines(log(sort(fitted(m1))), log(dp*sort(fitted(m1))), lty="dashed")
+
+# log mean-value scale with no dispersion
+plot(log(fitted(m1)), log((gala$Species - fitted(m1))^2), 
+     xlab= expression(hat(theta)),ylab=expression((y-hat(mu))^2), 
+     pch = 19, main = "no dispersion")
+lines(log(sort(fitted(m1))), log(sort(fitted(m1))), lty="dashed")
+```
+
+
+
+## 
+
+The \texttt{AER} package includes a function that allows for one to [test whether or not dispersion is present](https://www.sciencedirect.com/science/article/abs/pii/030440769090014K). We can see that dispersion is present at most reasonable significance testing levels.
+
+\vspace{12pt}
+\tiny
+```{r, message = FALSE}
+library(AER)
+dispersiontest(m1, trafo=1)
+```
+
+
+\vspace{12pt}
+\normalsize
+Note that the \texttt{AER} package defines dispersion differently than the \texttt{glm} function.
+
+
+
+## 
+
+Let's consider our better performing model from last time.
+
+\vspace{12pt}
+\tiny
+```{r}
+m3 <- glm(Species ~ Elevation + I(Elevation^2) + Nearest + Scruz + 
+            I(Scruz^2) + Adjacent + 
+            Area + I(Area^2), family = "poisson", data = gala, x = TRUE)
+```
+
+
+
+##
+
+This model appears to also be over dispersed.
+
+\vspace{12pt}
+\tiny
+```{r, message = FALSE}
+p <- length(coef(m3))
+
+fits <- predict(m3, type = "response")
+dp3 <- sum((y - fits)^2/fits) / (n - p)
+dp3
+
+dispersiontest(m3, trafo=1)
+```
+
+
+
+
+
+##
+
+```{r, echo = FALSE}
+# dispersion
+par(mfrow = c(1,2))
+plot(predict(m3), (gala$Species - fitted(m3))^2, 
+     xlab= expression(hat(theta)),ylab=expression((y-hat(mu))^2), 
+     pch = 19, main = "dispersion")
+lines(sort(predict(m3)), dp3*sort(fitted(m3)), lty="dashed")
+
+# no dispersion
+plot(predict(m3), (gala$Species - fitted(m3))^2, 
+     xlab= expression(hat(theta)),ylab=expression((y-hat(mu))^2), 
+     pch = 19, main = "no dispersion")
+lines(sort(predict(m3)), sort(fitted(m3)), lty="dashed")
+```
+
+
+##
+
+```{r, echo = FALSE}
+# log mean-value scale with dispersion (this distorts the success)
+par(mfrow = c(1,2))
+plot(log(fitted(m3)), log((gala$Species - fitted(m3))^2), 
+     xlab= expression(hat(theta)),ylab=expression((y-hat(mu))^2), 
+     pch = 19, main = "dispersion")
+lines(log(sort(fitted(m3))), log(dp3*sort(fitted(m3))), lty="dashed")
+
+# log mean-value scale with no dispersion
+plot(log(fitted(m3)), log((gala$Species - fitted(m3))^2), 
+     xlab= expression(hat(theta)),ylab=expression((y-hat(mu))^2), 
+     pch = 19, main = "no dispersion")
+lines(log(sort(fitted(m3))), log(sort(fitted(m3))), lty="dashed")
+```
+
+
+
+
+## Look at residuals
+
+We will now remove Santa Maria.
+
+\vspace{12pt}
+\tiny
+```{r}
+sort(round((gala$Species - fitted(m3))^2, 2), 
+     decreasing = TRUE)
+```
+
+
+
+## 
+
+\tiny
+```{r}
+m4 <- glm(Species ~ Elevation + I(Elevation^2) + Nearest + Scruz + 
+            I(Scruz^2) + Adjacent + Area + I(Area^2), family = "poisson",
+            data = gala[-27, ], x = TRUE)
+summary(m4)
+```
+
+
+
+##
+
+Let's calculate dispersion for this new model
+
+\vspace{12pt}
+\tiny
+```{r}
+p <- length(coef(m4))
+n <- nrow(gala) - 1
+y <- gala[-27, ]$Species
+
+## estimate dispersion directly
+fits <- predict(m4, type = "response")
+dp4 <- sum((y - fits)^2/fits) / (n - p)
+dp4
+
+dispersiontest(m4, trafo=1)
+```
+
+
+
+##
+
+```{r, echo = FALSE}
+# dispersion
+par(mfrow = c(1,2))
+plot(predict(m4), (y - fitted(m4))^2, 
+     xlab= expression(hat(theta)),ylab=expression((y-hat(mu))^2), 
+     pch = 19, main = "dispersion")
+lines(sort(predict(m4)), dp4*sort(fitted(m4)), lty="dashed")
+
+# no dispersion
+plot(predict(m4), (y - fitted(m4))^2, 
+     xlab= expression(hat(theta)),ylab=expression((y-hat(mu))^2), 
+     pch = 19, main = "no dispersion")
+lines(sort(predict(m4)), sort(fitted(m4)), lty="dashed")
+```
+
+
+
+##
+
+```{r, echo = FALSE}
+# log mean-value scale with dispersion (this distorts the success)
+par(mfrow = c(1,2))
+plot(log(fitted(m4)), log((y - fitted(m4))^2), 
+     xlab= expression(hat(theta)),ylab=expression((y-hat(mu))^2), 
+     pch = 19, main = "dispersion")
+lines(log(sort(fitted(m4))), log(dp4*sort(fitted(m4))), lty="dashed")
+
+# log mean-value scale with no dispersion
+plot(log(fitted(m4)), log((y - fitted(m4))^2), 
+     xlab= expression(hat(theta)),ylab=expression((y-hat(mu))^2), 
+     pch = 19, main = "no dispersion")
+lines(log(sort(fitted(m4))), log(sort(fitted(m4))), lty="dashed")
+```
+
+
+
+## 
+
+Matching of large species counts is pretty good.
+
+\vspace{12pt}
+\tiny
+```{r}
+foo <- data.frame(names = rownames(gala[-27, ]),
+                  Species = y,
+                  pred = as.numeric(predict(m4, type = "response")), 
+                  resid = residuals(m4))
+head(cbind(foo %>% arrange(desc(Species)) %>% pull(names),
+           foo %>% arrange(desc(pred)) %>% pull(names)), 10)
+```
+
+
+##
+
+There are still some misses, mostly among small counts.
+
+\vspace{12pt}
+\tiny
+```{r}
+foo %>% arrange(desc(abs(resid))) %>% head(10)
+```
+
+
+
+
+
+
+
+## Which model? 
+
+We can additionally consider information criteria:
+
+\vspace{12pt}
+\tiny
+```{r}
+AIC(m1, m3, m4)
+
+BIC(m1, m3, m4)
+```
+
+
+
+
+
+
+<!-- ##  -->
+
+<!-- The Poisson distribution has only one parameter (mean equals variance) and is therefore not very flexible for empirical fitting purposes.  -->
+
+<!-- \vspace{12pt} -->
+<!-- We can generalize by allowing ourselves a dispersion parameter to allow for increased flexibility in various Poisson models.  -->
+
+<!-- For example, suppose the Poisson response $Y$ has rate $\lambda$ which is itself a random variable. The tendency to fail for a machine may vary from unit to unit even though they are the same model. We can model this by letting $\lambda$ be gamma distributed with $E(\lambda) = \mu$ and $\mathrm{Var}(\lambda) = \mu/\phi$. Now $Y$ is negative binomial with mean $\mathrm{E}(Y) = \mu$. The mean is the same as the Poisson, but the variance $\mathrm{Var}(Y) = \mu(1+\phi)/\phi$ which is not equal to $\mu$.  -->
+
+
+
+## Negative Binomial regression
+
+Given a series of independent trials, each trial with probability of success $p$, let $Z$ be the number of trials until the $k$th success. 
+
+\vspace{12pt}
+The negative binomial distribution can arise naturally in a few ways: 
+
+- One can envision a system that can withstand $k$ hits before failure. The probability of a hit in a given time period is $p$. 
+- The negative binomial also arises from the generalization of the Poisson where the rate parameter is gamma distributed. 
+
+
+
+## 
+
+The mass function for the negative binomial distribution is:
+$$
+  \Prob(Z = z) = {z-1 \choose k-1}p^k(1-p)^{z-k}, \qquad z = k,k+1,\ldots,
+$$
+
+\vspace{12pt}
+We get a more convenient parameterization if we let $Y = Z - k$ and $p = (1 + \alpha)^{-1}$ so that: 
+$$
+  \Prob(Y=y) = {y+k-1 \choose k-1} \frac{\alpha^y}{(1+\alpha)^{y+k}}, \qquad y = 0,1,2,\ldots.
+$$
+Then $\mathrm{E}(Y) = \mu = k\alpha$ and $\mathrm{Var}(Y) = k\alpha + k\alpha^2 = \mu + \mu^2/k$. The log-likelihood is then 
+$$
+  \sum_{i=1}^n\left(y_i\log\left(\frac{\alpha}{1 + \alpha}\right) - k\log(1 + \alpha) 
+    + \sum_{j=0}^{y_i-1}\log(j+k) - \log(y_i!)\right).
+$$
+
+
+##
+
+\begin{center}
+Can the log likelihood on the previous slide be written in canonical form?
+\end{center}
+
+
+## 
+
+The most convenient way to link the mean response $\mu$ to a linear combination of the the predictors $X$ in typical GLM fashion is through 
+$$
+  \log\left(\frac{\mu}{\mu+k}\right) = \log\left(\frac{\alpha}{1+\alpha}\right) = \theta = x'\beta.
+$$
+
+\vspace{12pt}
+We can specify the change of parameters map $g:\theta\to\mu$ and the link function as $g^{-1}:\mu\to\theta$ as
+$$
+  g(\theta) = \frac{ke^\theta}{1 - e^\theta} = \mu, \qquad 
+    g^{-1}(\mu) = \log\left(\frac{\mu}{\mu+k}\right) = x'\beta.
+$$
+
+\vspace{12pt}
+We can regard $k$ as fixed and determined by the application or as an additional parameter to be estimated.
+
+
+
+
+## Example: Solder data 
+
+ATT ran an experiment varying five factors relevant to a wave-soldering procedure for mounting components on printed circuit boards. 
+
+\vspace{12pt}
+The response variable, skips, is a count of how many solder skips appeared in a visual inspection. 
+
+\vspace{12pt}
+The data comes from Comizzoli et al. (1990) (See the source material on the help page for the solder dataset in the faraway package). 
+
+
+
+## 
+
+We start with a Poisson regression: 
+
+\vspace{12pt}
+\tiny
+```{r}
+library(faraway)
+modp <- glm(skips ~ . , family=poisson, data=solder)
+c(deviance(modp), df.residual(modp))
+```
+
+
+We see that the full model has a residual deviance of 1797 on 881 degrees of freedom. This is not a good fit (as a rule of thumb, deviance should be less than degrees of freedom for a well-fitting submodel). 
+
+
+##
+
+Perhaps including interaction terms will improve the fit: 
+
+\vspace{12pt}
+\tiny
+```{r}
+modp2 <- glm(skips ~ (Opening +Solder + Mask + PadType + Panel)^2, 
+             family=poisson, data=solder)
+c(deviance(modp2), df.residual(modp2))
+pchisq(deviance(modp2), df.residual(modp2), lower=FALSE)
+```
+
+
+\vspace{12pt}
+\normalsize
+The fit is improved but not enough to conclude that the model fits. We could investigate: 
+
+- adding more interactions but that would make interpretation increasingly difficult. 
+- A check for outliers reveals no problem. 
+
+
+
+## Try negative binomial regression
+
+The functions for fitting come from the \texttt{MASS} package. Note that the \texttt{MASS} package has a \texttt{select} function that will clash with the \texttt{select} function in \texttt{dplyr}. Write \texttt{dplyr::select} for data wrangling.
+
+\vspace{12pt}
+We can specify the link parameter $k$. Here we choose $k = 1$ to demonstrate the method, although there is no substantive motivation from this application to use this value. 
+
+
+\vspace{12pt}
+Note that the $k = 1$ case corresponds to an assumption of a geometric distribution for the response.
+
+
+##
+
+\tiny
+```{r}
+library(MASS)
+modn <- glm(skips ~ ., negative.binomial(1), solder)
+modn
+
+## LRT test
+pchisq(deviance(modn), df.residual(modn), lower=FALSE)
+```
+
+
+##
+
+We can estimate the parameter $k$ using maximum likelihood estimation in:
+
+\tiny
+```{r}
+modn <- glm.nb(skips ~ ., solder)
+summary(modn)
+```
+
+
+##
+
+We see that $\hat k = 4.528$ with a standard error of $0.518$. 
+
+\vspace{12pt}
+We can compare negative binomial models using the usual inferential techniques. For instance, we see that the overall fit is much improved.
+
+\vspace{12pt}
+\tiny
+```{r}
+## LRT test
+pchisq(deviance(modn), df.residual(modn), lower=FALSE)
+```
+
+
+
+## Zero Inflated Count Models 
+
+Sometimes we see count response data where the number of zeroes appearing is significantly greater than the Poisson or negative binomial models would predict. 
+
+\vspace{12pt}
+This commonly arises in 
+
+- life history analyses of plants and animals where many subjects die before they reproduce, arrest 
+- bookings data where many people are either not arrested or receive zero day sentences, 
+- insurance claims data. 
+
+\vspace{12pt}
+Modifying the Poisson by adding a dispersion parameter does not adequately model this divergence from the standard count distributions.
+
+
+## Biochemistry graduate students
+
+We consider a sample of 915 biochemistry graduate students. 
+
+\vspace{12pt}
+The response variable is the number of articles produced during the last three years of the PhD. 
+\vspace{12pt}
+We are interested in how this is influenced by the gender, marital status, number of children, prestige of the department and productivity of the advisor of the student. 
+
+\vspace{12pt}
+The dataset may be found in the \texttt{pscl} package. 
+
+
+##
+
+We start by fitting a Poisson regression model:
+
+\vspace{12pt}
+\tiny
+```{r, message=FALSE}
+library(pscl)
+modp <- glm(art ~ ., data=bioChemists, family=poisson)
+sumary(modp)
+```
+
+
+
+##
+
+We can see that deviance is significantly larger than the degrees of freedom (a rule of thumb indicated poor fit). 
+
+\vspace{12pt}
+Some experimentation reveals that this cannot be solved by using a richer linear predictor or by eliminating some outliers (see Faraway). 
+
+\vspace{12pt}
+We might consider a dispersed Poisson model or negative binomial but some thought suggests that there are good reasons why a disproportionate number of students might produce no articles at all.
+
+
+## 
+
+We count and predict how many students produce between zero and seven articles. Very few students produce more than seven articles so we ignore these. 
+
+\vspace{12pt}
+The \texttt{predprob} function produces the predicted probabilities for each case. By summing these, we get the expected number for each article count.
+
+\vspace{12pt}
+\tiny
+```{r}
+ocount <- table(bioChemists$art)[1:8]
+pcount <- colSums(predprob(modp)[,1:8])
+```
+
+
+##
+
+\tiny
+```{r}
+plot(pcount, ocount, type="n", xlab="Predicted", ylab="Observed", 
+     ylim = c(0, 300), axes = FALSE)
+axis(side = 1)
+axis(side = 2)
+text(pcount,ocount, 0:7)
+```
+
+
+## 
+
+We see that there are many more students with zero articles than would be predicted by the Poisson model. In contrast, the relationship between observed and predicted is linear for the students who produce at least one article. 
+
+We now consider a zero-inflated Poisson model. First, some motivation.
