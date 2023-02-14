@@ -87,14 +87,14 @@ dark_theme = theme(plot.background   = element_blank(),
 ## Learning Objectives Today
 
 - Overdispersion
-- gala data analysis
+- Gala data analysis
 - Negative Binomial regression
 - Zero Inflated Count Models 
 
 
 
 
-##
+## Overdispersion
 
 When the mechanism is not known, we can introduce a dispersion parameter $\phi$ such that $\mathrm{Var}(Y) = \phi \mathrm{E}(Y) = \phi\mu$. This decouples the variance from the mean.
 
@@ -441,7 +441,15 @@ foo %>% arrange(desc(abs(resid))) %>% head(10)
 
 
 
+## 
 
+\tiny
+```{r}
+theta <- as.numeric(m4$x %*% coef(m4))
+par(mfrow = c(1,2))
+plot(theta, residuals(m4), xlab = "theta", ylab = "Deviance residuals", pch = 19) 
+plot(theta, residuals(m4, "pearson"), pch = 19, xlab = "theta", ylab = "Pearson residuals")
+```
 
 
 
@@ -556,6 +564,8 @@ c(deviance(modp), df.residual(modp))
 ```
 
 
+\vspace{12pt}
+\normalsize
 We see that the full model has a residual deviance of 1797 on 881 degrees of freedom. This is not a good fit (as a rule of thumb, deviance should be less than degrees of freedom for a well-fitting submodel). 
 
 

@@ -215,7 +215,7 @@ University of Illinois}
 \item
   Overdispersion
 \item
-  gala data analysis
+  Gala data analysis
 \item
   Negative Binomial regression
 \item
@@ -223,8 +223,8 @@ University of Illinois}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{}
-\protect\hypertarget{section}{}
+\begin{frame}{Overdispersion}
+\protect\hypertarget{overdispersion}{}
 When the mechanism is not known, we can introduce a dispersion parameter
 \(\phi\) such that \(\mathrm{Var}(Y) = \phi \mathrm{E}(Y) = \phi\mu\).
 This decouples the variance from the mean.
@@ -247,7 +247,7 @@ misspecified.
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-1}{}
+\protect\hypertarget{section}{}
 In the presence of overdispersion, the exponential family takes on a
 different functional form \begin{equation} \label{expofamdisp}
   f(y|\theta,\phi) = \exp\left(\frac{\langle y,\theta\rangle- c(\theta)}{a(\phi)} - b(y,\phi) \right),
@@ -277,7 +277,7 @@ sufficiency?
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-2}{}
+\protect\hypertarget{section-1}{}
 Note that the dispersion parameter can be estimated using \[
   \hat{\phi} = \frac{\sum_{i=1}^n(y - \hat\mu_i)^2/\hat\mu_i}{n-p}.
 \] Notice that the estimation of the dispersion and the regression
@@ -286,7 +286,7 @@ no effect on the regression parameter estimates.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-3}{}
+\protect\hypertarget{section-2}{}
 We investigate the overdispersed Poisson regression model with respect
 to the Galapogas data.
 
@@ -311,7 +311,7 @@ to the Galapogas data.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-4}{}
+\protect\hypertarget{section-3}{}
 \tiny
 
 \begin{Shaded}
@@ -353,7 +353,7 @@ to the Galapogas data.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-5}{}
+\protect\hypertarget{section-4}{}
 \tiny
 
 \begin{Shaded}
@@ -397,7 +397,7 @@ to the Galapogas data.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-6}{}
+\protect\hypertarget{section-5}{}
 In this case the dispersion is quite large leading to an increase in
 standard errors of over a factor of 5
 
@@ -435,7 +435,7 @@ standard errors of over a factor of 5
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-7}{}
+\protect\hypertarget{section-6}{}
 The overdispersed Poisson model clearly offers improvements to the
 residuals vs fitted values plot
 
@@ -446,12 +446,12 @@ residuals vs fitted values plot
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-8}{}
+\protect\hypertarget{section-7}{}
 \includegraphics{week5_p1_files/figure-beamer/unnamed-chunk-7-1.pdf}
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-9}{}
+\protect\hypertarget{section-8}{}
 The \texttt{AER} package includes a function that allows for one to
 \href{https://www.sciencedirect.com/science/article/abs/pii/030440769090014K}{test
 whether or not dispersion is present}. We can see that dispersion is
@@ -487,7 +487,7 @@ the \texttt{glm} function.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-10}{}
+\protect\hypertarget{section-9}{}
 Let's consider our better performing model from last time.
 
 \vspace{12pt}
@@ -503,7 +503,7 @@ Let's consider our better performing model from last time.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-11}{}
+\protect\hypertarget{section-10}{}
 This model appears to also be over dispersed.
 
 \vspace{12pt}
@@ -543,12 +543,12 @@ This model appears to also be over dispersed.
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-12}{}
+\protect\hypertarget{section-11}{}
 \includegraphics{week5_p1_files/figure-beamer/unnamed-chunk-11-1.pdf}
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-13}{}
+\protect\hypertarget{section-12}{}
 \includegraphics{week5_p1_files/figure-beamer/unnamed-chunk-12-1.pdf}
 \end{frame}
 
@@ -581,7 +581,7 @@ We will now remove Santa Maria.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-14}{}
+\protect\hypertarget{section-13}{}
 \tiny
 
 \begin{Shaded}
@@ -629,7 +629,7 @@ We will now remove Santa Maria.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-15}{}
+\protect\hypertarget{section-14}{}
 Let's calculate dispersion for this new model
 
 \vspace{12pt}
@@ -672,17 +672,17 @@ Let's calculate dispersion for this new model
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-16}{}
+\protect\hypertarget{section-15}{}
 \includegraphics{week5_p1_files/figure-beamer/unnamed-chunk-16-1.pdf}
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-17}{}
+\protect\hypertarget{section-16}{}
 \includegraphics{week5_p1_files/figure-beamer/unnamed-chunk-17-1.pdf}
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-18}{}
+\protect\hypertarget{section-17}{}
 Matching of large species counts is pretty good.
 
 \vspace{12pt}
@@ -715,7 +715,7 @@ Matching of large species counts is pretty good.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-19}{}
+\protect\hypertarget{section-18}{}
 There are still some misses, mostly among small counts.
 
 \vspace{12pt}
@@ -740,6 +740,22 @@ There are still some misses, mostly among small counts.
 ## Genovesa Genovesa      40 20.74950  3.742670
 ## Tortuga   Tortuga      16 35.49805 -3.673642
 \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-19}{}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{theta }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(m4}\SpecialCharTok{$}\NormalTok{x }\SpecialCharTok{\%*\%} \FunctionTok{coef}\NormalTok{(m4))}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(theta, }\FunctionTok{residuals}\NormalTok{(m4), }\AttributeTok{xlab =} \StringTok{"theta"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Deviance residuals"}\NormalTok{, }\AttributeTok{pch =} \DecValTok{19}\NormalTok{) }
+\FunctionTok{plot}\NormalTok{(theta, }\FunctionTok{residuals}\NormalTok{(m4, }\StringTok{"pearson"}\NormalTok{), }\AttributeTok{pch =} \DecValTok{19}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"theta"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Pearson residuals"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{week5_p1_files/figure-beamer/unnamed-chunk-20-1.pdf}
 \end{frame}
 
 \begin{frame}[fragile]{Which model?}
@@ -889,6 +905,9 @@ We start with a Poisson regression:
 \begin{verbatim}
 ## [1] 1796.973  881.000
 \end{verbatim}
+
+\vspace{12pt}
+\normalsize
 
 We see that the full model has a residual deviance of 1797 on 881
 degrees of freedom. This is not a good fit (as a rule of thumb, deviance
@@ -1233,7 +1252,7 @@ count.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{week5_p1_files/figure-beamer/unnamed-chunk-28-1.pdf}
+\includegraphics{week5_p1_files/figure-beamer/unnamed-chunk-29-1.pdf}
 \end{frame}
 
 \begin{frame}{}
