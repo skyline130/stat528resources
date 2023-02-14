@@ -649,7 +649,7 @@ This commonly arises in
 Modifying the Poisson by adding a dispersion parameter does not adequately model this divergence from the standard count distributions.
 
 
-## Biochemistry graduate students
+## Example: Biochemistry graduate students
 
 We consider a sample of 915 biochemistry graduate students. 
 
@@ -718,4 +718,121 @@ text(pcount,ocount, 0:7)
 
 We see that there are many more students with zero articles than would be predicted by the Poisson model. In contrast, the relationship between observed and predicted is linear for the students who produce at least one article. 
 
+\vspace{12pt}
 We now consider a zero-inflated Poisson model. First, some motivation.
+
+\vspace{12pt}
+Suppose we ask the general public how many games of chess they have played in the last month:
+
+- Some people will say zero because they do not play chess 
+- Some will say zero because they are chess players who did not play in the last month. 
+
+\vspace{12pt}
+Circumstances such as these require a \emph{mixture} model. 
+
+
+##
+
+A general specification of this model takes the form:
+\begin{align*}
+  \Prob(Y = 0) &= \phi + (1 - \phi)f(0) \\
+  \Prob(Y = j) &= (1 - \phi)f(j), \qquad j > 0.
+\end{align*}
+The parameter $\phi$ represents the proportion of subjects who will always respond zero (the non-chess players in the motivating example).
+
+\vspace{12pt}
+One can model the proportion $\phi$ using a binary response model. 
+
+\vspace{12pt}
+The distribution $f$ models the counts of those individuals that can have a positive response. 
+
+
+## 
+
+We can use a Poisson model for $f$ in which case this is called zero-inflated Poisson model.
+
+\vspace{12pt}
+\tiny
+```{r}
+modz <- zeroinfl(art ~ ., data=bioChemists)
+summary(modz)
+```
+
+
+##
+
+We notice that the \texttt{ment} variable which counts the number of articles produced by the mentor is the most significant predictor in both the Poisson and binary regressions. 
+
+\vspace{12pt}
+This is because the zero-inflated approach models the probability of a zero count (not the probability of a successful 1 count). Hence there is no contradiction.
+
+\vspace{12pt}
+We can use the standard likelihood testing theory to compare nested models. For example, suppose we consider a simplified version of the zero-inflated Poisson model where we now have different predictors for the two components of the model. The count part of the model is specified before the | and the binary response model after.
+
+
+## 
+
+\tiny
+```{r}
+# smaller model
+modz2 <- zeroinfl(art ~ fem+kid5+ment | ment, data=bioChemists)
+
+# summary table for smaller model
+summary(modz2)
+
+# test of nested models
+pchisq(2*(modz$loglik-modz2$loglik), 6, lower = FALSE)
+```
+
+
+## 
+
+For interpretation, the exponentiated coefficients are more useful:
+
+\vspace{12pt}
+\tiny
+```{r}
+exp(coef(modz2))
+```
+
+\vspace{12pt}
+\normalsize
+We can also use the model to make predictions. Consider a single male with no
+children whose mentor produced six articles:
+
+\vspace{12pt}
+\tiny
+```{r}
+newman <- data.frame(fem="Men",mar="Single",kid5=0,ment=6)
+predict(modz2, newdata=newman, type="prob")[1:6]
+```
+
+
+##
+
+We see that most likely outcome for this student is that no articles will be produced with a probability of 0.278. We can query the probability of no production from the zero part of the model:
+
+\vspace{12pt}
+\tiny
+```{r}
+predict(modz2, newdata=newman, type="zero")
+```
+
+\vspace{12pt}
+\normalsize
+So the additional probability to make this up to 0.278 comes from the Poisson count part of the model. This difference might be attributed to students who had the potential to write an article.
+
+
+## 
+
+We note that the zero-inflated Poisson distribution also arises as a special case of an [aster model](https://academic.oup.com/biomet/article-abstract/94/2/415/224189) used in life history analyses for populations of plants or animals. 
+
+\vspace{12pt}
+The aster model can be thought of as a generalized generalized linear regression model and it models individuals through stages of their lifecycle. One can think of a simple lifecycle: 
+$$
+  1 \to Y_1 \to Y_2,
+$$
+where 
+
+- $Y_1$ encodes subjects either reaching or not reaching a reproductive stage (modeled as a binary random variable) and then, conditional on reproduction
+- $Y_2$ encodes how many offspring produced by the subjects in the reproductive stage (modeled as a 0-truncated Poisson random variable).

@@ -413,7 +413,7 @@ A common explanation for large deviance (or poor fit) is the presence of a few o
 \end{equation}
 where $y$, $\theta$, and $c(\theta)$ are as before, $\phi$ is a dispersion parameter, and $b(y,\phi)$ is a function of the data $y$ and the dispersion parameter $\phi$. From the perspective of the canonical exponential families that we have motivated throughout, the function $b(y,\phi)$ is similar to the base measure $h$ that was dropped from consideration in log likelihood based arguments that focused on the parameters. Notice that the density \eqref{expofamdisp} is a generalization of the exponential family density which specifies that $a(\phi) = 1$ and $b(y,\phi) = \log(h(y))$. Note that the dispersion parameter can be estimated using
 $$
-  \hat{\phi} = \frac{\sum_{i=1}^n(y - \hat\mu_i)^2/\hat\mu_i}{n-p}
+  \hat{\phi} = \frac{\sum_{i=1}^n(y - \hat\mu_i)^2/\hat\mu_i}{n-p}.
 $$
 Notice that the estimation of the dispersion and the regression parameters is independent, so choosing a dispersion other than one has no effect on the regression parameter estimates.
 
@@ -584,7 +584,7 @@ We now consider a zero-inflated Poisson model. First, some motivation. Suppose w
   \Prob(Y = 0) &= \phi + (1 - \phi)f(0) \\
   \Prob(Y = j) &= (1 - \phi)f(j), \qquad j > 0.
 \end{align*}
-The parameter $\phi$ represents the proportion of subjects who will always respond zero (the non-chess players in the motivating example). One can model the proportion $\phi$ using the binary response model. The distribution $f$ models the counts of those individuals that can have a positive response. Note that it is possible that some of these individuals will have zero response which combine with the always-zero individuals. We can use a Poisson model for $f$ in which case this is called zero-inflated Poisson model.
+The parameter $\phi$ represents the proportion of subjects who will always respond zero (the non-chess players in the motivating example). One can model the proportion $\phi$ using a binary response model. The distribution $f$ models the counts of those individuals that can have a positive response. Note that it is possible that some of these individuals will have zero response which combine with the always-zero individuals. We can use a Poisson model for $f$ in which case this is called zero-inflated Poisson model.
 
 ```{r}
 modz <- zeroinfl(art ~ ., data=bioChemists)

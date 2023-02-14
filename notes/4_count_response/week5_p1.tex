@@ -1134,8 +1134,8 @@ Modifying the Poisson by adding a dispersion parameter does not
 adequately model this divergence from the standard count distributions.
 \end{frame}
 
-\begin{frame}{Biochemistry graduate students}
-\protect\hypertarget{biochemistry-graduate-students}{}
+\begin{frame}{Example: Biochemistry graduate students}
+\protect\hypertarget{example-biochemistry-graduate-students}{}
 We consider a sample of 915 biochemistry graduate students.
 
 \vspace{12pt}
@@ -1234,6 +1234,275 @@ count.
 \end{Shaded}
 
 \includegraphics{week5_p1_files/figure-beamer/unnamed-chunk-28-1.pdf}
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-32}{}
+We see that there are many more students with zero articles than would
+be predicted by the Poisson model. In contrast, the relationship between
+observed and predicted is linear for the students who produce at least
+one article.
+
+\vspace{12pt}
+
+We now consider a zero-inflated Poisson model. First, some motivation.
+
+\vspace{12pt}
+
+Suppose we ask the general public how many games of chess they have
+played in the last month:
+
+\begin{itemize}
+\tightlist
+\item
+  Some people will say zero because they do not play chess
+\item
+  Some will say zero because they are chess players who did not play in
+  the last month.
+\end{itemize}
+
+\vspace{12pt}
+
+Circumstances such as these require a \emph{mixture} model.
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-33}{}
+A general specification of this model takes the form: \begin{align*}
+  \mathbb{P}(Y = 0) &= \phi + (1 - \phi)f(0) \\
+  \mathbb{P}(Y = j) &= (1 - \phi)f(j), \qquad j > 0.
+\end{align*} The parameter \(\phi\) represents the proportion of
+subjects who will always respond zero (the non-chess players in the
+motivating example).
+
+\vspace{12pt}
+
+One can model the proportion \(\phi\) using a binary response model.
+
+\vspace{12pt}
+
+The distribution \(f\) models the counts of those individuals that can
+have a positive response.
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-34}{}
+We can use a Poisson model for \(f\) in which case this is called
+zero-inflated Poisson model.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{modz }\OtherTok{\textless{}{-}} \FunctionTok{zeroinfl}\NormalTok{(art }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data=}\NormalTok{bioChemists)}
+\FunctionTok{summary}\NormalTok{(modz)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## zeroinfl(formula = art ~ ., data = bioChemists)
+## 
+## Pearson residuals:
+##     Min      1Q  Median      3Q     Max 
+## -2.3253 -0.8652 -0.2826  0.5404  7.2976 
+## 
+## Count model coefficients (poisson with log link):
+##              Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)  0.640839   0.121307   5.283 1.27e-07 ***
+## femWomen    -0.209144   0.063405  -3.299 0.000972 ***
+## marMarried   0.103750   0.071111   1.459 0.144567    
+## kid5        -0.143320   0.047429  -3.022 0.002513 ** 
+## phd         -0.006166   0.031008  -0.199 0.842376    
+## ment         0.018098   0.002294   7.888 3.07e-15 ***
+## 
+## Zero-inflation model coefficients (binomial with logit link):
+##              Estimate Std. Error z value Pr(>|z|)   
+## (Intercept) -0.577060   0.509386  -1.133  0.25728   
+## femWomen     0.109752   0.280082   0.392  0.69517   
+## marMarried  -0.354018   0.317611  -1.115  0.26501   
+## kid5         0.217095   0.196483   1.105  0.26920   
+## phd          0.001275   0.145263   0.009  0.99300   
+## ment        -0.134114   0.045243  -2.964  0.00303 **
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+## 
+## Number of iterations in BFGS optimization: 19 
+## Log-likelihood: -1605 on 12 Df
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-35}{}
+We notice that the \texttt{ment} variable which counts the number of
+articles produced by the mentor is the most significant predictor in
+both the Poisson and binary regressions.
+
+\vspace{12pt}
+
+This is because the zero-inflated approach models the probability of a
+zero count (not the probability of a successful 1 count). Hence there is
+no contradiction.
+
+\vspace{12pt}
+
+We can use the standard likelihood testing theory to compare nested
+models. For example, suppose we consider a simplified version of the
+zero-inflated Poisson model where we now have different predictors for
+the two components of the model. The count part of the model is
+specified before the \textbar{} and the binary response model after.
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-36}{}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# smaller model}
+\NormalTok{modz2 }\OtherTok{\textless{}{-}} \FunctionTok{zeroinfl}\NormalTok{(art }\SpecialCharTok{\textasciitilde{}}\NormalTok{ fem}\SpecialCharTok{+}\NormalTok{kid5}\SpecialCharTok{+}\NormalTok{ment }\SpecialCharTok{|}\NormalTok{ ment, }\AttributeTok{data=}\NormalTok{bioChemists)}
+
+\CommentTok{\# summary table for smaller model}
+\FunctionTok{summary}\NormalTok{(modz2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## zeroinfl(formula = art ~ fem + kid5 + ment | ment, data = bioChemists)
+## 
+## Pearson residuals:
+##     Min      1Q  Median      3Q     Max 
+## -2.2802 -0.8807 -0.2718  0.5131  7.4788 
+## 
+## Count model coefficients (poisson with log link):
+##              Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)  0.694517   0.053025  13.098  < 2e-16 ***
+## femWomen    -0.233857   0.058400  -4.004 6.22e-05 ***
+## kid5        -0.126516   0.039668  -3.189  0.00143 ** 
+## ment         0.018004   0.002224   8.096 5.67e-16 ***
+## 
+## Zero-inflation model coefficients (binomial with logit link):
+##             Estimate Std. Error z value Pr(>|z|)    
+## (Intercept) -0.68488    0.20529  -3.336 0.000849 ***
+## ment        -0.12680    0.03981  -3.185 0.001448 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+## 
+## Number of iterations in BFGS optimization: 22 
+## Log-likelihood: -1608 on 6 Df
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# test of nested models}
+\FunctionTok{pchisq}\NormalTok{(}\DecValTok{2}\SpecialCharTok{*}\NormalTok{(modz}\SpecialCharTok{$}\NormalTok{loglik}\SpecialCharTok{{-}}\NormalTok{modz2}\SpecialCharTok{$}\NormalTok{loglik), }\DecValTok{6}\NormalTok{, }\AttributeTok{lower =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.4041153
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-37}{}
+For interpretation, the exponentiated coefficients are more useful:
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{exp}\NormalTok{(}\FunctionTok{coef}\NormalTok{(modz2))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## count_(Intercept)    count_femWomen        count_kid5        count_ment 
+##         2.0027411         0.7914748         0.8811604         1.0181669 
+##  zero_(Intercept)         zero_ment 
+##         0.5041522         0.8809081
+\end{verbatim}
+
+\vspace{12pt}
+\normalsize
+
+We can also use the model to make predictions. Consider a single male
+with no children whose mentor produced six articles:
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{newman }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{fem=}\StringTok{"Men"}\NormalTok{,}\AttributeTok{mar=}\StringTok{"Single"}\NormalTok{,}\AttributeTok{kid5=}\DecValTok{0}\NormalTok{,}\AttributeTok{ment=}\DecValTok{6}\NormalTok{)}
+\FunctionTok{predict}\NormalTok{(modz2, }\AttributeTok{newdata=}\NormalTok{newman, }\AttributeTok{type=}\StringTok{"prob"}\NormalTok{)[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{6}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.27758792 0.19394034 0.21635997 0.16091421 0.08975799 0.04005363
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-38}{}
+We see that most likely outcome for this student is that no articles
+will be produced with a probability of 0.278. We can query the
+probability of no production from the zero part of the model:
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{predict}\NormalTok{(modz2, }\AttributeTok{newdata=}\NormalTok{newman, }\AttributeTok{type=}\StringTok{"zero"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        1 
+## 0.190666
+\end{verbatim}
+
+\vspace{12pt}
+\normalsize
+
+So the additional probability to make this up to 0.278 comes from the
+Poisson count part of the model. This difference might be attributed to
+students who had the potential to write an article.
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-39}{}
+We note that the zero-inflated Poisson distribution also arises as a
+special case of an
+\href{https://academic.oup.com/biomet/article-abstract/94/2/415/224189}{aster
+model} used in life history analyses for populations of plants or
+animals.
+
+\vspace{12pt}
+
+The aster model can be thought of as a generalized generalized linear
+regression model and it models individuals through stages of their
+lifecycle. One can think of a simple lifecycle: \[
+  1 \to Y_1 \to Y_2,
+\] where
+
+\begin{itemize}
+\tightlist
+\item
+  \(Y_1\) encodes subjects either reaching or not reaching a
+  reproductive stage (modeled as a binary random variable) and then,
+  conditional on reproduction
+\item
+  \(Y_2\) encodes how many offspring produced by the subjects in the
+  reproductive stage (modeled as a 0-truncated Poisson random variable).
+\end{itemize}
 \end{frame}
 
 \end{document}

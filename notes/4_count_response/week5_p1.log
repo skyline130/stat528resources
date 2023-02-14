@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  14 FEB 2023 09:23
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  14 FEB 2023 10:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1410,7 +1410,39 @@ sed on input line 15.
 (pdftex.def)             Requested size: 307.2947pt x 192.00677pt.
 ) [43
 
- <./week5_p1_files/figure-beamer/unnamed-chunk-28-1.pdf>]
+ <./week5_p1_files/figure-beamer/unnamed-chunk-28-1.pdf>] [44
+
+] [45
+
+]
+\openout4 = `week5_p1.vrb'.
+
+(./week5_p1.vrb)
+Overfull \vbox (15.62834pt too high) detected at line 1335
+ []
+
+[46
+
+] [47
+
+]
+\openout4 = `week5_p1.vrb'.
+
+(./week5_p1.vrb) [48
+
+]
+\openout4 = `week5_p1.vrb'.
+
+(./week5_p1.vrb) [49
+
+]
+\openout4 = `week5_p1.vrb'.
+
+(./week5_p1.vrb) [50
+
+] [51
+
+]
 \tf@nav=\write6
 \openout6 = `week5_p1.nav'.
 
@@ -1422,16 +1454,16 @@ sed on input line 15.
 
 (./week5_p1.aux) ) 
 Here is how much of TeX's memory you used:
- 29856 strings out of 478268
- 599308 string characters out of 5846347
+ 29909 strings out of 478268
+ 599857 string characters out of 5846347
  904116 words of memory out of 5000000
- 47156 multiletter control sequences out of 15000+600000
- 539642 words of font info for 128 fonts, out of 8000000 for 9000
+ 47174 multiletter control sequences out of 15000+600000
+ 540062 words of font info for 130 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  128i,11n,122p,1005b,450s stack positions out of 10000i,1000n,20000p,200000b,200000s
-{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mat
-hit.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/
-usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texl
+{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.
+enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/
+local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texl
 ive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{/usr/local/texlive/2022/texm
 f-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2022/texmf-dist/fonts/e
 nc/dvips/lm/lm-mathex.enc}</usr/local/texlive/2022/texmf-dist/fonts/type1/publi
@@ -1448,12 +1480,13 @@ cal/texlive/2022/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></usr/local/texliv
 e/2022/texmf-dist/fonts/type1/public/lm/lmtko10.pfb></usr/local/texlive/2022/te
 xmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2022/texmf-dist/f
 onts/type1/public/lm/lmtt8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/
-public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2022/texmf-dist/fonts/ty
-pe1/public/amsfonts/symbols/msbm10.pfb>
-Output written on week5_p1.pdf (43 pages, 382942 bytes).
+public/lm/lmtti10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/am
+sfonts/symbols/msam10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/publi
+c/amsfonts/symbols/msbm10.pfb>
+Output written on week5_p1.pdf (51 pages, 408173 bytes).
 PDF statistics:
- 485 PDF objects out of 1000 (max. 8388607)
- 372 compressed objects within 4 object streams
- 129 named destinations out of 1000 (max. 500000)
+ 546 PDF objects out of 1000 (max. 8388607)
+ 422 compressed objects within 5 object streams
+ 153 named destinations out of 1000 (max. 500000)
  41038 words of extra memory for PDF output out of 42996 (max. 10000000)
 
