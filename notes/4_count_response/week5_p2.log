@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  16 FEB 2023 10:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  16 FEB 2023 11:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1409,7 +1409,7 @@ sed on input line 930.
 
 Package amsmath Warning: Foreign command \atopwithdelims;
 (amsmath)                \frac or \genfrac should be used instead
-(amsmath)                 on input line 1090.
+(amsmath)                 on input line 1095.
 
 [37
 
@@ -1440,7 +1440,7 @@ Package amsmath Warning: Foreign command \atopwithdelims;
 \openout4 = `week5_p2.vrb'.
 
 (./week5_p2.vrb)
-Overfull \vbox (115.62834pt too high) detected at line 1349
+Overfull \vbox (115.62834pt too high) detected at line 1354
  []
 
 [45
@@ -1488,7 +1488,7 @@ sed on input line 15.
 \openout4 = `week5_p2.vrb'.
 
 (./week5_p2.vrb)
-Overfull \vbox (15.62834pt too high) detected at line 1601
+Overfull \vbox (15.62834pt too high) detected at line 1606
  []
 
 [55
@@ -1553,7 +1553,7 @@ onts/type1/public/lm/lmtt8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/
 public/lm/lmtti10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/am
 sfonts/symbols/msam10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/publi
 c/amsfonts/symbols/msbm10.pfb>
-Output written on week5_p2.pdf (60 pages, 439454 bytes).
+Output written on week5_p2.pdf (60 pages, 439589 bytes).
 PDF statistics:
  633 PDF objects out of 1000 (max. 8388607)
  491 compressed objects within 5 object streams

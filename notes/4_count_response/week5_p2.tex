@@ -992,7 +992,7 @@ There are still some misses, mostly among small counts.
 
 \begin{frame}[fragile]{}
 \protect\hypertarget{section-26}{}
-How about leave-one-cross-validation as a check against overfit?
+How about leave-one-out cross-validation as a check against overfit?
 
 \vspace{12pt}
 \tiny
@@ -1008,15 +1008,20 @@ How about leave-one-cross-validation as a check against overfit?
 \NormalTok{pred1 }\OtherTok{\textless{}{-}}\NormalTok{ pred2 }\OtherTok{\textless{}{-}}\NormalTok{ pred3 }\OtherTok{\textless{}{-}}\NormalTok{ pred4 }\OtherTok{\textless{}{-}}\NormalTok{ pred5 }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
 \ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(dat))\{}
 \NormalTok{  pred1[j] }\OtherTok{\textless{}{-}}\NormalTok{  (dat[j, ]}\SpecialCharTok{$}\NormalTok{Species }\SpecialCharTok{{-}} \FunctionTok{predict}\NormalTok{(}\FunctionTok{update}\NormalTok{(m1\_b, }\AttributeTok{data =}\NormalTok{ dat[}\SpecialCharTok{{-}}\NormalTok{j, ]), }
-                             \AttributeTok{newdata =}\NormalTok{ dat[j, ]))}\SpecialCharTok{\^{}}\DecValTok{2}
+                             \AttributeTok{newdata =}\NormalTok{ dat[j, ]))}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{/} 
+    \FunctionTok{predict}\NormalTok{(}\FunctionTok{update}\NormalTok{(m1\_b, }\AttributeTok{data =}\NormalTok{ dat[}\SpecialCharTok{{-}}\NormalTok{j, ]), }\AttributeTok{newdata =}\NormalTok{ dat[j, ])}
 \NormalTok{  pred2[j] }\OtherTok{\textless{}{-}}\NormalTok{  (dat[j, ]}\SpecialCharTok{$}\NormalTok{Species }\SpecialCharTok{{-}} \FunctionTok{predict}\NormalTok{(}\FunctionTok{update}\NormalTok{(m2\_b, }\AttributeTok{data =}\NormalTok{ dat[}\SpecialCharTok{{-}}\NormalTok{j, ]), }
-                             \AttributeTok{newdata =}\NormalTok{ dat[j, ]))}\SpecialCharTok{\^{}}\DecValTok{2}
+                             \AttributeTok{newdata =}\NormalTok{ dat[j, ]))}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{/} 
+    \FunctionTok{predict}\NormalTok{(}\FunctionTok{update}\NormalTok{(m2\_b, }\AttributeTok{data =}\NormalTok{ dat[}\SpecialCharTok{{-}}\NormalTok{j, ]), }\AttributeTok{newdata =}\NormalTok{ dat[j, ])}
 \NormalTok{  pred3[j] }\OtherTok{\textless{}{-}}\NormalTok{  (dat[j, ]}\SpecialCharTok{$}\NormalTok{Species }\SpecialCharTok{{-}} \FunctionTok{predict}\NormalTok{(}\FunctionTok{update}\NormalTok{(m3\_b, }\AttributeTok{data =}\NormalTok{ dat[}\SpecialCharTok{{-}}\NormalTok{j, ]), }
-                             \AttributeTok{newdata =}\NormalTok{ dat[j, ]))}\SpecialCharTok{\^{}}\DecValTok{2}
+                             \AttributeTok{newdata =}\NormalTok{ dat[j, ]))}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{/} 
+    \FunctionTok{predict}\NormalTok{(}\FunctionTok{update}\NormalTok{(m3\_b, }\AttributeTok{data =}\NormalTok{ dat[}\SpecialCharTok{{-}}\NormalTok{j, ]), }\AttributeTok{newdata =}\NormalTok{ dat[j, ])}
 \NormalTok{  pred4[j] }\OtherTok{\textless{}{-}}\NormalTok{  (dat[j, ]}\SpecialCharTok{$}\NormalTok{Species }\SpecialCharTok{{-}} \FunctionTok{predict}\NormalTok{(}\FunctionTok{update}\NormalTok{(m4\_b, }\AttributeTok{data =}\NormalTok{ dat[}\SpecialCharTok{{-}}\NormalTok{j, ]), }
-                             \AttributeTok{newdata =}\NormalTok{ dat[j, ]))}\SpecialCharTok{\^{}}\DecValTok{2}
+                             \AttributeTok{newdata =}\NormalTok{ dat[j, ]))}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{/} 
+    \FunctionTok{predict}\NormalTok{(}\FunctionTok{update}\NormalTok{(m4\_b, }\AttributeTok{data =}\NormalTok{ dat[}\SpecialCharTok{{-}}\NormalTok{j, ]), }\AttributeTok{newdata =}\NormalTok{ dat[j, ])}
 \NormalTok{  pred5[j] }\OtherTok{\textless{}{-}}\NormalTok{  (dat[j, ]}\SpecialCharTok{$}\NormalTok{Species }\SpecialCharTok{{-}} \FunctionTok{predict}\NormalTok{(}\FunctionTok{update}\NormalTok{(m5\_b, }\AttributeTok{data =}\NormalTok{ dat[}\SpecialCharTok{{-}}\NormalTok{j, ]), }
-                             \AttributeTok{newdata =}\NormalTok{ dat[j, ]))}\SpecialCharTok{\^{}}\DecValTok{2}
+                             \AttributeTok{newdata =}\NormalTok{ dat[j, ]))}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{/} 
+    \FunctionTok{predict}\NormalTok{(}\FunctionTok{update}\NormalTok{(m5\_b, }\AttributeTok{data =}\NormalTok{ dat[}\SpecialCharTok{{-}}\NormalTok{j, ]), }\AttributeTok{newdata =}\NormalTok{ dat[j, ])}
 \NormalTok{\}}
 
 \FunctionTok{c}\NormalTok{(}\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{(pred1)), }\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{(pred2)), }\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{(pred3)), }
@@ -1025,13 +1030,13 @@ How about leave-one-cross-validation as a check against overfit?
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 132.0047 132.0047 130.1501 130.1501 128.7904
+## [1] 54.75609 54.75609 51.02298 51.02298 50.31299
 \end{verbatim}
 \end{frame}
 
 \begin{frame}[fragile]{}
 \protect\hypertarget{section-27}{}
-Then report what was removed.
+Then report what was removed. Maybe these islands are interesting?
 
 \vspace{12pt}
 \tiny
