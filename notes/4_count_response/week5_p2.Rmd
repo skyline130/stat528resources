@@ -268,8 +268,8 @@ Let's consider our better performing model from last time.
 \tiny
 ```{r}
 m3 <- glm(Species ~ Elevation + I(Elevation^2) + Nearest + Scruz + 
-            I(Scruz^2) + Adjacent + 
-            Area + I(Area^2), family = "poisson", data = gala, x = TRUE)
+          I(Scruz^2) + Adjacent + Area + I(Area^2), 
+          family = "poisson", data = gala, x = TRUE)
 ```
 
 
@@ -286,7 +286,12 @@ p <- length(coef(m3))
 fits <- predict(m3, type = "response")
 dp3 <- sum((y - fits)^2/fits) / (n - p)
 dp3
+```
 
+
+\vspace{12pt}
+\tiny
+```{r, message = FALSE}
 dispersiontest(m3, trafo=1)
 ```
 
@@ -372,9 +377,19 @@ y <- gala[-27, ]$Species
 fits <- predict(m4, type = "response")
 dp4 <- sum((y - fits)^2/fits) / (n - p)
 dp4
+```
 
+\vspace{12pt}
+\tiny
+```{r}
 dispersiontest(m4, trafo=1)
 ```
+
+
+\vspace{12pt}
+\normalsize
+Any thoughts on things that we should do differently?
+
 
 
 
@@ -463,26 +478,169 @@ We can additionally consider information criteria:
 \vspace{12pt}
 \tiny
 ```{r}
-AIC(m1, m3, m4)
+AIC(m1, m2, m3, m4)
 
-BIC(m1, m3, m4)
+BIC(m1, m2, m3, m4)
+```
+
+
+\vspace{12pt}
+\normalsize
+Any thing that we should have considered?
+
+
+
+##
+
+Go back to the start. And discover that a simpler model with two outliers removed fits this data well.
+
+
+\vspace{12pt}
+\tiny
+```{r}
+dat <- gala[-c(11,27), ]
+m5 <- glm(Species ~ Elevation + Nearest + Scruz + Adjacent + Area + I(Area^2), 
+          family = "poisson", data = dat)
+summary(m5)
+```
+
+
+##
+
+Overdispersion is likely present.
+
+\vspace{12pt}
+\tiny
+```{r}
+p <- length(coef(m5))
+n <- nrow(dat)
+y <- dat$Species
+
+## estimate dispersion directly
+fits <- predict(m5, type = "response")
+dp5 <- sum((y - fits)^2/fits) / (n - p)
+dp5
+```
+
+
+\vspace{12pt}
+\tiny
+```{r}
+dispersiontest(m5, trafo=1)
+```
+
+
+##
+
+```{r, echo = FALSE}
+# dispersion
+y <- dat$Species
+par(mfrow = c(1,2))
+plot(predict(m5), (y - fitted(m5))^2, 
+     xlab= expression(hat(theta)),ylab=expression((y-hat(mu))^2), 
+     pch = 19, main = "dispersion")
+lines(sort(predict(m5)), dp4*sort(fitted(m5)), lty="dashed")
+
+# no dispersion
+plot(predict(m5), (y - fitted(m5))^2, 
+     xlab= expression(hat(theta)),ylab=expression((y-hat(mu))^2), 
+     pch = 19, main = "no dispersion")
+lines(sort(predict(m5)), sort(fitted(m5)), lty="dashed")
+```
+
+
+
+##
+
+```{r, echo = FALSE}
+# log mean-value scale with dispersion (this distorts the success)
+par(mfrow = c(1,2))
+plot(log(fitted(m5)), log((y - fitted(m5))^2), 
+     xlab= expression(hat(theta)),ylab=expression((y-hat(mu))^2), 
+     pch = 19, main = "dispersion")
+lines(log(sort(fitted(m5))), log(dp4*sort(fitted(m5))), lty="dashed")
+
+# log mean-value scale with no dispersion
+plot(log(fitted(m5)), log((y - fitted(m5))^2), 
+     xlab= expression(hat(theta)),ylab=expression((y-hat(mu))^2), 
+     pch = 19, main = "no dispersion")
+lines(log(sort(fitted(m5))), log(sort(fitted(m5))), lty="dashed")
 ```
 
 
 
 
 
+## 
 
-<!-- ##  -->
+Matching of large species counts is pretty good.
 
-<!-- The Poisson distribution has only one parameter (mean equals variance) and is therefore not very flexible for empirical fitting purposes.  -->
+\vspace{12pt}
+\tiny
+```{r}
+foo <- data.frame(names = rownames(dat),
+                  Species = y,
+                  pred = as.numeric(predict(m5, type = "response")), 
+                  resid = residuals(m5))
+head(cbind(foo %>% arrange(desc(Species)) %>% pull(names),
+           foo %>% arrange(desc(pred)) %>% pull(names)), 10)
+```
 
-<!-- \vspace{12pt} -->
-<!-- We can generalize by allowing ourselves a dispersion parameter to allow for increased flexibility in various Poisson models.  -->
 
-<!-- For example, suppose the Poisson response $Y$ has rate $\lambda$ which is itself a random variable. The tendency to fail for a machine may vary from unit to unit even though they are the same model. We can model this by letting $\lambda$ be gamma distributed with $E(\lambda) = \mu$ and $\mathrm{Var}(\lambda) = \mu/\phi$. Now $Y$ is negative binomial with mean $\mathrm{E}(Y) = \mu$. The mean is the same as the Poisson, but the variance $\mathrm{Var}(Y) = \mu(1+\phi)/\phi$ which is not equal to $\mu$.  -->
+##
+
+There are still some misses, mostly among small counts.
+
+\vspace{12pt}
+\tiny
+```{r}
+foo %>% arrange(desc(abs(resid))) %>% head(10)
+```
 
 
+
+## 
+
+How about leave-one-cross-validation as a check against overfit?
+
+\vspace{12pt}
+\tiny
+```{r}
+m1_b <- update(m1, data = dat)
+m2_b <- update(m2, data = dat)
+m3_b <- update(m3, data = dat)
+m4_b <- update(m4, data = dat)
+m5_b <- update(m5, data = dat)
+
+pred1 <- pred2 <- pred3 <- pred4 <- pred5 <- NULL
+for(j in 1:nrow(dat)){
+  pred1[j] <-  (dat[j, ]$Species - predict(update(m1_b, data = dat[-j, ]), 
+                             newdata = dat[j, ]))^2
+  pred2[j] <-  (dat[j, ]$Species - predict(update(m2_b, data = dat[-j, ]), 
+                             newdata = dat[j, ]))^2
+  pred3[j] <-  (dat[j, ]$Species - predict(update(m3_b, data = dat[-j, ]), 
+                             newdata = dat[j, ]))^2
+  pred4[j] <-  (dat[j, ]$Species - predict(update(m4_b, data = dat[-j, ]), 
+                             newdata = dat[j, ]))^2
+  pred5[j] <-  (dat[j, ]$Species - predict(update(m5_b, data = dat[-j, ]), 
+                             newdata = dat[j, ]))^2
+}
+
+c(sqrt(mean(pred1)), sqrt(mean(pred2)), sqrt(mean(pred3)), 
+  sqrt(mean(pred4)), sqrt(mean(pred5)))
+```
+
+
+
+## 
+
+Then report what was removed. 
+
+\vspace{12pt}
+\tiny
+```{r}
+gala[c(11,27), ]
+```
 
 ## Negative Binomial regression
 

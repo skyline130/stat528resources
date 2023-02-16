@@ -500,8 +500,8 @@ Let's consider our better performing model from last time.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{m3 }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(Species }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Elevation }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Elevation}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+}\NormalTok{ Nearest }\SpecialCharTok{+}\NormalTok{ Scruz }\SpecialCharTok{+} 
-            \FunctionTok{I}\NormalTok{(Scruz}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+}\NormalTok{ Adjacent }\SpecialCharTok{+} 
-\NormalTok{            Area }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Area}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{), }\AttributeTok{family =} \StringTok{"poisson"}\NormalTok{, }\AttributeTok{data =}\NormalTok{ gala, }\AttributeTok{x =} \ConstantTok{TRUE}\NormalTok{)}
+          \FunctionTok{I}\NormalTok{(Scruz}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+}\NormalTok{ Adjacent }\SpecialCharTok{+}\NormalTok{ Area }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Area}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{), }
+          \AttributeTok{family =} \StringTok{"poisson"}\NormalTok{, }\AttributeTok{data =}\NormalTok{ gala, }\AttributeTok{x =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 \end{frame}
@@ -527,6 +527,9 @@ This model appears to also be over dispersed.
 ## [1] 17.84607
 \end{verbatim}
 
+\vspace{12pt}
+\tiny
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{dispersiontest}\NormalTok{(m3, }\AttributeTok{trafo=}\DecValTok{1}\NormalTok{)}
@@ -548,12 +551,12 @@ This model appears to also be over dispersed.
 
 \begin{frame}{}
 \protect\hypertarget{section-11}{}
-\includegraphics{week5_p2_files/figure-beamer/unnamed-chunk-11-1.pdf}
+\includegraphics{week5_p2_files/figure-beamer/unnamed-chunk-12-1.pdf}
 \end{frame}
 
 \begin{frame}{}
 \protect\hypertarget{section-12}{}
-\includegraphics{week5_p2_files/figure-beamer/unnamed-chunk-12-1.pdf}
+\includegraphics{week5_p2_files/figure-beamer/unnamed-chunk-13-1.pdf}
 \end{frame}
 
 \begin{frame}[fragile]{Look at residuals}
@@ -656,6 +659,9 @@ Let's calculate dispersion for this new model
 ## [1] 16.39359
 \end{verbatim}
 
+\vspace{12pt}
+\tiny
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{dispersiontest}\NormalTok{(m4, }\AttributeTok{trafo=}\DecValTok{1}\NormalTok{)}
@@ -673,16 +679,21 @@ Let's calculate dispersion for this new model
 ##    alpha 
 ## 10.31668
 \end{verbatim}
+
+\vspace{12pt}
+\normalsize
+
+Any thoughts on things that we should do differently?
 \end{frame}
 
 \begin{frame}{}
 \protect\hypertarget{section-15}{}
-\includegraphics{week5_p2_files/figure-beamer/unnamed-chunk-16-1.pdf}
+\includegraphics{week5_p2_files/figure-beamer/unnamed-chunk-18-1.pdf}
 \end{frame}
 
 \begin{frame}{}
 \protect\hypertarget{section-16}{}
-\includegraphics{week5_p2_files/figure-beamer/unnamed-chunk-17-1.pdf}
+\includegraphics{week5_p2_files/figure-beamer/unnamed-chunk-19-1.pdf}
 \end{frame}
 
 \begin{frame}[fragile]{}
@@ -759,7 +770,7 @@ There are still some misses, mostly among small counts.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{week5_p2_files/figure-beamer/unnamed-chunk-20-1.pdf}
+\includegraphics{week5_p2_files/figure-beamer/unnamed-chunk-22-1.pdf}
 \end{frame}
 
 \begin{frame}[fragile]{Which model?}
@@ -771,38 +782,270 @@ We can additionally consider information criteria:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{AIC}\NormalTok{(m1, m3, m4)}
+\FunctionTok{AIC}\NormalTok{(m1, m2, m3, m4)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## Warning in AIC.default(m1, m3, m4): models are not all fitted to the same number
-## of observations
+## Warning in AIC.default(m1, m2, m3, m4): models are not all fitted to the same
+## number of observations
 \end{verbatim}
 
 \begin{verbatim}
 ##    df      AIC
 ## m1  7 769.0063
+## m2  7       NA
 ## m3  9 590.7201
 ## m4  9 527.4177
 \end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{BIC}\NormalTok{(m1, m3, m4)}
+\FunctionTok{BIC}\NormalTok{(m1, m2, m3, m4)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## Warning in BIC.default(m1, m3, m4): models are not all fitted to the same number
-## of observations
+## Warning in BIC.default(m1, m2, m3, m4): models are not all fitted to the same
+## number of observations
 \end{verbatim}
 
 \begin{verbatim}
 ##    df      BIC
 ## m1  7 778.8146
+## m2  7       NA
 ## m3  9 603.3309
 ## m4  9 539.7234
+\end{verbatim}
+
+\vspace{12pt}
+\normalsize
+
+Any thing that we should have considered?
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-20}{}
+Go back to the start. And discover that a simpler model with two
+outliers removed fits this data well.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dat }\OtherTok{\textless{}{-}}\NormalTok{ gala[}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(}\DecValTok{11}\NormalTok{,}\DecValTok{27}\NormalTok{), ]}
+\NormalTok{m5 }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(Species }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Elevation }\SpecialCharTok{+}\NormalTok{ Nearest }\SpecialCharTok{+}\NormalTok{ Scruz }\SpecialCharTok{+}\NormalTok{ Adjacent }\SpecialCharTok{+}\NormalTok{ Area }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(Area}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{), }
+          \AttributeTok{family =} \StringTok{"poisson"}\NormalTok{, }\AttributeTok{data =}\NormalTok{ dat)}
+\FunctionTok{summary}\NormalTok{(m5)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = Species ~ Elevation + Nearest + Scruz + Adjacent + 
+##     Area + I(Area^2), family = "poisson", data = dat)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -5.5295  -3.2080  -0.3116   1.4949   8.6438  
+## 
+## Coefficients:
+##               Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)  3.079e+00  5.844e-02  52.690  < 2e-16 ***
+## Elevation    2.260e-03  1.511e-04  14.955  < 2e-16 ***
+## Nearest      1.617e-02  1.856e-03   8.711  < 2e-16 ***
+## Scruz       -5.562e-03  7.867e-04  -7.070 1.55e-12 ***
+## Adjacent    -4.589e-04  3.290e-05 -13.947  < 2e-16 ***
+## Area         1.321e-03  1.660e-04   7.960 1.72e-15 ***
+## I(Area^2)   -3.128e-07  2.711e-08 -11.535  < 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 3201.33  on 27  degrees of freedom
+## Residual deviance:  327.76  on 21  degrees of freedom
+## AIC: 488.68
+## 
+## Number of Fisher Scoring iterations: 5
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-21}{}
+Overdispersion is likely present.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(}\FunctionTok{coef}\NormalTok{(m5))}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(dat)}
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ dat}\SpecialCharTok{$}\NormalTok{Species}
+
+\DocumentationTok{\#\# estimate dispersion directly}
+\NormalTok{fits }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(m5, }\AttributeTok{type =} \StringTok{"response"}\NormalTok{)}
+\NormalTok{dp5 }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{((y }\SpecialCharTok{{-}}\NormalTok{ fits)}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{fits) }\SpecialCharTok{/}\NormalTok{ (n }\SpecialCharTok{{-}}\NormalTok{ p)}
+\NormalTok{dp5}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 16.23208
+\end{verbatim}
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{dispersiontest}\NormalTok{(m5, }\AttributeTok{trafo=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Overdispersion test
+## 
+## data:  m5
+## z = 2.4224, p-value = 0.007709
+## alternative hypothesis: true alpha is greater than 0
+## sample estimates:
+##    alpha 
+## 11.16917
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-22}{}
+\includegraphics{week5_p2_files/figure-beamer/unnamed-chunk-27-1.pdf}
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-23}{}
+\includegraphics{week5_p2_files/figure-beamer/unnamed-chunk-28-1.pdf}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-24}{}
+Matching of large species counts is pretty good.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{foo }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{names =} \FunctionTok{rownames}\NormalTok{(dat),}
+                  \AttributeTok{Species =}\NormalTok{ y,}
+                  \AttributeTok{pred =} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{predict}\NormalTok{(m5, }\AttributeTok{type =} \StringTok{"response"}\NormalTok{)), }
+                  \AttributeTok{resid =} \FunctionTok{residuals}\NormalTok{(m5))}
+\FunctionTok{head}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(foo }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(Species)) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{pull}\NormalTok{(names),}
+\NormalTok{           foo }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(pred)) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{pull}\NormalTok{(names)), }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       [,1]           [,2]          
+##  [1,] "SantaCruz"    "SantaCruz"   
+##  [2,] "Isabela"      "Isabela"     
+##  [3,] "SanCristobal" "SanCristobal"
+##  [4,] "SanSalvador"  "SanSalvador" 
+##  [5,] "Pinzon"       "Pinta"       
+##  [6,] "Pinta"        "Fernandina"  
+##  [7,] "Fernandina"   "Pinzon"      
+##  [8,] "Rabida"       "Marchena"    
+##  [9,] "SantaFe"      "Baltra"      
+## [10,] "Baltra"       "SantaFe"
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-25}{}
+There are still some misses, mostly among small counts.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{foo }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(}\FunctionTok{abs}\NormalTok{(resid))) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{head}\NormalTok{(}\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                   names Species      pred     resid
+## Gardner1       Gardner1      58  14.35012  8.643823
+## Enderby         Enderby       2  22.09196 -5.529526
+## Gardner2       Gardner2       5  27.70207 -5.318218
+## Rabida           Rabida      70  36.15708  4.980092
+## Caldwell       Caldwell       3  21.23008 -4.971853
+## Onslow           Onslow       2  18.79448 -4.962589
+## Coamano         Coamano       2  17.43625 -4.712842
+## Pinzon           Pinzon     108  70.20558  4.176494
+## Eden               Eden       8  25.42063 -4.042690
+## SanSalvador SanSalvador     237 290.48578 -3.242711
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-26}{}
+How about leave-one-cross-validation as a check against overfit?
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m1\_b }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(m1, }\AttributeTok{data =}\NormalTok{ dat)}
+\NormalTok{m2\_b }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(m2, }\AttributeTok{data =}\NormalTok{ dat)}
+\NormalTok{m3\_b }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(m3, }\AttributeTok{data =}\NormalTok{ dat)}
+\NormalTok{m4\_b }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(m4, }\AttributeTok{data =}\NormalTok{ dat)}
+\NormalTok{m5\_b }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(m5, }\AttributeTok{data =}\NormalTok{ dat)}
+
+\NormalTok{pred1 }\OtherTok{\textless{}{-}}\NormalTok{ pred2 }\OtherTok{\textless{}{-}}\NormalTok{ pred3 }\OtherTok{\textless{}{-}}\NormalTok{ pred4 }\OtherTok{\textless{}{-}}\NormalTok{ pred5 }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(dat))\{}
+\NormalTok{  pred1[j] }\OtherTok{\textless{}{-}}\NormalTok{  (dat[j, ]}\SpecialCharTok{$}\NormalTok{Species }\SpecialCharTok{{-}} \FunctionTok{predict}\NormalTok{(}\FunctionTok{update}\NormalTok{(m1\_b, }\AttributeTok{data =}\NormalTok{ dat[}\SpecialCharTok{{-}}\NormalTok{j, ]), }
+                             \AttributeTok{newdata =}\NormalTok{ dat[j, ]))}\SpecialCharTok{\^{}}\DecValTok{2}
+\NormalTok{  pred2[j] }\OtherTok{\textless{}{-}}\NormalTok{  (dat[j, ]}\SpecialCharTok{$}\NormalTok{Species }\SpecialCharTok{{-}} \FunctionTok{predict}\NormalTok{(}\FunctionTok{update}\NormalTok{(m2\_b, }\AttributeTok{data =}\NormalTok{ dat[}\SpecialCharTok{{-}}\NormalTok{j, ]), }
+                             \AttributeTok{newdata =}\NormalTok{ dat[j, ]))}\SpecialCharTok{\^{}}\DecValTok{2}
+\NormalTok{  pred3[j] }\OtherTok{\textless{}{-}}\NormalTok{  (dat[j, ]}\SpecialCharTok{$}\NormalTok{Species }\SpecialCharTok{{-}} \FunctionTok{predict}\NormalTok{(}\FunctionTok{update}\NormalTok{(m3\_b, }\AttributeTok{data =}\NormalTok{ dat[}\SpecialCharTok{{-}}\NormalTok{j, ]), }
+                             \AttributeTok{newdata =}\NormalTok{ dat[j, ]))}\SpecialCharTok{\^{}}\DecValTok{2}
+\NormalTok{  pred4[j] }\OtherTok{\textless{}{-}}\NormalTok{  (dat[j, ]}\SpecialCharTok{$}\NormalTok{Species }\SpecialCharTok{{-}} \FunctionTok{predict}\NormalTok{(}\FunctionTok{update}\NormalTok{(m4\_b, }\AttributeTok{data =}\NormalTok{ dat[}\SpecialCharTok{{-}}\NormalTok{j, ]), }
+                             \AttributeTok{newdata =}\NormalTok{ dat[j, ]))}\SpecialCharTok{\^{}}\DecValTok{2}
+\NormalTok{  pred5[j] }\OtherTok{\textless{}{-}}\NormalTok{  (dat[j, ]}\SpecialCharTok{$}\NormalTok{Species }\SpecialCharTok{{-}} \FunctionTok{predict}\NormalTok{(}\FunctionTok{update}\NormalTok{(m5\_b, }\AttributeTok{data =}\NormalTok{ dat[}\SpecialCharTok{{-}}\NormalTok{j, ]), }
+                             \AttributeTok{newdata =}\NormalTok{ dat[j, ]))}\SpecialCharTok{\^{}}\DecValTok{2}
+\NormalTok{\}}
+
+\FunctionTok{c}\NormalTok{(}\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{(pred1)), }\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{(pred2)), }\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{(pred3)), }
+  \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{(pred4)), }\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{(pred5)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 132.0047 132.0047 130.1501 130.1501 128.7904
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-27}{}
+Then report what was removed.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{gala[}\FunctionTok{c}\NormalTok{(}\DecValTok{11}\NormalTok{,}\DecValTok{27}\NormalTok{), ]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##            Species Endemics   Area Elevation Nearest Scruz Adjacent Size
+## Espanola        97       26  58.27       198     1.1  88.3     0.57    3
+## SantaMaria     285       73 170.92       640     2.6  49.2     0.10    3
 \end{verbatim}
 \end{frame}
 
@@ -828,7 +1071,7 @@ The negative binomial distribution can arise naturally in a few ways:
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-20}{}
+\protect\hypertarget{section-28}{}
 The mass function for the negative binomial distribution is: \[
   \mathbb{P}(Z = z) = {z-1 \choose k-1}p^k(1-p)^{z-k}, \qquad z = k,k+1,\ldots,
 \]
@@ -847,14 +1090,14 @@ log-likelihood is then \[
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-21}{}
+\protect\hypertarget{section-29}{}
 \begin{center}
 Can the log likelihood on the previous slide be written in canonical form?
 \end{center}
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-22}{}
+\protect\hypertarget{section-30}{}
 The most convenient way to link the mean response \(\mu\) to a linear
 combination of the the predictors \(X\) in typical GLM fashion is
 through \[
@@ -892,7 +1135,7 @@ the help page for the solder dataset in the faraway package).
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-23}{}
+\protect\hypertarget{section-31}{}
 We start with a Poisson regression:
 
 \vspace{12pt}
@@ -919,7 +1162,7 @@ should be less than degrees of freedom for a well-fitting submodel).
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-24}{}
+\protect\hypertarget{section-32}{}
 Perhaps including interaction terms will improve the fit:
 
 \vspace{12pt}
@@ -983,7 +1226,7 @@ distribution for the response.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-25}{}
+\protect\hypertarget{section-33}{}
 \tiny
 
 \begin{Shaded}
@@ -1042,7 +1285,7 @@ distribution for the response.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-26}{}
+\protect\hypertarget{section-34}{}
 We can estimate the parameter \(k\) using maximum likelihood estimation
 in:
 
@@ -1106,7 +1349,7 @@ in:
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-27}{}
+\protect\hypertarget{section-35}{}
 We see that \(\hat k = 4.528\) with a standard error of \(0.518\).
 
 \vspace{12pt}
@@ -1174,7 +1417,7 @@ The dataset may be found in the \texttt{pscl} package.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-28}{}
+\protect\hypertarget{section-36}{}
 We start by fitting a Poisson regression model:
 
 \vspace{12pt}
@@ -1203,7 +1446,7 @@ We start by fitting a Poisson regression model:
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-29}{}
+\protect\hypertarget{section-37}{}
 We can see that deviance is significantly larger than the degrees of
 freedom (a rule of thumb indicated poor fit).
 
@@ -1220,7 +1463,7 @@ number of students might produce no articles at all.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-30}{}
+\protect\hypertarget{section-38}{}
 We count and predict how many students produce between zero and seven
 articles. Very few students produce more than seven articles so we
 ignore these.
@@ -1243,7 +1486,7 @@ count.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-31}{}
+\protect\hypertarget{section-39}{}
 \tiny
 
 \begin{Shaded}
@@ -1256,11 +1499,11 @@ count.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{week5_p2_files/figure-beamer/unnamed-chunk-29-1.pdf}
+\includegraphics{week5_p2_files/figure-beamer/unnamed-chunk-40-1.pdf}
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-32}{}
+\protect\hypertarget{section-40}{}
 We see that there are many more students with zero articles than would
 be predicted by the Poisson model. In contrast, the relationship between
 observed and predicted is linear for the students who produce at least
@@ -1290,7 +1533,7 @@ Circumstances such as these require a \emph{mixture} model.
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-33}{}
+\protect\hypertarget{section-41}{}
 A general specification of this model takes the form: \begin{align*}
   \mathbb{P}(Y = 0) &= \phi + (1 - \phi)f(0) \\
   \mathbb{P}(Y = j) &= (1 - \phi)f(j), \qquad j > 0.
@@ -1309,7 +1552,7 @@ have a positive response.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-34}{}
+\protect\hypertarget{section-42}{}
 We can use a Poisson model for \(f\) in which case this is called
 zero-inflated Poisson model.
 
@@ -1358,7 +1601,7 @@ zero-inflated Poisson model.
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-35}{}
+\protect\hypertarget{section-43}{}
 We notice that the \texttt{ment} variable which counts the number of
 articles produced by the mentor is the most significant predictor in
 both the Poisson and binary regressions.
@@ -1379,7 +1622,7 @@ specified before the \textbar{} and the binary response model after.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-36}{}
+\protect\hypertarget{section-44}{}
 \tiny
 
 \begin{Shaded}
@@ -1432,7 +1675,7 @@ specified before the \textbar{} and the binary response model after.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-37}{}
+\protect\hypertarget{section-45}{}
 For interpretation, the exponentiated coefficients are more useful:
 
 \vspace{12pt}
@@ -1473,7 +1716,7 @@ with no children whose mentor produced six articles:
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-38}{}
+\protect\hypertarget{section-46}{}
 We see that most likely outcome for this student is that no articles
 will be produced with a probability of 0.278. We can query the
 probability of no production from the zero part of the model:
@@ -1501,7 +1744,7 @@ students who had the potential to write an article.
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-39}{}
+\protect\hypertarget{section-47}{}
 We note that the zero-inflated Poisson distribution also arises as a
 special case of an
 \href{https://academic.oup.com/biomet/article-abstract/94/2/415/224189}{aster

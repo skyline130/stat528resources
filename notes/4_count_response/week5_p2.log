@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  16 FEB 2023 07:55
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  16 FEB 2023 10:11
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1255,28 +1255,28 @@ ed on input line 451.
 (./week5_p2.vrb) [16
 
 ]
-<week5_p2_files/figure-beamer/unnamed-chunk-11-1.pdf, id=151, 765.86125pt x 499
-.8675pt>
-File: week5_p2_files/figure-beamer/unnamed-chunk-11-1.pdf Graphic file (type pd
-f)
-<use week5_p2_files/figure-beamer/unnamed-chunk-11-1.pdf>
-Package pdftex.def Info: week5_p2_files/figure-beamer/unnamed-chunk-11-1.pdf  u
-sed on input line 552.
-(pdftex.def)             Requested size: 307.28564pt x 200.56126pt.
-[17
-
- <./week5_p2_files/figure-beamer/unnamed-chunk-11-1.pdf>]
-<week5_p2_files/figure-beamer/unnamed-chunk-12-1.pdf, id=168, 765.86125pt x 499
+<week5_p2_files/figure-beamer/unnamed-chunk-12-1.pdf, id=151, 765.86125pt x 499
 .8675pt>
 File: week5_p2_files/figure-beamer/unnamed-chunk-12-1.pdf Graphic file (type pd
 f)
 <use week5_p2_files/figure-beamer/unnamed-chunk-12-1.pdf>
 Package pdftex.def Info: week5_p2_files/figure-beamer/unnamed-chunk-12-1.pdf  u
-sed on input line 557.
+sed on input line 555.
+(pdftex.def)             Requested size: 307.28564pt x 200.56126pt.
+[17
+
+ <./week5_p2_files/figure-beamer/unnamed-chunk-12-1.pdf>]
+<week5_p2_files/figure-beamer/unnamed-chunk-13-1.pdf, id=168, 765.86125pt x 499
+.8675pt>
+File: week5_p2_files/figure-beamer/unnamed-chunk-13-1.pdf Graphic file (type pd
+f)
+<use week5_p2_files/figure-beamer/unnamed-chunk-13-1.pdf>
+Package pdftex.def Info: week5_p2_files/figure-beamer/unnamed-chunk-13-1.pdf  u
+sed on input line 560.
 (pdftex.def)             Requested size: 307.28564pt x 200.56126pt.
 [18
 
- <./week5_p2_files/figure-beamer/unnamed-chunk-12-1.pdf>]
+ <./week5_p2_files/figure-beamer/unnamed-chunk-13-1.pdf>]
 \openout4 = `week5_p2.vrb'.
 
 (./week5_p2.vrb) [19
@@ -1297,28 +1297,28 @@ LaTeX Font Warning: Font shape `T1/lmtt/bx/it' in size <6> not available
 ) [21
 
 ]
-<week5_p2_files/figure-beamer/unnamed-chunk-16-1.pdf, id=203, 765.86125pt x 499
+<week5_p2_files/figure-beamer/unnamed-chunk-18-1.pdf, id=203, 765.86125pt x 499
 .8675pt>
-File: week5_p2_files/figure-beamer/unnamed-chunk-16-1.pdf Graphic file (type pd
+File: week5_p2_files/figure-beamer/unnamed-chunk-18-1.pdf Graphic file (type pd
 f)
-<use week5_p2_files/figure-beamer/unnamed-chunk-16-1.pdf>
-Package pdftex.def Info: week5_p2_files/figure-beamer/unnamed-chunk-16-1.pdf  u
-sed on input line 681.
+<use week5_p2_files/figure-beamer/unnamed-chunk-18-1.pdf>
+Package pdftex.def Info: week5_p2_files/figure-beamer/unnamed-chunk-18-1.pdf  u
+sed on input line 692.
 (pdftex.def)             Requested size: 307.28564pt x 200.56126pt.
 [22
 
- <./week5_p2_files/figure-beamer/unnamed-chunk-16-1.pdf>]
-<week5_p2_files/figure-beamer/unnamed-chunk-17-1.pdf, id=219, 765.86125pt x 499
+ <./week5_p2_files/figure-beamer/unnamed-chunk-18-1.pdf>]
+<week5_p2_files/figure-beamer/unnamed-chunk-19-1.pdf, id=219, 765.86125pt x 499
 .8675pt>
-File: week5_p2_files/figure-beamer/unnamed-chunk-17-1.pdf Graphic file (type pd
+File: week5_p2_files/figure-beamer/unnamed-chunk-19-1.pdf Graphic file (type pd
 f)
-<use week5_p2_files/figure-beamer/unnamed-chunk-17-1.pdf>
-Package pdftex.def Info: week5_p2_files/figure-beamer/unnamed-chunk-17-1.pdf  u
-sed on input line 686.
+<use week5_p2_files/figure-beamer/unnamed-chunk-19-1.pdf>
+Package pdftex.def Info: week5_p2_files/figure-beamer/unnamed-chunk-19-1.pdf  u
+sed on input line 697.
 (pdftex.def)             Requested size: 307.28564pt x 200.56126pt.
 [23
 
- <./week5_p2_files/figure-beamer/unnamed-chunk-17-1.pdf>]
+ <./week5_p2_files/figure-beamer/unnamed-chunk-19-1.pdf>]
 \openout4 = `week5_p2.vrb'.
 
 (./week5_p2.vrb) [24
@@ -1332,36 +1332,61 @@ sed on input line 686.
 \openout4 = `week5_p2.vrb'.
 
 (./week5_p2.vrb
-<week5_p2_files/figure-beamer/unnamed-chunk-20-1.pdf, id=248, 761.84625pt x 465
+<week5_p2_files/figure-beamer/unnamed-chunk-22-1.pdf, id=248, 761.84625pt x 465
 .74pt>
-File: week5_p2_files/figure-beamer/unnamed-chunk-20-1.pdf Graphic file (type pd
+File: week5_p2_files/figure-beamer/unnamed-chunk-22-1.pdf Graphic file (type pd
 f)
-<use week5_p2_files/figure-beamer/unnamed-chunk-20-1.pdf>
-Package pdftex.def Info: week5_p2_files/figure-beamer/unnamed-chunk-20-1.pdf  u
+<use week5_p2_files/figure-beamer/unnamed-chunk-22-1.pdf>
+Package pdftex.def Info: week5_p2_files/figure-beamer/unnamed-chunk-22-1.pdf  u
 sed on input line 14.
 (pdftex.def)             Requested size: 307.27893pt x 187.84904pt.
 ) [26
 
- <./week5_p2_files/figure-beamer/unnamed-chunk-20-1.pdf>]
+ <./week5_p2_files/figure-beamer/unnamed-chunk-22-1.pdf>]
 \openout4 = `week5_p2.vrb'.
 
 (./week5_p2.vrb) [27
 
-] [28
+]
+\openout4 = `week5_p2.vrb'.
+
+(./week5_p2.vrb)
+Overfull \vbox (15.62834pt too high) detected at line 874
+ []
+
+[28
 
 ]
+\openout4 = `week5_p2.vrb'.
 
-Package amsmath Warning: Foreign command \atopwithdelims;
-(amsmath)                \frac or \genfrac should be used instead
-(amsmath)                 on input line 847.
+(./week5_p2.vrb) [29
 
-[29
+]
+<week5_p2_files/figure-beamer/unnamed-chunk-27-1.pdf, id=280, 765.86125pt x 499
+.8675pt>
+File: week5_p2_files/figure-beamer/unnamed-chunk-27-1.pdf Graphic file (type pd
+f)
+<use week5_p2_files/figure-beamer/unnamed-chunk-27-1.pdf>
+Package pdftex.def Info: week5_p2_files/figure-beamer/unnamed-chunk-27-1.pdf  u
+sed on input line 925.
+(pdftex.def)             Requested size: 307.28564pt x 200.56126pt.
+[30
 
-] [30
+ <./week5_p2_files/figure-beamer/unnamed-chunk-27-1.pdf>]
+<week5_p2_files/figure-beamer/unnamed-chunk-28-1.pdf, id=297, 765.86125pt x 499
+.8675pt>
+File: week5_p2_files/figure-beamer/unnamed-chunk-28-1.pdf Graphic file (type pd
+f)
+<use week5_p2_files/figure-beamer/unnamed-chunk-28-1.pdf>
+Package pdftex.def Info: week5_p2_files/figure-beamer/unnamed-chunk-28-1.pdf  u
+sed on input line 930.
+(pdftex.def)             Requested size: 307.28564pt x 200.56126pt.
+[31
 
-] [31
+ <./week5_p2_files/figure-beamer/unnamed-chunk-28-1.pdf>]
+\openout4 = `week5_p2.vrb'.
 
-] [32
+(./week5_p2.vrb) [32
 
 ]
 \openout4 = `week5_p2.vrb'.
@@ -1373,26 +1398,22 @@ Package amsmath Warning: Foreign command \atopwithdelims;
 
 (./week5_p2.vrb) [34
 
-] [35
-
 ]
 \openout4 = `week5_p2.vrb'.
 
-(./week5_p2.vrb) [36
+(./week5_p2.vrb) [35
+
+] [36
 
 ]
-\openout4 = `week5_p2.vrb'.
 
-(./week5_p2.vrb)
-Overfull \vbox (115.62834pt too high) detected at line 1106
- []
+Package amsmath Warning: Foreign command \atopwithdelims;
+(amsmath)                \frac or \genfrac should be used instead
+(amsmath)                 on input line 1090.
 
 [37
 
-]
-\openout4 = `week5_p2.vrb'.
-
-(./week5_p2.vrb) [38
+] [38
 
 ] [39
 
@@ -1403,39 +1424,33 @@ Overfull \vbox (115.62834pt too high) detected at line 1106
 
 (./week5_p2.vrb) [41
 
-] [42
+]
+\openout4 = `week5_p2.vrb'.
+
+(./week5_p2.vrb) [42
+
+] [43
 
 ]
 \openout4 = `week5_p2.vrb'.
 
-(./week5_p2.vrb) [43
-
-]
-\openout4 = `week5_p2.vrb'.
-
-(./week5_p2.vrb
-<week5_p2_files/figure-beamer/unnamed-chunk-29-1.pdf, id=371, 735.74875pt x 459
-.7175pt>
-File: week5_p2_files/figure-beamer/unnamed-chunk-29-1.pdf Graphic file (type pd
-f)
-<use week5_p2_files/figure-beamer/unnamed-chunk-29-1.pdf>
-Package pdftex.def Info: week5_p2_files/figure-beamer/unnamed-chunk-29-1.pdf  u
-sed on input line 15.
-(pdftex.def)             Requested size: 307.2947pt x 192.00677pt.
-) [44
-
- <./week5_p2_files/figure-beamer/unnamed-chunk-29-1.pdf>] [45
-
-] [46
+(./week5_p2.vrb) [44
 
 ]
 \openout4 = `week5_p2.vrb'.
 
 (./week5_p2.vrb)
-Overfull \vbox (15.62834pt too high) detected at line 1358
+Overfull \vbox (115.62834pt too high) detected at line 1349
  []
 
-[47
+[45
+
+]
+\openout4 = `week5_p2.vrb'.
+
+(./week5_p2.vrb) [46
+
+] [47
 
 ] [48
 
@@ -1444,17 +1459,58 @@ Overfull \vbox (15.62834pt too high) detected at line 1358
 
 (./week5_p2.vrb) [49
 
-]
-\openout4 = `week5_p2.vrb'.
-
-(./week5_p2.vrb) [50
+] [50
 
 ]
 \openout4 = `week5_p2.vrb'.
 
 (./week5_p2.vrb) [51
 
-] [52
+]
+\openout4 = `week5_p2.vrb'.
+
+(./week5_p2.vrb
+<week5_p2_files/figure-beamer/unnamed-chunk-40-1.pdf, id=441, 735.74875pt x 459
+.7175pt>
+File: week5_p2_files/figure-beamer/unnamed-chunk-40-1.pdf Graphic file (type pd
+f)
+<use week5_p2_files/figure-beamer/unnamed-chunk-40-1.pdf>
+Package pdftex.def Info: week5_p2_files/figure-beamer/unnamed-chunk-40-1.pdf  u
+sed on input line 15.
+(pdftex.def)             Requested size: 307.2947pt x 192.00677pt.
+) [52
+
+ <./week5_p2_files/figure-beamer/unnamed-chunk-40-1.pdf>] [53
+
+] [54
+
+]
+\openout4 = `week5_p2.vrb'.
+
+(./week5_p2.vrb)
+Overfull \vbox (15.62834pt too high) detected at line 1601
+ []
+
+[55
+
+] [56
+
+]
+\openout4 = `week5_p2.vrb'.
+
+(./week5_p2.vrb) [57
+
+]
+\openout4 = `week5_p2.vrb'.
+
+(./week5_p2.vrb) [58
+
+]
+\openout4 = `week5_p2.vrb'.
+
+(./week5_p2.vrb) [59
+
+] [60
 
 ]
 \tf@nav=\write6
@@ -1468,10 +1524,10 @@ Overfull \vbox (15.62834pt too high) detected at line 1358
 
 (./week5_p2.aux) ) 
 Here is how much of TeX's memory you used:
- 29923 strings out of 478268
- 600317 string characters out of 5846347
- 905115 words of memory out of 5000000
- 47182 multiletter control sequences out of 15000+600000
+ 29989 strings out of 478268
+ 601615 string characters out of 5846347
+ 905116 words of memory out of 5000000
+ 47210 multiletter control sequences out of 15000+600000
  540062 words of font info for 130 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  128i,11n,122p,1005b,450s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -1497,10 +1553,10 @@ onts/type1/public/lm/lmtt8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/
 public/lm/lmtti10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/am
 sfonts/symbols/msam10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/publi
 c/amsfonts/symbols/msbm10.pfb>
-Output written on week5_p2.pdf (52 pages, 414726 bytes).
+Output written on week5_p2.pdf (60 pages, 439454 bytes).
 PDF statistics:
- 560 PDF objects out of 1000 (max. 8388607)
- 432 compressed objects within 5 object streams
- 156 named destinations out of 1000 (max. 500000)
- 41043 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 633 PDF objects out of 1000 (max. 8388607)
+ 491 compressed objects within 5 object streams
+ 180 named destinations out of 1000 (max. 500000)
+ 41053 words of extra memory for PDF output out of 42996 (max. 10000000)
 
