@@ -1,0 +1,119 @@
+---
+title: "Homework 4: Data separation and multinomial regression"
+author: "your name"
+date: 'Due: March 3rd at 11:59 PM'
+output: pdf_document
+header-includes: 
+ - \usepackage{amsthm}
+ - \usepackage{amsmath}
+ - \usepackage{amsfonts}
+ - \usepackage{amscd}
+ - \usepackage{amssymb}
+ - \usepackage{natbib}
+ - \usepackage{url}
+---
+
+\allowdisplaybreaks
+
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\inner}[1]{\langle #1 \rangle}
+\newcommand{\yobs}{y_{\text{obs}}}
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+\noindent{\bf Problem 1}: Do the following regarding the Sabermetrics dataset (bball.csv), 
+\begin{itemize}
+  \item[(a)] Fit the \texttt{nnet} model and comment on the similarities and differences between the \texttt{nnet} and \texttt{VGAM} fits in the Sabermetrics example in the ordinal and multinomial regression notes. Report interesting conclusions using either implementation.
+  \item[(b)] Provide recommendations on how an aspiring baseball player should approach hitting. You may want to consider success metrics like hits where hits = 1B + 2B + 3B + HR, or weighted hits where weighted hits = 1B + 2$\times$2B + 3$\times$3B + 4$\times$HR. Note these metrics are conditional on a ball being put into play in the context of this analysis.
+\end{itemize}
+
+
+
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 2}: Comment on the differences between the \texttt{vglm} and \texttt{polr} implementations in the happiness and trauma example.
+
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 3}: A study of factors affecting alcohol consumption measures the response variable with the scale (abstinence, a drink a day or less, more than one drink a day). For a comparison of two groups while adjusting for relevant covariates, the researchers hypothesize that the two groups will have about the same prevalence of abstinence, but that one group will have a considerably higher proportion who have more than one drink a day. Even though the response variable is ordinal, explain why a cumulative logit model with proportional odds structure may be inappropriate for this study.
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 4}: Refer to the table below:
+
+\begin{center}
+\begin{tabular}{llccc}
+\hline 
+	& & \multicolumn{3}{c}{Belief in Heaven} \\
+    \cline{3-5} 
+Race & Gender & Yes & Unsure & No \\	
+\hline
+Black & Female &  88 &  16 & 2 \\
+ 	  &   Male &  54 &  17 & 5 \\
+White & Female & 397 & 141 & 24 \\
+  	  & Male   & 235 & 189 & 39 \\
+\hline
+	
+\end{tabular}
+	
+\end{center}
+
+
+\begin{itemize}
+\item[(a)] Fit the model
+$$
+ \log(\pi_j/\pi_3) = \alpha_j + \beta_j^Gx_1 + \beta_j^R x_2, \qquad j = 1,2.
+$$
+\item[(b)] Find the prediction equation for $\log(\pi_1/\pi_2)$.
+\item[(c)] Treating belief in heaven as ordinal fit and interpret a cumulative logit model and a cumulative probit model. Compare results and state interpretations in each case.
+\end{itemize}
+
+
+\vspace*{1cm}
+
+
+\noindent{\bf Problem 5}: Suppose that you have a coin that when flipped has a probability $0 < p < 1$ of landing heads, and that we know nothing about $p$. Suppose that you flip the coin four times and all four flips resulted in heads. Derive the MLE of $p$ and the MLE of $\Var(Y_i)$ under the standard Bernoulli model. Now, for some error tolerance $0 < \alpha < 1$, derive a valid one-sided confidence interval for $p$ making use of the statement $\Prob\left(\sum_{i=1}^4y_i = 4\right)$.
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 6}: Complete the following with respect to the \texttt{endometrial} example:
+\begin{itemize}
+  \item[(a)] Write your own Fisher scoring algorithm for this example. Argue that $\hat\beta$ diverges in some sense as the iterations of your algorithm increase.
+  \item[(b)] Show that the log likelihood has an asymptote in $\|\beta\|$.
+  \item[(c)] Code the likelihood function for this dataset, pick a value of $\tilde\beta$ that is in the LCM, find an eigenvector of estimated Fisher information $\eta$ such that the likelihood asymptotes, and then show that the likelihood asymptotes in $\tilde\beta + s\eta$ as $s \to \infty$.
+  \item[(d)] Explain why the likelihood asymptotes in $\tilde\beta + s\eta$ as $s \to \infty$.
+\end{itemize}
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 7}: Summarise the Firth approach mentioned in Section 7.4.7 and 7.4.8 of Agresti. Compare and contrast the Firth approach with the direct MLE approach outlined in the complete separation notes. What are the strengths and weaknesses of each approach?
+
+\vspace*{1cm}
+
+<!-- %\noindent{\bf Problem 4}: Use \texttt{glmdr} software to analyze the following data: -->
+<!-- %\begin{verbatim} -->
+<!-- %x <- 1:30 -->
+<!-- %y <- c(rep(0, 12), rep(1, 11), rep(0, 7))	 -->
+<!-- %\end{verbatim} -->
+<!-- %Fit a logistic regression model that includes a quadratic $x$ term. Produce an informative plot of the estimated 95\% confidence intervals for the estimated mean-value parameters under this quadratic logistic model. -->
+
+<!-- %\vspace*{1cm} -->
+
+\noindent{\bf Problem 8}: Use \texttt{glmdr} software to analyze the \texttt{catrec.txt} data using Poisson regression. Specifically, fit a third order model and provide confidence intervals for all mean-value parameter estimates, both one-sided intervals for responses that are constrained on the boundary and two-sided intervals for responses that are unconstrained. Also verify that the third order model is appropriate.
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 9}: Do you think that the \texttt{glm} function can be used to provide an appropriate value of the Akaike information criterion (AIC) when complete separation or quasi-complete separation exists? Why or why not?
+
+
+
+

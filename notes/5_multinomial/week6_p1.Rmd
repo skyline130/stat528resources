@@ -400,13 +400,13 @@ axis(2)
 ```
 
 
-<!-- ##  -->
+<!-- ## -->
 
 <!-- ```{r} -->
 <!-- dat <- cbind(bball, fitted(mod4)) -->
 <!-- HR <- dat %>% filter(b4 > 0.50) -->
-<!-- ggplot(HR, aes(x = launch_speed, y = launch_angle)) +  -->
-<!--   geom_point() +  -->
+<!-- ggplot(HR, aes(x = launch_speed, y = launch_angle)) + -->
+<!--   geom_point() + -->
 <!--   theme_minimal() -->
 <!-- ``` -->
 
@@ -416,11 +416,11 @@ axis(2)
 <!-- ```{r} -->
 <!-- dat <- cbind(bball, fitted(mod4)) -->
 <!-- B2 <- dat %>% filter(b2 > 0.50) -->
-<!-- ggplot(B2, aes(x = spray_angle, y = launch_speed)) +  -->
+<!-- ggplot(B2, aes(x = spray_angle, y = launch_speed)) + -->
 <!--   geom_point() + theme_minimal() -->
 
-<!-- ggplot(B2, aes(x = spray_angle, y = launch_speed)) +  -->
-<!--   geom_point() +  -->
+<!-- ggplot(B2, aes(x = spray_angle, y = launch_speed)) + -->
+<!--   geom_point() + -->
 <!--   theme_minimal() -->
 <!-- ``` -->
 
