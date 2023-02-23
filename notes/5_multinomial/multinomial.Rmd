@@ -517,7 +517,7 @@ $$
   \text{control}
 \end{array}\right).
 $$
-So happiness is estimated lower ($Y$ is estimated to be larger) as trauma increases. For example, we can estimate the odds of ``very happy'' for control category A relative to control category B (trauma held fixed), and a Wald 95\% confidence interval for these estimates:
+So happiness is estimated lower ($Y$ is estimated to be larger) as trauma increases. We can estimate the odds of ``very happy'' for control category A relative to control category B (trauma held fixed), and a Wald 95\% confidence interval for these estimates:
 
 ```{r}
 exp(2.036)

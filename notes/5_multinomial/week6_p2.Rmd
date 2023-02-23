@@ -1,0 +1,324 @@
+---
+title: "STAT 528 - Advanced Regression Analysis II"
+author: "Multinomial response regression (part I)"
+institute: |
+  | Daniel J. Eck
+  | Department of Statistics  
+  | University of Illinois
+date: ""
+output: 
+    beamer_presentation:
+        keep_tex: true
+        fig_width: 11
+        fig_height: 7.5
+        includes:
+bibliography: ../note_sources.bib
+urlcolor: blue
+header-includes:
+- \usepackage{graphicx}
+- \usepackage{bm}
+- \usepackage{array}
+- \usepackage{amsmath}
+- \usepackage{amsthm}
+- \usepackage{amsfonts}
+- \usepackage{amssymb}
+- \usepackage{tikz-cd}
+- \usepackage{url}
+- \definecolor{foreground}{RGB}{255,255,255}
+- \definecolor{background}{RGB}{34,28,54}
+- \definecolor{title}{RGB}{105,165,255}
+- \definecolor{gray}{RGB}{175,175,175}
+- \definecolor{lightgray}{RGB}{225,225,225}
+- \definecolor{subtitle}{RGB}{232,234,255}
+- \definecolor{hilight}{RGB}{112,224,255}
+- \definecolor{vhilight}{RGB}{255,111,207}
+- \setbeamertemplate{footline}[page number]
+---
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Proj}{\textbf{P}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\rootn}{\sqrt{n}}
+\newcommand{\p}{\mathbf{p}}
+\newcommand{\E}{\text{E}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\mubf}{\bm{\mu}}
+\newcommand{\logit}{\text{logit}}
+
+\newtheorem{cor}{Corollary}
+\newtheorem{lem}{Lemma}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{prop}{Proposition}
+
+
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy.opts=list(width.cutoff=40))
+library(ggplot2)
+
+mycols     = c("chartreuse3", "orangered", "deepskyblue3", "darkorchid1", "yellow")
+dark_theme = theme(plot.background   = element_blank(), 
+                   panel.background  = element_blank(),
+                   #legend.background = element_blank(), legend.key = element_blank(),
+                   axis.title.x      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(10,0,0,0)),
+                   axis.title.y      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(0,20,0,0)),
+                   axis.text         = element_text(size=18, color = "grey80"), 
+                   text              = element_text(size=20),
+                   axis.title        = element_text(size = 26),
+                   legend.title      = element_text(size = 26, colour = "grey80"),
+                   panel.border      = element_blank(),
+                   panel.grid.major  = element_line(colour = "grey50"), 
+                   panel.grid.minor  = element_line(colour = "grey30"))
+```
+
+
+## Last time
+
+- nominal responses
+- Multinomial regression via baseline-category logistic model
+- data analysis
+
+
+## Learning Objectives Today
+
+- ordinal responses 
+- proportional-odds model 
+- data analysis
+
+\vspace{12pt}
+This slide deck will only contain data analysis. The lecture will be largely on the blackboard. 
+
+
+
+## R Example: Happiness and Traumatic Events 
+
+
+The response variable happiness is an ordinal categorical variable indicating the current happiness level of the individual: 
+
+- 1 if very happy
+- 2 if pretty happy 
+- 3 if not too happy 
+
+\vspace{12pt}
+Here trauma is a count of the number of traumatic events that the individual faced in the previous year. 
+
+\vspace{12pt}
+The control variable is a binary categorical variable (race) that was deemed important by the researchers who conducted the study (given two levels: 0 if in A; 1 if in B). 
+
+
+
+##
+
+We load in the data
+
+\vspace{12pt}
+\tiny
+```{r}
+happiness <- read.table("happiness.txt", header=TRUE)
+```
+
+```{r, echo = FALSE}
+colnames(happiness)[1] <- c("control")
+```
+
+\vspace{12pt}
+\normalsize
+and display the first 10 rows:
+
+\vspace{12pt}
+\tiny
+```{r}
+head(happiness, 10)
+```
+
+
+##
+
+We load in \texttt{VGAM} and fit the proportional-odds model
+
+\vspace{12pt}
+\tiny
+```{r, message = FALSE}
+library(VGAM)
+mod <- vglm(happy ~ trauma + control, family=propodds(reverse=FALSE),
+            data=happiness)
+summary(mod)
+```
+
+
+## 
+
+A LRT suggests that our model fits the data better than a saturated model.
+
+\vspace{12pt}
+\small
+```{r}
+pchisq(deviance(mod), df.residual(mod), lower = FALSE)
+```
+
+
+##
+
+In our notation, the estimates are 
+
+\begin{align*}
+\begin{array}{c}
+  \hat\alpha_1 \approx -0.518 \\
+  \hat\alpha_2 \approx 3.401
+\end{array} \qquad \hat\beta \approx \left(\begin{array}{c}
+  -0.406 \\
+  -2.036
+\end{array}\right)
+\end{align*}
+
+\vspace{12pt}
+where 
+$$
+  x = \left(\begin{array}{c}
+  \text{trauma} \\
+  \text{control}
+\end{array}\right).
+$$
+
+
+## 
+
+Thus happiness is estimated lower ($Y$ is estimated to be larger) as trauma increases. 
+
+\vspace{12pt}
+We can estimate the odds of ``very happy'' for control category A (coded 0) relative to control category B (coded 1) with trauma held fixed, and a Wald 95\% confidence interval for these estimates:
+
+\vspace{12pt}
+\tiny
+```{r}
+exp(2.036)
+
+exp(2.036 + c(-1,1) * qnorm(0.975) * 0.691)
+```
+
+
+\vspace{12pt}
+\normalsize
+The control variable (race) has a large effect on happiness
+
+
+
+## 
+
+We can do likelihood ratio tests as before
+
+\vspace{12pt}
+\tiny
+```{r}
+modred <- vglm(happy ~ trauma, family=propodds(reverse=FALSE),
+               data=happiness)
+llrts <- deviance(modred) - deviance(mod)
+llrts.df <- df.residual(modred) - df.residual(mod)
+llrts
+llrts.df
+1 - pchisq(llrts, llrts.df)
+```
+
+
+##
+
+We can also graph probability curves (versus trauma) by happiness category and control:
+
+\vspace{12pt}
+\tiny
+```{r, eval = FALSE}
+curve(predict(mod, data.frame(trauma=x,control=0), type="response")[,1],
+      xlab="Trauma", ylab="Probability",
+      xlim=range(happiness$trauma), ylim=c(0,1))
+curve(predict(mod, data.frame(trauma=x,control=0), type="response")[,2],
+      add=TRUE, col="red")
+curve(predict(mod, data.frame(trauma=x,control=0), type="response")[,3],
+      add=TRUE, col="blue")
+curve(predict(mod, data.frame(trauma=x,control=1), type="response")[,1],
+      add=TRUE, lty=2)
+curve(predict(mod, data.frame(trauma=x,control=1), type="response")[,2],
+      add=TRUE, col="red", lty=2)
+curve(predict(mod, data.frame(trauma=x,control=1), type="response")[,3],
+      add=TRUE, col="blue", lty=2)
+legend("topright", c("A","B"), lty=1:2)
+legend("topleft", c("Very Happy","Pretty Happy","Not Too Happy"), lty=1,
+       col=c("black","red","blue"))
+```
+
+
+##
+
+```{r, echo = FALSE}
+curve(predict(mod, data.frame(trauma=x,control=0), type="response")[,1],
+      xlab="Trauma", ylab="Probability",
+      xlim=range(happiness$trauma), ylim=c(0,1))
+curve(predict(mod, data.frame(trauma=x,control=0), type="response")[,2],
+      add=TRUE, col="red")
+curve(predict(mod, data.frame(trauma=x,control=0), type="response")[,3],
+      add=TRUE, col="blue")
+curve(predict(mod, data.frame(trauma=x,control=1), type="response")[,1],
+      add=TRUE, lty=2)
+curve(predict(mod, data.frame(trauma=x,control=1), type="response")[,2],
+      add=TRUE, col="red", lty=2)
+curve(predict(mod, data.frame(trauma=x,control=1), type="response")[,3],
+      add=TRUE, col="blue", lty=2)
+legend("topright", c("A","B"), lty=1:2)
+legend("topleft", c("Very Happy","Pretty Happy","Not Too Happy"), lty=1,
+       col=c("black","red","blue"))
+```
+
+
+## 
+
+We can check the assumption of proportional odds by comparison with a model that does not assume it:
+
+\vspace{12pt}
+\tiny
+```{r}
+modnotprop <- vglm(happy ~ trauma + control, family=cumulative(parallel=FALSE),
+                   data=happiness)
+summary(modnotprop)
+```
+
+
+##
+
+Now perform the LRT. Keep in mind that forcing proportionality is more restrictive than not enforcing it.
+
+\vspace{12pt}
+\tiny
+```{r}
+llrts <- deviance(mod) - deviance(modnotprop)
+llrts.df <- df.residual(mod) - df.residual(modnotprop)
+llrts
+llrts.df
+1 - pchisq(llrts, llrts.df)
+```
+
+\vspace{12pt}
+\normalsize
+The proportional-odds model fits this data better.
+
+
+## 
+
+We can also fit a probit analog to the proportional-odds model
+
+\vspace{12pt}
+\tiny
+```{r}
+mod.probit <- vglm(happy ~ trauma + control,
+                   family=cumulative(link="probitlink",parallel=TRUE),
+                   data=happiness)
+summary(mod.probit)
+```
+
+
+##
+
+See notes \texttt{polr} implementation.
