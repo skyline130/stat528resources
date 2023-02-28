@@ -1,5 +1,5 @@
 ---
-title: "Complete Separation Notes"
+title: "Data Separation Notes"
 author: "Daniel J. Eck"
 date: ""
 output: pdf_document
@@ -263,7 +263,7 @@ where the $n_i$ are the binomial sample sizes.  In logistic regression we have $
   &\text{maximize} \quad p_k,
     \qquad
    \text{subject to} 
-     \quad \prod_{i \in I} p_i^{y_i} (1 - p_i)^{n_i - y_i} \ge \alpha, \; \text{or} \\
+     \quad \prod_{i \in I} p_i^{y_i} (1 - p_i)^{n_i - y_i} \ge \alpha; \\
   &\text{minimize} \quad p_k,
     \qquad
    \text{subject to} 
@@ -500,6 +500,6 @@ So which prior do we use?
 
 
 
-<!-- \bibliographystyle{plainnat} -->
-<!-- \bibliography{../note_sources} -->
+\bibliographystyle{plainnat}
+\bibliography{../note_sources}
 

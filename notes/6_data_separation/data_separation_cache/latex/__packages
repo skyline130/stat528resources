@@ -1,6 +1,4 @@
 ggplot2
-usethis
-devtools
 glmdr
 enrichwith
 data.table
