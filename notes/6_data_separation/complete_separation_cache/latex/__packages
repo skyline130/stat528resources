@@ -1,0 +1,11 @@
+ggplot2
+usethis
+devtools
+glmdr
+enrichwith
+data.table
+MASS
+Matrix
+lme4
+arm
+brglm2
