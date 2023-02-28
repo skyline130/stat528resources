@@ -6,8 +6,9 @@ See the Syllabus for more details. See the notes directory for course notes.
 
 # News
 
- - Homework 3 is now posted
- - We will begin discussion on binary and count regression
+ - Homework 4 is now posted
+ - We will discuss data separation this week
+ - The take-home midterm will be posted next week.
  - New file naming convention in the notes directory
 
 
@@ -257,7 +258,7 @@ A list of the designated University employees who, as counselors, confidential a
   + **Reading**: course notes, chapter 8 of Agresti, [the VGAM Package for Categorical Data Analysis](https://www.jstatsoft.org/article/view/v032i10)
   
 * Week 7 [02/28, 03/02]
-  + Complete Separation 
+  + Data Separation 
   + **Reading**: course notes, sections 6.5, 7.2 of Agresti
   + Homework 4 due on Friday, March 3rd at 11:59 PM  
 
