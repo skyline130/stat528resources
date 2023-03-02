@@ -1,0 +1,731 @@
+---
+title: "STAT 528 - Advanced Regression Analysis II"
+author: "Data Separation (part II)"
+institute: |
+  | Daniel J. Eck
+  | Department of Statistics  
+  | University of Illinois
+date: ""
+output: 
+    beamer_presentation:
+        keep_tex: true
+        fig_width: 11
+        fig_height: 7.5
+        includes:
+bibliography: ../note_sources.bib
+urlcolor: blue
+header-includes:
+- \usepackage{graphicx}
+- \usepackage{bm}
+- \usepackage{array}
+- \usepackage{amsmath}
+- \usepackage{amsthm}
+- \usepackage{amsfonts}
+- \usepackage{amssymb}
+- \usepackage{tikz-cd}
+- \usepackage{url}
+- \definecolor{foreground}{RGB}{255,255,255}
+- \definecolor{background}{RGB}{34,28,54}
+- \definecolor{title}{RGB}{105,165,255}
+- \definecolor{gray}{RGB}{175,175,175}
+- \definecolor{lightgray}{RGB}{225,225,225}
+- \definecolor{subtitle}{RGB}{232,234,255}
+- \definecolor{hilight}{RGB}{112,224,255}
+- \definecolor{vhilight}{RGB}{255,111,207}
+- \setbeamertemplate{footline}[page number]
+---
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Proj}{\textbf{P}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\rootn}{\sqrt{n}}
+\newcommand{\p}{\mathbf{p}}
+\newcommand{\E}{\text{E}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\mubf}{\bm{\mu}}
+\newcommand{\logit}{\text{logit}}
+
+\newtheorem{cor}{Corollary}
+\newtheorem{lem}{Lemma}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{prop}{Proposition}
+
+
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy.opts=list(width.cutoff=40))
+library(ggplot2)
+
+mycols     = c("chartreuse3", "orangered", "deepskyblue3", "darkorchid1", "yellow")
+dark_theme = theme(plot.background   = element_blank(), 
+                   panel.background  = element_blank(),
+                   #legend.background = element_blank(), legend.key = element_blank(),
+                   axis.title.x      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(10,0,0,0)),
+                   axis.title.y      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(0,20,0,0)),
+                   axis.text         = element_text(size=18, color = "grey80"), 
+                   text              = element_text(size=20),
+                   axis.title        = element_text(size = 26),
+                   legend.title      = element_text(size = 26, colour = "grey80"),
+                   panel.border      = element_blank(),
+                   panel.grid.major  = element_line(colour = "grey50"), 
+                   panel.grid.minor  = element_line(colour = "grey30"))
+```
+
+
+## Today's Learning Objectives
+
+- data separation introduction
+- statistical inference when separation exists
+
+
+
+\vspace{12pt}
+This slide deck will only contain data analyses and computational tools.
+
+
+
+## 
+
+Recall our 8 point data set which is taken from Section 6.5.1 in Agresti.
+
+\vspace{12pt}
+\tiny
+```{r}
+x <- (1:9 * 10)[-5]
+y <- c(0,0,0,0,1,1,1,1)
+plot(x, y, pch = 19)
+```
+
+
+
+## 
+
+Last time we demonstrated that there is a hyperplane which separates the successes and failures.
+
+
+\vspace{12pt}
+\tiny
+```{r}
+## separation vector
+b <- c(-50, 1) 
+
+## model matrix
+M <- cbind(1, x)
+
+## check condition
+cbind(M %*% b, y)
+```
+
+
+
+
+## 
+
+As we can see below the glm output is nonsense.
+
+\vspace{12pt}
+\tiny
+```{r}
+m1 <- glm(y ~ x, family = "binomial")
+
+## summary table
+summary(m1)
+```
+
+
+##
+
+The data exhibits complete degeneracy, and statistical inference is essentially meaningless. 
+
+\vspace{12pt}
+Luckily the computational checks have warned the user that a potential problem has occurred. 
+
+\vspace{12pt}
+Note that these warning messages do not describe what the problem is or provide any guidance for how users should handle this problem. 
+
+
+
+
+##
+
+Morevover, these checks are purely computational and do not necessarily imply that separation has occurred. 
+
+\vspace{12pt}
+\tiny
+```{r}
+w <- c(x, 1e3)
+z <- c(0,0,0,1,0,1,1,1,1)
+m1_alt <- glm(z ~ w, family = "binomial")
+summary(m1_alt)
+```
+
+
+
+## 
+
+Notice that in the Agresti example the number of Fisher scoring iterations is 25 (maximum allowable iterations). Look at what happens when change the defaults:
+
+\vspace{12pt}
+\tiny
+```{r}
+m2 <- glm(y ~ x, family = "binomial", 
+          control = list(maxit = 1e4, epsilon = 1e-100))
+summary(m2)
+```
+
+
+##
+
+Returning to the model fit with the default settings, we see large canonical parameter estimates and mean value parameter estimates that are at the boundary of the closure of their parameter space $(0 < p < 1)$. 
+
+\vspace{12pt}
+Informally, estimates are ``at infinity.''
+
+
+\vspace{12pt}
+\tiny
+```{r}
+## submodel canonical parameter estimates
+betahat <- m1$coefficients
+betahat
+
+## saturated model canonical parameter estimates
+thetahat <- as.numeric(M %*% betahat)
+thetahat
+
+## saturated model mean value parameter estimates
+phat <- predict(m1, type = "response")
+phat
+```
+
+
+
+## Canonical statistic on the boundary of its support
+
+Recall that the submodel can be written as 
+$$
+  \langle y, M\beta \rangle - c(M\beta) = \langle M^Ty, \beta \rangle - c_\beta(\beta)
+$$
+\vspace{12pt}
+Also notice that the observed value of the canonical statistic $M^Ty$ for the above submodel is on the boundary of the support of values for $M^TY$. 
+
+\vspace{12pt}
+This implies that the MLE does not exist in the traditional sense. See [Geyer (2009)](https://projecteuclid.org/euclid.ejs/1239716414) for technical details that are beyond the scope of this course). 
+
+
+
+##
+
+\begin{center}
+\includegraphics[width = 0.75\textwidth]{boundaryMtY.png}
+\end{center}
+
+
+##
+
+Note that, by the observed equals expected property, $M^Ty$ is the MLE of the submodel mean-value parameter vector. The variance of the submodel canonical statistic is the Fisher information matrix.
+
+\vspace{12pt}
+We now use R scripts to compute the Fisher information matrix. An eigenvector decomposition reveals that the Fisher information matrix is numerically singular. 
+
+
+\vspace{12pt}
+\tiny
+```{r}
+invFI <- vcov(m1)
+FI <- solve(invFI)
+eigen(FI)
+```
+
+
+
+## 
+
+This implies that $\widehat{\Var}(M^TY) = 0$. 
+
+\vspace{12pt}
+Therefore, the MLE solution to this problem is that the observed data which are on the boundary are the only possible data that could have occurred. 
+
+\vspace{12pt}
+Of course, these are estimates and not actual parameters. The problem is how to make inferential statements about model parameters given this degeneracy.
+
+
+## Inference in the complete separation setting
+
+The exponential family in this example is completely degenerate. The MLE does not exist in the traditional sense, but may (does) exist in the completion of the exponential family (the set which includes all exponential family distributions and all limits of distributions). 
+
+\vspace{12pt}
+Conventional maximum likelihood computations come close, in a sense, to finding the MLE in the completion of the exponential family. They go uphill on the likelihood function until they meet their convergence criteria and stop. 
+
+\vspace{12pt}
+\tiny
+```{r, warning = FALSE, message = FALSE}
+asymptote <- t(sapply(1:30, function(iter){
+  m1 <- glm(y ~ x, family = "binomial", control = list(maxit = iter, epsilon = 1e-20))
+  c(sqrt(log(crossprod(coef(m1)))), logLik(m1))
+}))
+asymptote <- as.data.frame(asymptote)
+```
+
+
+
+##
+
+```{r, echo = FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(ggplot2)
+ggplot(asymptote) + 
+  ggtitle('asymptote of the log likelihood') + 
+  labs(x= expression(log(~"||"~beta~"||")), y= "log likelihood") + 
+  geom_line(aes(x = V1, y = V2), color = "black") + 
+  geom_abline(intercept = 0, slope = 0, lty = 2, color = "red") + 
+  theme(legend.position="bottom", panel.background = element_blank(),
+        legend.key = element_rect(fill = "white"),
+        axis.ticks.x = element_blank(),
+        panel.grid.major.x = element_line("lightgrey", size = 0.15), 
+        panel.grid.major.y = element_line("lightgrey", size = 0.15), 
+        panel.grid.minor.x = element_line("lightgrey", size = 0.07), 
+        panel.grid.minor.y = element_line("lightgrey", size = 0.07))
+```
+
+
+##
+
+```{r, echo = FALSE, warning=FALSE}
+ggplot(asymptote[25:30, ]) + 
+  ggtitle('zoomed in') + 
+  labs(x= expression(log(~"||"~beta~"||")), y = "") + 
+  geom_line(aes(x = V1, y = V2), color = "black") + 
+  geom_abline(intercept = 0, slope = 0, lty = 2, color = "red") + 
+  theme(legend.position="bottom", panel.background = element_blank(),
+        legend.key = element_rect(fill = "white"),
+        axis.ticks.x = element_blank(),
+        panel.grid.major.x = element_line("lightgrey", size = 0.15), 
+        panel.grid.major.y = element_line("lightgrey", size = 0.15), 
+        panel.grid.minor.x = element_line("lightgrey", size = 0.07), 
+        panel.grid.minor.y = element_line("lightgrey", size = 0.07))
+```
+
+
+## 
+
+At this point, canonical parameter estimates $\hat\theta$ and $\hat\beta$ are still infinitely far away from the MLE in the completion. 
+
+\vspace{12pt}
+But mean value parameter estimates $\hat\mu$ are close to the MLE in the completion, and the log likelihood is nearly maximized.
+
+\vspace{12pt}
+And the corresponding probability distributions are close in total variation norm to the MLE probability distribution in the completion.
+
+
+## Software and return to Agresti example
+
+The \texttt{inference} function in the R package \texttt{glmdr} determines one-sided confidence intervals for mean value parameters corresponding to response values that are constrained to their observed values $y_I$ 
+
+\vspace{12pt}
+\tiny
+```{r, message = FALSE}
+library(glmdr)
+```
+
+
+\vspace{12pt}
+\normalsize 
+
+- See the \texttt{glmdr} directory in the stat528resources repo. You will have to install the package locally
+- The \texttt{glmdr} package currently only works for logistic, binomial, and Poisson regression.
+
+
+
+<!-- ## -->
+
+<!-- We return to the motivating Agresti example. Here we see that the Fisher information matrix has only null eigenvectors.  -->
+
+<!-- \vspace{12pt} -->
+<!-- \tiny -->
+<!-- ```{r} -->
+<!-- eigen(FI) -->
+<!-- ``` -->
+
+
+##
+
+<!-- In this case the MLE of the saturated model mean value parameters agree with the observed data; they are on the boundary of the set of possible values, either zero or one. Thus the LCM is completely degenerate at the one point set containing only the observed value of the canonical statistic of this exponential family. One-sided confidence intervals for mean value parameters (success probability considered as a function of the predictor $x$) are now computed.  -->
+
+We now fit the logistic regression model using the \texttt{glmdr} fitting function instead of \texttt{glm}. The user is prompted with a description of the problem which provides guidance on how to handle the problem.
+
+\vspace{12pt}
+\tiny
+```{r, cache = TRUE}
+m_glmdr <- glmdr(y ~ x)
+
+## summary information
+summary(m_glmdr)
+```
+
+
+
+##
+
+We then use the \texttt{inference} function to obtain one sided confidence intervals for mean-value parameters corresponding to components $Y_I$ that are constrained to be their observed values. 
+
+\vspace{12pt}
+\tiny
+```{r, cache = TRUE}
+## one-sided CIs
+CIs <- inference(m_glmdr)
+CIs
+```
+
+
+
+## 
+
+
+```{r fig.height = 5, fig.width = 6, fig.align = "center", echo = FALSE}
+bounds.lower.p <- CIs$lower
+bounds.upper.p <- CIs$upper
+par(mar = c(4, 4, 0, 0) + 0.1)
+plot(x, y, axes = FALSE, type = "n",
+    xlab = expression(x), ylab = expression(pi(x)))
+segments(x, bounds.lower.p, x, bounds.upper.p, lwd = 2)
+box()
+axis(side = 1)
+axis(side = 2)
+points(x, y, pch = 21, bg = "white")
+```
+
+
+## Commentary on Agresti
+
+The $n = 8$ data point example that we analyzed comes from Section 6.5.1 in Agresti. 
+
+\vspace{12pt}
+However, this textbook provides no model based inferential solution to this problem. 
+
+\vspace{12pt}
+This week, we provided such a solution that exists within the exponential family modeling and maximum likelihood estimation paradigms. 
+
+\vspace{12pt}
+To be fair to Agresti, "solutions" to complete separation are discussed in Sections 7.4.8. 
+
+
+## Not completely degenerate
+
+In the Agresti example we noticed that the estimated Fisher information matrix was completely degenerate. T
+
+\vspace{12pt}
+his need not be so in generality, the Fisher information matrix can exhibit partial degeneracy. 
+
+\vspace{12pt}
+When this is so the limiting conditional model (LCM) is not completely degenerate, data pairs $(y_i,x_i)$ corresponding to response vectors which are left unconstrained form the LCM and parameter estimation can be conducted in a traditional manner. 
+
+\vspace{12pt}
+We will now explore an example where with partial degeneracy. 
+
+
+## Endometrial example
+
+We will consider the endometrial example in which the a histology grade and risk factors for 79 cases of endometrial cancer are analyzed. the variables are:
+
+- **NV**: neovasculization with coding 0 for absent and 1 for present
+- **PI**: pulsality index of arteria uterina
+- **EH**: endometrium heigh
+- **HG**: histology grade with coding 0 for low grade and 1 for high grade
+
+\vspace{12pt}
+\tiny
+```{r, message = FALSE, warning = FALSE}
+library(enrichwith)
+data(endometrial)
+head(endometrial, 3)
+```
+
+
+## 
+
+We begin with a standard logistic regression fit.
+
+\vspace{12pt}
+\tiny
+```{r}
+m <- glm(HG ~ ., data = endometrial, family = "binomial", 
+         x = TRUE, y = TRUE)
+summary(m)
+```
+
+
+
+## 
+
+We observe **quasi-complete separation** in NV (a categorical variable with two levels), where we note that a 2 × 2 contingency table with an empty (zero) cell is an example of quasi-complete separation. 
+
+\vspace{12pt}
+\tiny
+```{r}
+b <- c(0,1,0,0)
+library(data.table)
+foo <- setDT(as.data.frame(cbind(m$y, m$x %*% b)))
+colnames(foo) <- c("y", "sep")
+foo[, .(.N), by = c("y", "sep")]
+```
+
+
+
+## 
+
+We now use \texttt{glmdr} to do our fitting. The user is prompted with a description of the problem which provides guidance on how to handle the problem.
+
+\vspace{12pt}
+\tiny
+```{r}
+m_glmdr <- glmdr(HG ~ ., data = endometrial, family = "binomial")
+summary(m_glmdr)
+```
+
+
+
+##
+
+The summary table is strange. The variable driving quasi-complete separation has been dropped from consideration.
+
+\vspace{12pt}
+We only observe partially degeneracy of Fisher Information (the variance matrix for the submodel canonical statistic).
+
+\vspace{12pt}
+\tiny
+```{r}
+solve(vcov(m))
+```
+
+
+##
+
+The reason for this strangeness is beyond the scope of this course. The interested reader can check out Lemma 1 and Corollary 1 in Section 6.1.3. in [Eck and Geyer (2021)](https://projecteuclid.org/journals/electronic-journal-of-statistics/volume-15/issue-1/Computationally-efficient-likelihood-inference-in-exponential-families-when-the-maximum/10.1214/21-EJS1815.full).
+
+
+\vspace{12pt}
+We now investigate what is going on under the hood.
+
+\vspace{12pt}
+\tiny
+```{r, warning = FALSE, message = FALSE}
+asymptote <- t(sapply(1:30, function(iter){
+  m_test <- glm(HG ~ ., family = "binomial", data = endometrial, 
+                control = list(maxit = iter, epsilon = 1e-20))
+  c(sqrt(log(crossprod(coef(m_test)))), logLik(m_test), coef(m_test))
+}))
+asymptote <- as.data.frame(asymptote)
+```
+
+
+##
+
+```{r, echo = FALSE, warning=FALSE}
+ggplot(asymptote) + 
+  ggtitle('asymptote of the log likelihood') + 
+  labs(x= expression(log(~"||"~beta~"||")), y= "log likelihood") + 
+  geom_line(aes(x = V1, y = V2), color = "black") + 
+  geom_abline(intercept = 0, slope = 0, lty = 2, color = "red") + 
+  theme(legend.position="bottom", panel.background = element_blank(),
+        legend.key = element_rect(fill = "white"),
+        axis.ticks.x = element_blank(),
+        panel.grid.major.x = element_line("lightgrey", size = 0.15), 
+        panel.grid.major.y = element_line("lightgrey", size = 0.15), 
+        panel.grid.minor.x = element_line("lightgrey", size = 0.07), 
+        panel.grid.minor.y = element_line("lightgrey", size = 0.07))
+```
+
+
+##
+
+```{r, echo = FALSE, warning=FALSE}
+ggplot(asymptote[25:30, ]) + 
+  ggtitle('zoomed in') + 
+  labs(x= expression(log(~"||"~beta~"||")), y = "") + 
+  geom_line(aes(x = V1, y = V2), color = "black") + 
+  geom_abline(intercept = 0, slope = 0, lty = 2, color = "red") + 
+  theme(legend.position="bottom", panel.background = element_blank(),
+        legend.key = element_rect(fill = "white"),
+        axis.ticks.x = element_blank(),
+        panel.grid.major.x = element_line("lightgrey", size = 0.15), 
+        panel.grid.major.y = element_line("lightgrey", size = 0.15), 
+        panel.grid.minor.x = element_line("lightgrey", size = 0.07), 
+        panel.grid.minor.y = element_line("lightgrey", size = 0.07))
+```
+
+
+## 
+
+\tiny
+```{r}
+asymptote %>% mutate(iter = 1:30) %>% 
+  dplyr::select(3:6) %>% as.data.frame()
+```
+
+
+## 
+
+We now obtain inference for all mean-value parameters in two steps: 
+
+- We first use traditional methods to obtain inferences for mean-value parameters that are unconstrained (the data points forming the LCM). 
+- Then we can use the \texttt{inference} function to obtain one-sided confidence intervals for components of the response vector that are constrained at their observed values.
+
+
+## 
+First we will use traditional methods for inferences mean-value parameters that are unconstrained.
+
+\tiny
+```{r}
+m2 <- update(m, subset = m_glmdr$linearity)
+summary(m2)
+```
+
+
+##
+
+\tiny
+```{r}
+## get estimates of mean-value parameters in the LCM
+preds <- predict(m2, se.fit = TRUE, type = "response")
+head(cbind(preds$fit, preds$se.fit))
+```
+
+
+## 
+
+Then we can use the \texttt{inference} function to obtain one-sided confidence intervals for components of the response vector that are constrained at their observed values.
+
+\vspace{12pt}
+\tiny
+```{r}
+## get one-sided CIs for constrained responses
+preds_constrained <- inference(m_glmdr)
+cbind(endometrial[!m_glmdr$linearity, ], preds_constrained)
+```
+
+
+## 
+
+We can test for the significance of the \texttt{NV} variable in the presence of quasi-complete separation using traditional means. Methods get harder when the degeneracy exists in the null model as explained in Section 3.15 of [Geyer (2009)](https://projecteuclid.org/journals/electronic-journal-of-statistics/volume-3/issue-none/Likelihood-inference-in-exponential-families-and-directions-of-recession/10.1214/08-EJS349.full).
+
+\vspace{12pt}
+\tiny
+```{r}
+m_small <- glm(HG ~ PI + EH, data = endometrial, family = "binomial", 
+         x = TRUE, y = TRUE)
+anova(m_small, m, test = "LRT")
+AIC(m); AIC(m_small)
+```
+
+
+## Other approaches: the problem with priors
+
+We consider three different approaches:
+
+- Flat improper priors: will not work when separation exists
+- The weakly informative prior advocated [here](https://projecteuclid.org/journals/annals-of-applied-statistics/volume-2/issue-4/A-weakly-informative-default-prior-distribution-for-logistic-and-other/10.1214/08-AOAS191.full) and implemented in the \texttt{bayesglm}
+- Jeffrey's prior based approaches advocated for by [Ioannis Kosmidis](https://www.ikosmidis.com/) and [David Firth](https://warwick.ac.uk/fac/sci/statistics/staff/academic-research/firth/) in several papers and implemented in the \texttt{brglm2} package
+
+We will demonstrate inferential inconsistencies between the later two approaches.
+
+
+
+## 
+
+We first show that the \texttt{bayesglm} defaults produce p-values for the \texttt{NV} variable that are close to 0.05. 
+
+\vspace{12pt}
+Modest changes to these defaults can change decisions about this variable's significance when testing at the 0.05 level.
+
+\vspace{12pt}
+\tiny
+```{r, message=FALSE, warning = FALSE}
+library(arm) # for bayesglm
+dat <- endometrial
+dat[, 2:3] <- scale(dat[, 2:3]) * 0.5
+
+bayes_mod1 <- bayesglm(HG~.,data=dat,family="binomial", prior.scale = 1)
+bayes_mod <- bayesglm(HG~.,data=dat,family="binomial") # default value 2.5
+bayes_mod5 <- bayesglm(HG~.,data=dat,family="binomial", prior.scale = 5)
+bayes_mod10 <- bayesglm(HG~.,data=dat,family="binomial", prior.scale = 10)
+
+# p-values for NV variable
+c(summary(bayes_mod1)$coef[2,4], summary(bayes_mod)$coef[2,4], 
+  summary(bayes_mod5)$coef[2,4], summary(bayes_mod10)$coef[2,4])
+```
+
+
+
+## 
+
+```{r plot, cache = TRUE, echo = FALSE}
+xx <- seq(from = 1, to = 5, length = 1e3)
+foo <- unlist(lapply(xx, function(j){
+  summary(bayesglm(HG~.,data=dat,family="binomial",
+                   prior.scale = j))$coef[2,4]
+}))
+
+plot.new()
+plot.window(xlim = c(1,5), ylim = c(0.025, 0.0725))
+title("Neovasculization p-value vs prior scale")
+lines(xx, foo)
+axis(1)
+axis(2)
+abline(h = 0.05, col = "red", lty = 2)
+abline(v = 2.5, col = "blue", lty = 1)
+mtext("prior scale", side = 1, line = 2.5)
+mtext("p-value", side = 2, line = 2.5)
+```
+
+
+## 
+
+
+
+Different \texttt{brglm} fitting options yield different results, although these differences do not materialize in different conclusions for the \texttt{NV} variable when testing at the 0.05 significance level. 
+
+\vspace{12pt}
+\tiny
+```{r}
+library(brglm2) # for brglm2
+brglm_mod <- glm(HG~.,data=endometrial,family = "binomial",
+                 method = "brglm_fit", type = "MPL_Jeffreys")
+brglm_mod_AS_mean <- glm(HG~.,data=endometrial,family = "binomial",
+                 method = "brglm_fit", type = "AS_mean")
+brglm_mod_AS_median <- glm(HG~.,data=endometrial,family = "binomial",
+                         method = "brglm_fit", type = "AS_median")
+brglm_mod_AS_mixed <- glm(HG~.,data=endometrial,family = "binomial",
+                           method = "brglm_fit", type = "AS_mixed")
+
+c(summary(brglm_mod)$coef[2,4], summary(brglm_mod_AS_mean)$coef[2,4], 
+  summary(brglm_mod_AS_median)$coef[2,4], summary(brglm_mod_AS_mixed)$coef[2,4])
+```
+
+
+
+## Discussion
+
+Which prior do we use? 
+
+\vspace{12pt}
+- **Gelman**: Our prior [Cauchy $\mu =0$; $\sigma = 2.5$] has the advantage of always giving answers, even when there is complete separation in logistic regression (a common problem, even when the sample size is large and the number of predictors is small), and also automatically applying more shrinkage to higher-order interactions.
+- **Kosmidis and Firth**: Penalization of the likelihood by Jeffreys’ invariant prior, or a positive power thereof, is shown to produce finite-valued maximum penalized likelihood estimates in a broad class of binomial generalized linear models. The class of models includes logistic regression, where the Jeffreys-prior penalty is known additionally to reduce the asymptotic bias of the maximum likelihood estimator
+
+
+## 
+
+- **Gelman**: Our approach is similar [to Jeffrey's] but is parameterized in terms of the coefficients and thus allows us to make use of prior knowledge on that scale... We recommend this prior distribution as a default choice for routine applied use.
+- **Kosmidis and Firth**:  The apparent finiteness and shrinkage properties of the reduced-bias estimator, together with the fact that the estimator has the same first-order asymptotic distribution as the maximum likelihood estimator, are key reasons for the increasingly widespread use of Jeffreys-prior penalized logistic regression in applied work.
+- **Gelman**: Scale-free prior distributions such as Jeffreys’ do not include enough prior information. As we have seen in specific examples and also in the corpus
+of datasets, this weakly-informative prior distribution yields estimates that make
+more sense and perform better predictively, compared to maximum likelihood.
+
+
+\vspace{12pt}
+[What we have here is a failure to communicate](https://www.youtube.com/watch?v=V2f-MZ2HRHQ). 

@@ -363,7 +363,7 @@ The $n = 8$ data point example that we analyzed comes from Section 6.5.1 in Agre
 
 In the Agresti example we noticed that the estimated Fisher information matrix was completely degenerate. This need not be so in generality, the Fisher information matrix can exhibit partial degeneracy. When this is so the LCM is not trivially degenerate like in the Agresti example. Data pairs $(y_i,x_i)$ corresponding to response vectors which are left unconstrained form the LCM and parameter estimation can be conducted in a traditional manner. We will explore an example where with partial degeneracy. 
 
-We will condsider the endometrial example in which the a histology grade and risk factors for 79 cases of endometrial cancer are analyzed. 
+We will consider the endometrial example in which the a histology grade and risk factors for 79 cases of endometrial cancer are analyzed. 
 
 ```{r, message = FALSE, warning = FALSE}
 library(enrichwith)
