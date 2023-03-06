@@ -263,7 +263,8 @@ A list of the designated University employees who, as counselors, confidential a
   + Homework 4 due on Friday, March 3rd at 11:59 PM  
 
 * Week 8 [03/07, 03/09]
-  + GLM Diagnostics 
+  + GLM Diagnostics (Tuesday)
+  + open discussion and exam questions (Thursday)
   + **Reading**: course notes
   + Take home midterm exam due on Friday, March 10th at 11:59 PM
 
