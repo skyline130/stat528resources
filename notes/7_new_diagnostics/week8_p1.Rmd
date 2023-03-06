@@ -1,0 +1,444 @@
+---
+title: "STAT 528 - Advanced Regression Analysis II"
+author: "Generalized Linear Models Diagnostics"
+institute: |
+  | Daniel J. Eck (with credit to Lu Yang)
+  | Department of Statistics
+  | University of Illinois
+date: ""
+output: 
+    beamer_presentation:
+        keep_tex: true
+        fig_width: 11
+        fig_height: 7.5
+        includes:
+bibliography: residualbib.bib  
+urlcolor: blue
+header-includes:
+- \usepackage{graphicx}
+- \usepackage{bm}
+- \definecolor{foreground}{RGB}{255,255,255}
+- \definecolor{background}{RGB}{34,28,54}
+- \definecolor{title}{RGB}{105,165,255}
+- \definecolor{gray}{RGB}{175,175,175}
+- \definecolor{lightgray}{RGB}{225,225,225}
+- \definecolor{subtitle}{RGB}{232,234,255}
+- \definecolor{hilight}{RGB}{112,224,255}
+- \definecolor{vhilight}{RGB}{255,111,207}
+- \setbeamertemplate{footline}[page number]
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy.opts=list(width.cutoff=40))
+library(ggplot2)
+
+mycols     = c("chartreuse3", "orangered", "deepskyblue3", "darkorchid1", "yellow")
+dark_theme = theme(plot.background   = element_blank(), 
+                   panel.background  = element_blank(),
+                   #legend.background = element_blank(), legend.key = element_blank(),
+                   axis.title.x      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(10,0,0,0)),
+                   axis.title.y      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(0,20,0,0)),
+                   axis.text         = element_text(size=18, color = "grey80"), 
+                   text              = element_text(size=20),
+                   axis.title        = element_text(size = 26),
+                   legend.title      = element_text(size = 26, colour = "grey80"),
+                   panel.border      = element_blank(),
+                   panel.grid.major  = element_line(colour = "grey50"), 
+                   panel.grid.minor  = element_line(colour = "grey30"))
+```
+
+## Learning Objectives Today
+- GLM diagnostics
+
+
+##
+-  The diagnostic methods for GLMs mirror those used for Gaussian linear models. 
+- However, some adaptations are necessary and, depending on the type of GLM, not all diagnostic methods will be applicable.
+
+
+## Leverage and Influence
+- Hat matrix $$\mathbf{H}=\mathbf{W}^{1/2}\mathbf{X}(\mathbf{X}'\mathbf{W}\mathbf{X})^{-1}\mathbf{X}'\mathbf{W}^{1/2}$$
+where $\mathbf{W} = diag(w)$ are weights in IRLS.
+- One important difference from the linear model case is that the leverages are no longer just a function of $\mathbf{X}$ and now depend on the response through the weights $\mathbf{W}$
+- Cook's distance
+$$D_i=\frac{(\hat{\bm\beta}_{(i)}-\hat{\bm\beta})'(\mathbf{X}'\mathbf{W}\mathbf{X})(\hat{\bm\beta}_{(i)}-\hat{\bm\beta})}{p'\hat{\phi}}$$
+
+## Galapagos data: large mean discrete outcomes
+- There are 30 Galapagos islands and 7 variables in the data set. The relationship between the number of plant species and several geographic variables is of interest. 
+
+
+
+\scriptsize
+```{r}
+data(gala, package="faraway")
+head(gala)
+modp <- glm(Species ~ .,family=poisson,gala)
+```
+
+
+##
+\scriptsize
+```{r fig.width=8,fig.height=4,warning=FALSE}
+par(mfrow=c(1,2))
+plot(modp,which=4)
+plot(modp,which=5)
+```
+
+## Residuals
+- Pearson residuals
+$$\hat{e}_{Pi}=\frac{y_i-\hat{\mu}_i}{\sqrt{V(\hat{\mu}_i)}}$$
+- $X^2=\sum_i\hat{e}_{Pi}$
+- Let deviance $D=\sum_id_i$, deviance residuals$$\hat{e}_{Di}=\mathrm{sign}\left(y_i-\hat{\mu}_i\right)\sqrt{d_i}$$
+- $D=\sum_{i=1}^n\hat{e}_{Di}^2$
+
+
+
+##
+
+\scriptsize
+```{r fig.width=6,fig.height=4}
+plot(residuals(modp,type="deviance") ~ predict(modp,type="response"),
+xlab=expression(hat(mu)),ylab="Deviance residuals")
+abline(h=0)
+```
+
+## Potential remedies
+- Is there any nonlinear relationship between the predicted values and the residuals?  
+    * A change link function 
+    * A change in the choice of predictors or transformations on these predictors
+- The assumptions of the GLM would require constant variance in the plot
+    *  A change in the variance function, quasi-likelihood GLM 
+
+## QQ plot
+\scriptsize
+```{r}
+qqnorm(residuals(modp,type="deviance"))
+qqline(residuals(modp,type="deviance"))
+```
+
+## Half-normal plots
+- One can use a half-normal plot that compares the sorted absolute residuals and the quantiles of the half-normal distribution:
+$\Phi^{-1}\left(\frac{n+i}{2n+1}\right)~i=1,\ldots,n$
+- We  seek outliers which may be identified as points off the trend
+
+\scriptsize
+```{r fig.width=3,fig.height=3}
+library(faraway)
+halfnorm(residuals(modp))
+```
+
+
+## Small mean discrete outcomes: LGPIF data
+- In some cases, plots of the residuals are not particularly helpful. 
+- For a binary response, the residual can only take two possible values for given predicted response. This is the most extreme situation, but similar discreteness can occur for binomial responses with small group sizes and Poisson responses that are small.
+
+\scriptsize
+```{r}
+freqinBC <- readRDS("freqinBC.rds")
+table(freqinBC$FreqBC)
+```
+
+##
+\scriptsize
+```{r}
+# Possion GLM
+freqmodelBC <- glm(FreqBC ~ lnCoverageBC + lnDeductBC + NoClaimCreditBC +
+                     TypeCity + TypeCounty + TypeMisc + TypeSchool + TypeTown,
+                   data = freqinBC, family = poisson(link = "log"))
+library(MASS)
+freqmodelBCnb <- glm.nb(FreqBC ~ lnCoverageBC + lnDeductBC + NoClaimCreditBC +
+                     TypeCity + TypeCounty + TypeMisc + TypeSchool + TypeTown,
+                   data = freqinBC)
+```
+
+##
+- Plots of residuals in these small mean cases tend to show curved lines of points corresponding to the limited number of observed responses. Such artifacts can obscure the main purpose of the plot.
+
+```{r  echo=FALSE,fig.width=6,fig.height=4}
+y <- freqinBC$FreqBC
+plot(residuals(freqmodelBC,type="deviance")[y==0]~ log(freqmodelBC$fitted.values[y==0]),main="Poisson GLM", xlab = "Linear predictors", ylab = "Deviance residuals",
+     xlim=c(-5,5),ylim=c(-5,5))
+points(residuals(freqmodelBC,type="deviance")[y==1]~ log(freqmodelBC$fitted.values[y==1]),main="Proposed, NB", xlab = "Fitted Values", ylab = "Residuals",
+     cex.lab=2, cex.axis=2, cex.main=2,lwd=1.5,col="red",pch=2)
+
+points(residuals(freqmodelBC,type="deviance")[y==2]~ log(freqmodelBC$fitted.values[y==2]),main="Proposed, NB", xlab = "Fitted Values", ylab = "Residuals",
+     cex.lab=2, cex.axis=2, cex.main=2,lwd=1.5,col="blue",pch=4)
+
+points(residuals(freqmodelBC,type="deviance")[y>2]~ log(freqmodelBC$fitted.values[y>2]),main="Proposed, NB", xlab = "Fitted Values", ylab = "Residuals",
+       cex.lab=2, cex.axis=2, cex.main=2,lwd=1.5,col="orange",pch=15)
+
+legend( title = "y","bottomright","y",c(0,1,2,">2"),col=c("black","red","blue","orange"),pch=c(1,2,4,15))
+```
+
+##
+```{r  echo=FALSE,fig.width=6,fig.height=4}
+y <- freqinBC$FreqBC
+plot(residuals(freqmodelBCnb,type="deviance")[y==0]~ log(freqmodelBCnb$fitted.values[y==0]),main="NB GLM", xlab = "Linear predictors", ylab = "Deviance residuals",
+     xlim=c(-5,5),ylim=c(-4,4))
+points(residuals(freqmodelBCnb,type="deviance")[y==1]~ log(freqmodelBCnb$fitted.values[y==1]),main="Proposed, NB", xlab = "Fitted Values", ylab = "Residuals",
+     cex.lab=2, cex.axis=2, cex.main=2,lwd=1.5,col="red",pch=2)
+
+points(residuals(freqmodelBCnb,type="deviance")[y==2]~ log(freqmodelBCnb$fitted.values[y==2]),main="Proposed, NB", xlab = "Fitted Values", ylab = "Residuals",
+     cex.lab=2, cex.axis=2, cex.main=2,lwd=1.5,col="blue",pch=4)
+
+points(residuals(freqmodelBCnb,type="deviance")[y>2]~ log(freqmodelBCnb$fitted.values[y>2]),main="Proposed, NB", xlab = "Fitted Values", ylab = "Residuals",
+       cex.lab=2, cex.axis=2, cex.main=2,lwd=1.5,col="orange",pch=15)
+
+legend( title = "y","bottomright","y",c(0,1,2,">2"),col=c("black","red","blue","orange"),pch=c(1,2,4,15))
+```
+
+## QQ plots
+
+\scriptsize
+```{r}
+par(mfrow=c(1,2))
+qqnorm(residuals(freqmodelBC,type="deviance"))
+qqline(residuals(freqmodelBC,type="deviance"))
+qqnorm(residuals(freqmodelBCnb,type="deviance"))
+qqline(residuals(freqmodelBCnb,type="deviance"))
+```
+
+# Residuals in GLM
+
+## Two desirable properties	of  an informative diagnostic tool
+\begin{itemize}
+		\vspace{0.1in}
+		\item[1] Proximity to null patterns under true models
+		\vspace{0.2in}
+		\item[2] Discrepancy with null patterns under misspecified models
+\end{itemize}
+
+
+## Residuals for linear regression models
+\begin{itemize}
+	\item Residuals $r_i=Y_i-x_i'\hat{\bm\beta}$, normally distributed under correctly specified models
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/lmexam}
+	\caption{QQ plots for linear regression model residuals.}
+\end{figure}
+
+## Residuals for linear regression models
+\begin{itemize}
+			\item Features of residuals  in linear regression models 
+		\begin{itemize}
+			\item Follow a known distribution under the correctly specified models
+			\item Nearly identically distributed 
+		\end{itemize}
+		\vspace{0.1in}
+	\item Graphical diagnostics: QQ plot, PP plot, residuals versus predictor plot
+	\begin{itemize}
+		\item Check normality assumption
+		\item Identify other important factors
+\item etc.
+	\end{itemize}
+	\vspace{0.1in}
+	\item Construct overall goodness-of-fit tests using residuals
+
+\end{itemize}
+
+
+## Beyond Normality: @cox1968general
+
+\begin{table}
+\begin{tabular}{ccc}
+	Linear Regression & &Generalization\\
+\\
+	$e_i =Y_i-X_i'\beta$&&$e_i=h(Y_i,X_i'\beta)$\\
+	\\
+				
+				$e_i \sim N(0,\sigma^2)$ i.i.d &{\huge\textcolor{red}{$\Longrightarrow$}}&	$e_i$  i.i.d$\sim$known distribution \\
+				\\
+		$r_i=Y_i-X_i'\hat{\beta}$&&$R_i=h(Y_i,X_i'\hat{\beta})$\\
+		\\
+	$r_i$	are normally distributed &&$R_i$ follow a hypothesized pattern \\under the true model&&under the true model
+\end{tabular}
+\end{table}
+
+
+## Residuals for Continuous Outcomes
+\begin{itemize}
+	
+	\item For \textcolor{blue}{continuous} variables $Y_i$, 
+probability integral transform $F(Y_i|X_i,\beta)\sim \mathrm{Uniform}(0,1)$
+\begin{itemize}
+\item Gamma, inverse normal, lognormal distributions
+\end{itemize}
+\item Cox-Snell residuals  $F(Y_i|X_i,\hat{\beta}),i=1,\ldots,n$ should be uniform with correctly specified models
+\end{itemize}
+\vspace{-0.4in}
+\begin{figure}[h]
+\includegraphics[width=.8\textwidth]{figures/continuous}
+\caption{Histogram and PP plot of Cox-Snell  residuals for a gamma example. }
+\end{figure}
+
+
+## Commonly Used Residuals for Discrete Outcomes
+\begin{itemize}
+\item  \textcolor{red}{Discrete} $Y_i$ cannot be expressed as transformations of $X_i'\beta$  and i.i.d. errors so Cox-Snell residuals are not applicable
+
+	\item Pearson and deviance residuals are \textcolor{red}{approximately} normal under a correctly specified model
+\item How Good Is the Approximation?
+\begin{itemize}
+	
+	\item A simulated example: Poisson GLM with log link
+\end{itemize}
+\end{itemize}
+\vspace{-0.1in}
+\begin{figure}[h]
+\includegraphics[width=0.8\textwidth]{figures/poisson2coefslides2}
+\caption{PP plots of residuals for a Poisson GLM  under the \textcolor{blue}{\textbf{true model}}.}
+\end{figure}
+
+
+## $m$-Asymptotics
+-  $m$: the number of trials  of binomial distributions, or the Poisson means, which controls the discreteness level
+\vspace{0.2in}
+- $m$-asymptotics: deviance residuals are normally distributed  with a discrepancy term of order at least $O_p(m^{-1/2})$ (@pierce1986residuals)
+\vspace{0.2in}
+- When $m$ is small, deviance residuals and Pearson residuals could have a large discrepancy with the null pattern  even under the true model, even with large $n$
+
+
+
+## Randomized Quantile Residuals (@dunn1996randomized)
+\begin{itemize}
+	\item Idea: transform discrete integer-valued data into continuous data by adding noise
+	\item Let $a_i = \hat{F}_i(Y_i-1)$ and $b_i = \hat{F}_i(Y_i)$, then the randomized quantile
+	residual
+	$$ \hat{e}_{Ri} = \Phi^{-1} (V_i),$$
+	where $V_i$ is a uniform random variable on the interval $(a_i,b_i]$ independent of $Y_i$.
+	\item Null pattern: normality
+\end{itemize}
+
+
+##
+\scriptsize
+```{r fig.width=8,fig.height=4}
+par(mfrow=c(1,2))
+library(statmod)
+resr <- qresid(freqmodelBC)
+qqnorm(resr[-which(is.infinite(resr))])
+qqline(resr[-which(is.infinite(resr))])
+
+resrnb <- qresid(freqmodelBCnb)
+qqnorm(resrnb[-which(is.infinite(resrnb))])
+qqline(resrnb[-which(is.infinite(resrnb))])
+```
+
+## Drawbacks of Randomized Quantile Residuals 
+\begin{itemize}
+	\item The procedure injects noise to the data
+	\item The behavior of the residuals depend on the realization of the noise
+\vspace{-0.2in}
+	\begin{figure}[h]
+	\includegraphics[width=0.8\textwidth]{figures/randomizeseeds}
+	\caption{PP plot of randomized quantile  residuals of a Poisson GLM example with two different random seeds. }
+\end{figure}
+	\item Not sensitive to misspecification
+\end{itemize}
+
+## Quasi-empirical residual distribution function (@yang2021assessment)
+\begin{itemize}
+\item  The   Quasi-empirical residual distribution function is an alternative to empirical  distribution function of Cox-Snell residuals
+\item 	 The   Quasi-empirical residual distribution function, $\hat{U}(\cdot)$,
+						should be close to the identity function under true model 
+	\begin{figure}[h]
+		\includegraphics[width=0.8\textwidth]{figures/quickexample}
+		\vspace{-0.1in}
+		\caption{$\hat{U}$ and deviance residuals for  a Poisson example under the true model. }
+	\end{figure}
+
+\end{itemize}
+
+
+## Quasi-empirical residual distribution function 
+- If $Y$  is continuous, 
+for any fixed value $s \in (0, 1)$,
+\begin{align}\label{unic}
+	\Pr(F(Y|\mathbf{X}=\mathbf{x})\leq s)=s.
+\end{align}
+-	Conditioning on $\mathbf{X}=\mathbf{x}$, \eqref{unic} holds for discrete $Y$ if and only if $s=F(k| \mathbf{x})$ for some integer $k$, i.e.,
+	$\Pr \left(Y\leq k| F(k| \mathbf{X})=s\right)=s$.
+-	@yang2021assessment proposed to use the subset of the data for which $F(k| \mathbf{X})\approx s$ to estimate  $\Pr(Y\leq k| F(k| \mathbf{X})\approx s)$ instead
+
+##
+-	Define the grid point $F(k| \mathbf{x})$ closest to $s$ 
+	as $H( s;X,\beta)$
+- 	A kernel function $K(\cdot)$ to is used assign  weights to the observations depending on the distance of $s$ and $H( s;X_{i},\beta)$, $K((H( s;X_{i},\beta)-s)/h_n)$, $h_n$ is the bandwidth
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.6\textwidth]{figures/Kernels}
+			\caption{Kernel Functions}
+		\end{figure}
+
+## 	
+\begin{itemize}
+		
+		\item 
+		Define the quasi-empirical residual distribution function
+		\begin{align}
+		\begin{split}\label{esti}
+		\hat{U}(s)=\sum_{i=1}^{n}W_{ni}1( F(Y_{i}|\mathbf{X}_i,\bm{\beta})\leq H( s;X_{i},{\beta})),
+		\end{split}
+		\end{align}
+		where 
+		$$W_{ni}=\frac{K((H( s;X_{i},{\beta})-s)/h_n)}
+		{\sum_{i=1}^{n}K((H( s;X_{i},{\beta})-s)/h_n)}$$
+		\item Comparison of empirical residual distribution function with $\hat{U}(s)$ 
+		
+		\begin{table}
+			
+			\begin{tabular}{cl}
+				Continuous&$ \sum_{i=1}^{n}\textcolor{BrickRed}{\frac{1}{n}}1(F(Y_{i}|X_{i},{\beta}) \leq \textcolor{blue}{s})$\\Discrete
+				&$\sum_{i=1}^{n}\textcolor{BrickRed}{W_{ni}}1( F(Y_{i}|\mathbf{X}_i,\bm{\beta})\leq \textcolor{blue}{H( s;X_{i},{\beta})})$
+			\end{tabular}
+		\end{table}
+			\end{itemize}
+
+## 	Model Diagnostics for LGPIF
+\begin{figure}
+		\centering
+			\includegraphics[width=.65\textwidth]{figures/marginplot}
+
+		\caption{\small Plot of quasi-empirical residual distribution function $\hat{U}$ (Solid Line) for LGPIF data.}
+\end{figure}
+
+
+##  Quasi-empirical residual distribution function
+- Pros
+		\begin{itemize}
+		\item is principled
+			\item is close to the hypothesized pattern under the true model
+			\item under the misspecified model, shows a significant discrepancy
+		\end{itemize}
+- Cons
+\begin{itemize}
+\item does not produce residuals themselves and cannot identify causes of misspecification
+\item requires tuning bandwidth
+\item convergence rate $n^{-1/3}$
+\end{itemize}
+
+
+## Double  probability integral transform residuals (in progress)
+- $F(Y|\mathbf{X})$  itself is not uniformly distributed for discrete outcomes 
+-  Another layer of probability integral transform,  $G_{0}\left(F(Y|\mathbf{X})\right)$, yields a uniform variable under the true model, where $G_{0}$ is the distribution of $F(Y|\mathbf{X})$
+- The \textit{double probability integral transform residuals} 
+$$	\hat{r}(Y_i|\mathbf{X}_i)=\hat{G}_{i}\left(F(Y_{i}|\mathbf{X}_i,\bm{\beta})\right)$$
+where $\hat{G}_{i}$ is an estimator of $G_{0}$ suited to the $i$th observation
+$$\hat{G}_{i}(s)=	\frac{1}{n-1}\sum_{j=1,j\neq i}^n {F}\left({F}^{(-1)}(s| \mathbf{X}_{j},\hat{\bm\beta})| \mathbf{X}_{j},\hat{\bm\beta}\right).$$
+
+## Causes of misspecification
+- Overdispersion: S-shaped pattern
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{figures/othercause202111} 
+\caption{QQ plots of the double  probability integral transform residuals under the correctly specified model (left) and models with overdispersion (middle) and an incorrect link function (right). \label{fig:other}}
+\end{figure}
+
+## References
