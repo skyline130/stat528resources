@@ -6,7 +6,7 @@ See the Syllabus for more details. See the notes directory for course notes.
 
 # News
 
- - Homework 4 is now posted
+ - Midterm is now posted
  - We will discuss data separation this week
  - The take-home midterm will be posted next week.
  - New file naming convention in the notes directory
