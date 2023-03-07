@@ -196,203 +196,84 @@ University of Illinois}
 \begin{itemize}
 \tightlist
 \item
-  GLM diagnostics
+  GLM diagnostics using Lu Yang's Quasi-Empirical Residual Distribution
+  Function method (paper in same directory as these slides).
 \end{itemize}
-\end{frame}
-
-\begin{frame}{}
-\protect\hypertarget{section}{}
-\begin{itemize}
-\tightlist
-\item
-  The diagnostic methods for GLMs mirror those used for Gaussian linear
-  models.
-\item
-  However, some adaptations are necessary and, depending on the type of
-  GLM, not all diagnostic methods will be applicable.
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Leverage and Influence}
-\protect\hypertarget{leverage-and-influence}{}
-\begin{itemize}
-\tightlist
-\item
-  Hat matrix
-  \[\mathbf{H}=\mathbf{W}^{1/2}\mathbf{X}(\mathbf{X}'\mathbf{W}\mathbf{X})^{-1}\mathbf{X}'\mathbf{W}^{1/2}\]
-  where \(\mathbf{W} = diag(w)\) are weights in IRLS.
-\item
-  One important difference from the linear model case is that the
-  leverages are no longer just a function of \(\mathbf{X}\) and now
-  depend on the response through the weights \(\mathbf{W}\)
-\item
-  Cook's distance
-  \[D_i=\frac{(\hat{\bm\beta}_{(i)}-\hat{\bm\beta})'(\mathbf{X}'\mathbf{W}\mathbf{X})(\hat{\bm\beta}_{(i)}-\hat{\bm\beta})}{p'\hat{\phi}}\]
-\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Galapagos data: large mean discrete outcomes}
-\protect\hypertarget{galapagos-data-large-mean-discrete-outcomes}{}
-\begin{itemize}
-\tightlist
-\item
-  There are 30 Galapagos islands and 7 variables in the data set. The
-  relationship between the number of plant species and several
-  geographic variables is of interest.
-\end{itemize}
-
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{data}\NormalTok{(gala, }\AttributeTok{package=}\StringTok{"faraway"}\NormalTok{)}
-\FunctionTok{head}\NormalTok{(gala)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##              Species Endemics  Area Elevation Nearest Scruz Adjacent
-## Baltra            58       23 25.09       346     0.6   0.6     1.84
-## Bartolome         31       21  1.24       109     0.6  26.3   572.33
-## Caldwell           3        3  0.21       114     2.8  58.7     0.78
-## Champion          25        9  0.10        46     1.9  47.4     0.18
-## Coamano            2        1  0.05        77     1.9   1.9   903.82
-## Daphne.Major      18       11  0.34       119     8.0   8.0     1.84
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{modp }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(Species }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}\AttributeTok{family=}\NormalTok{poisson,gala)}
-\end{Highlighting}
-\end{Shaded}
-\end{frame}
-
-\begin{frame}[fragile]{}
-\protect\hypertarget{section-1}{}
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{))}
-\FunctionTok{plot}\NormalTok{(modp,}\AttributeTok{which=}\DecValTok{4}\NormalTok{)}
-\FunctionTok{plot}\NormalTok{(modp,}\AttributeTok{which=}\DecValTok{5}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{week8_p1_files/figure-beamer/unnamed-chunk-2-1.pdf}
 \end{frame}
 
 \begin{frame}{Residuals}
 \protect\hypertarget{residuals}{}
-\begin{itemize}
-\tightlist
-\item
-  Pearson residuals
-  \[\hat{e}_{Pi}=\frac{y_i-\hat{\mu}_i}{\sqrt{V(\hat{\mu}_i)}}\]
-\item
-  \(X^2=\sum_i\hat{e}_{Pi}\)
-\item
-  Let deviance \(D=\sum_id_i\), deviance
-  residuals\[\hat{e}_{Di}=\mathrm{sign}\left(y_i-\hat{\mu}_i\right)\sqrt{d_i}\]
-\item
-  \(D=\sum_{i=1}^n\hat{e}_{Di}^2\)
-\end{itemize}
+Recall Pearson and deviance residuals:
+
+\vspace{12pt}
+
+Pearson residuals
+\[\hat{e}_{Pi}=\frac{y_i-\hat{\mu}_i}{\sqrt{V(\hat{\mu}_i)}}\] where
+\(X^2=\sum_i\hat{e}_{Pi}\).
+
+\vspace{12pt}
+
+Let deviance \(D=\sum_id_i\), deviance residuals
+\[\hat{e}_{Di}=\mathrm{sign}\left(y_i-\hat{\mu}_i\right)\sqrt{d_i}\]
+where \(D=\sum_{i=1}^n\hat{e}_{Di}^2\).
+\end{frame}
+
+\begin{frame}{Potential remedies addressed by residual diagnostics}
+\protect\hypertarget{potential-remedies-addressed-by-residual-diagnostics}{}
+Is there any nonlinear relationship between the predicted values and the
+residuals?\\
+- A change link function - A change in the choice of predictors or
+transformations on these predictors
+
+\vspace{12pt}
+
+The assumptions of the GLM would require constant variance in the plot -
+A change in the variance function, quasi-likelihood GLM
+\end{frame}
+
+\begin{frame}{Potential problems}
+\protect\hypertarget{potential-problems}{}
+In some cases, plots of the residuals are not particularly helpful.
+
+\vspace{12pt}
+
+For a binary response, the residual can only take two possible values
+for given predicted response. This is the most extreme situation, but
+similar discreteness can occur for binomial responses with small group
+sizes and Poisson responses that are small.
+\end{frame}
+
+\begin{frame}{Small mean discrete outcomes: LGPIF data}
+\protect\hypertarget{small-mean-discrete-outcomes-lgpif-data}{}
+We present an application of the proposed quasi-empirical residual
+distribution function to insurance claim frequency data.
+
+\vspace{12pt}
+
+Frequency, the number of reported claims from each policyholder, is an
+important component of insurance claim data and largely reveals the
+riskiness of a policyholder.
+
+\vspace{12pt}
+
+Here, we use a dataset from the Local Government Property Insurance Fund
+(LGPIF) in the state of Wisconsin, USA.
+
+\vspace{12pt}
+
+The LGPIF was established by Wisconsin government to provide property
+insurance for local government entities.
+
+\vspace{12pt}
+
+We focus on building and contents (BC) insurance, which is the major
+coverage offered by the LGPIF. The dataset contains 5660 observations
+from year 2006 to 2010
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-2}{}
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{plot}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(modp,}\AttributeTok{type=}\StringTok{"deviance"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \FunctionTok{predict}\NormalTok{(modp,}\AttributeTok{type=}\StringTok{"response"}\NormalTok{),}
-\AttributeTok{xlab=}\FunctionTok{expression}\NormalTok{(}\FunctionTok{hat}\NormalTok{(mu)),}\AttributeTok{ylab=}\StringTok{"Deviance residuals"}\NormalTok{)}
-\FunctionTok{abline}\NormalTok{(}\AttributeTok{h=}\DecValTok{0}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{week8_p1_files/figure-beamer/unnamed-chunk-3-1.pdf}
-\end{frame}
-
-\begin{frame}{Potential remedies}
-\protect\hypertarget{potential-remedies}{}
-\begin{itemize}
-\tightlist
-\item
-  Is there any nonlinear relationship between the predicted values and
-  the residuals?
-
-  \begin{itemize}
-  \tightlist
-  \item
-    A change link function
-  \item
-    A change in the choice of predictors or transformations on these
-    predictors
-  \end{itemize}
-\item
-  The assumptions of the GLM would require constant variance in the plot
-
-  \begin{itemize}
-  \tightlist
-  \item
-    A change in the variance function, quasi-likelihood GLM
-  \end{itemize}
-\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{QQ plot}
-\protect\hypertarget{qq-plot}{}
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(modp,}\AttributeTok{type=}\StringTok{"deviance"}\NormalTok{))}
-\FunctionTok{qqline}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(modp,}\AttributeTok{type=}\StringTok{"deviance"}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{week8_p1_files/figure-beamer/unnamed-chunk-4-1.pdf}
-\end{frame}
-
-\begin{frame}[fragile]{Half-normal plots}
-\protect\hypertarget{half-normal-plots}{}
-\begin{itemize}
-\tightlist
-\item
-  One can use a half-normal plot that compares the sorted absolute
-  residuals and the quantiles of the half-normal distribution:
-  \(\Phi^{-1}\left(\frac{n+i}{2n+1}\right)~i=1,\ldots,n\)
-\item
-  We seek outliers which may be identified as points off the trend
-\end{itemize}
-
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{library}\NormalTok{(faraway)}
-\FunctionTok{halfnorm}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(modp))}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{week8_p1_files/figure-beamer/unnamed-chunk-5-1.pdf}
-\end{frame}
-
-\begin{frame}[fragile]{Small mean discrete outcomes: LGPIF data}
-\protect\hypertarget{small-mean-discrete-outcomes-lgpif-data}{}
-\begin{itemize}
-\tightlist
-\item
-  In some cases, plots of the residuals are not particularly helpful.
-\item
-  For a binary response, the residual can only take two possible values
-  for given predicted response. This is the most extreme situation, but
-  similar discreteness can occur for binomial responses with small group
-  sizes and Poisson responses that are small.
-\end{itemize}
-
-\scriptsize
+\protect\hypertarget{section}{}
+The frequency of claims is depicted below: \vspace{12pt} \tiny
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -410,18 +291,20 @@ University of Illinois}
 ##   98  108  133  154  201  231 
 ##    1    1    1    1    1    1
 \end{verbatim}
-\end{frame}
 
-\begin{frame}[fragile]{}
-\protect\hypertarget{section-3}{}
-\scriptsize
+\vspace{12pt}
+\normalsize
+
+Poisson and negative binomial regression models are fit to this data
+
+\vspace{12pt}
+\tiny
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Possion GLM}
 \NormalTok{freqmodelBC }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(FreqBC }\SpecialCharTok{\textasciitilde{}}\NormalTok{ lnCoverageBC }\SpecialCharTok{+}\NormalTok{ lnDeductBC }\SpecialCharTok{+}\NormalTok{ NoClaimCreditBC }\SpecialCharTok{+}
 \NormalTok{                     TypeCity }\SpecialCharTok{+}\NormalTok{ TypeCounty }\SpecialCharTok{+}\NormalTok{ TypeMisc }\SpecialCharTok{+}\NormalTok{ TypeSchool }\SpecialCharTok{+}\NormalTok{ TypeTown,}
-                   \AttributeTok{data =}\NormalTok{ freqinBC, }\AttributeTok{family =} \FunctionTok{poisson}\NormalTok{(}\AttributeTok{link =} \StringTok{"log"}\NormalTok{))}
+                   \AttributeTok{data =}\NormalTok{ freqinBC, }\AttributeTok{family =} \StringTok{"poisson"}\NormalTok{)}
 \FunctionTok{library}\NormalTok{(MASS)}
 \NormalTok{freqmodelBCnb }\OtherTok{\textless{}{-}} \FunctionTok{glm.nb}\NormalTok{(FreqBC }\SpecialCharTok{\textasciitilde{}}\NormalTok{ lnCoverageBC }\SpecialCharTok{+}\NormalTok{ lnDeductBC }\SpecialCharTok{+}\NormalTok{ NoClaimCreditBC }\SpecialCharTok{+}
 \NormalTok{                     TypeCity }\SpecialCharTok{+}\NormalTok{ TypeCounty }\SpecialCharTok{+}\NormalTok{ TypeMisc }\SpecialCharTok{+}\NormalTok{ TypeSchool }\SpecialCharTok{+}\NormalTok{ TypeTown,}
@@ -431,7 +314,7 @@ University of Illinois}
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-4}{}
+\protect\hypertarget{section-1}{}
 \begin{itemize}
 \tightlist
 \item
@@ -440,29 +323,12 @@ University of Illinois}
   Such artifacts can obscure the main purpose of the plot.
 \end{itemize}
 
-\includegraphics{week8_p1_files/figure-beamer/unnamed-chunk-8-1.pdf}
+\includegraphics{week8_p1_files/figure-beamer/unnamed-chunk-3-1.pdf}
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-5}{}
-\includegraphics{week8_p1_files/figure-beamer/unnamed-chunk-9-1.pdf}
-\end{frame}
-
-\begin{frame}[fragile]{QQ plots}
-\protect\hypertarget{qq-plots}{}
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{))}
-\FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(freqmodelBC,}\AttributeTok{type=}\StringTok{"deviance"}\NormalTok{))}
-\FunctionTok{qqline}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(freqmodelBC,}\AttributeTok{type=}\StringTok{"deviance"}\NormalTok{))}
-\FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(freqmodelBCnb,}\AttributeTok{type=}\StringTok{"deviance"}\NormalTok{))}
-\FunctionTok{qqline}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(freqmodelBCnb,}\AttributeTok{type=}\StringTok{"deviance"}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{week8_p1_files/figure-beamer/unnamed-chunk-10-1.pdf}
+\protect\hypertarget{section-2}{}
+\includegraphics{week8_p1_files/figure-beamer/unnamed-chunk-4-1.pdf}
 \end{frame}
 
 \hypertarget{residuals-in-glm}{%
@@ -542,7 +408,8 @@ probability integral transform $F(Y_i|X_i,\beta)\sim \mathrm{Uniform}(0,1)$
 \end{itemize}
 \item Cox-Snell residuals  $F(Y_i|X_i,\hat{\beta}),i=1,\ldots,n$ should be uniform with correctly specified models
 \end{itemize}
-\vspace{-0.4in}
+
+\vspace{5pt}
 \begin{figure}[h]
 \includegraphics[width=.8\textwidth]{figures/continuous}
 \caption{Histogram and PP plot of Cox-Snell  residuals for a gamma example. }
@@ -555,13 +422,9 @@ probability integral transform $F(Y_i|X_i,\beta)\sim \mathrm{Uniform}(0,1)$
 \item  \textcolor{red}{Discrete} $Y_i$ cannot be expressed as transformations of $X_i'\beta$  and i.i.d. errors so Cox-Snell residuals are not applicable
 
     \item Pearson and deviance residuals are \textcolor{red}{approximately} normal under a correctly specified model
-\item How Good Is the Approximation?
-\begin{itemize}
-    
-    \item A simulated example: Poisson GLM with log link
 \end{itemize}
-\end{itemize}
-\vspace{-0.1in}
+
+\vspace{5pt}
 \begin{figure}[h]
 \includegraphics[width=0.8\textwidth]{figures/poisson2coefslides2}
 \caption{PP plots of residuals for a Poisson GLM  under the \textcolor{blue}{\textbf{true model}}.}
@@ -586,134 +449,80 @@ probability integral transform $F(Y_i|X_i,\beta)\sim \mathrm{Uniform}(0,1)$
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Randomized Quantile Residuals (Dunn and Smyth (1996))}
-\protect\hypertarget{randomized-quantile-residuals-dunn1996randomized}{}
-\begin{itemize}
-    \item Idea: transform discrete integer-valued data into continuous data by adding noise
-    \item Let $a_i = \hat{F}_i(Y_i-1)$ and $b_i = \hat{F}_i(Y_i)$, then the randomized quantile
-    residual
-    $$ \hat{e}_{Ri} = \Phi^{-1} (V_i),$$
-    where $V_i$ is a uniform random variable on the interval $(a_i,b_i]$ independent of $Y_i$.
-    \item Null pattern: normality
-\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{}
-\protect\hypertarget{section-6}{}
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{))}
-\FunctionTok{library}\NormalTok{(statmod)}
-\NormalTok{resr }\OtherTok{\textless{}{-}} \FunctionTok{qresid}\NormalTok{(freqmodelBC)}
-\FunctionTok{qqnorm}\NormalTok{(resr[}\SpecialCharTok{{-}}\FunctionTok{which}\NormalTok{(}\FunctionTok{is.infinite}\NormalTok{(resr))])}
-\FunctionTok{qqline}\NormalTok{(resr[}\SpecialCharTok{{-}}\FunctionTok{which}\NormalTok{(}\FunctionTok{is.infinite}\NormalTok{(resr))])}
-
-\NormalTok{resrnb }\OtherTok{\textless{}{-}} \FunctionTok{qresid}\NormalTok{(freqmodelBCnb)}
-\FunctionTok{qqnorm}\NormalTok{(resrnb[}\SpecialCharTok{{-}}\FunctionTok{which}\NormalTok{(}\FunctionTok{is.infinite}\NormalTok{(resrnb))])}
-\FunctionTok{qqline}\NormalTok{(resrnb[}\SpecialCharTok{{-}}\FunctionTok{which}\NormalTok{(}\FunctionTok{is.infinite}\NormalTok{(resrnb))])}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{week8_p1_files/figure-beamer/unnamed-chunk-11-1.pdf}
-\end{frame}
-
-\begin{frame}{Drawbacks of Randomized Quantile Residuals}
-\protect\hypertarget{drawbacks-of-randomized-quantile-residuals}{}
-\begin{itemize}
-    \item The procedure injects noise to the data
-    \item The behavior of the residuals depend on the realization of the noise
-\vspace{-0.2in}
-    \begin{figure}[h]
-    \includegraphics[width=0.8\textwidth]{figures/randomizeseeds}
-    \caption{PP plot of randomized quantile  residuals of a Poisson GLM example with two different random seeds. }
-\end{figure}
-    \item Not sensitive to misspecification
-\end{itemize}
-\end{frame}
-
 \begin{frame}{Quasi-empirical residual distribution function (Yang
 (2021))}
 \protect\hypertarget{quasi-empirical-residual-distribution-function-yang2021assessment}{}
-\begin{itemize}
-\item  The   Quasi-empirical residual distribution function is an alternative to empirical  distribution function of Cox-Snell residuals
-\item    The   Quasi-empirical residual distribution function, $\hat{U}(\cdot)$,
-                        should be close to the identity function under true model 
+The Quasi-empirical residual distribution function, \(\hat{U}(\cdot)\),
+should be close to the identity function under true model
+
+\vspace{5pt}
     \begin{figure}[h]
         \includegraphics[width=0.8\textwidth]{figures/quickexample}
         \vspace{-0.1in}
         \caption{$\hat{U}$ and deviance residuals for  a Poisson example under the true model. }
     \end{figure}
-
-\end{itemize}
 \end{frame}
 
 \begin{frame}{Quasi-empirical residual distribution function}
 \protect\hypertarget{quasi-empirical-residual-distribution-function}{}
-\begin{itemize}
-\tightlist
-\item
-  If \(Y\) is continuous, for any fixed value \(s \in (0, 1)\),
-  \begin{align}\label{unic}
+If \(Y\) is continuous, for any fixed value \(s \in (0, 1)\),
+\begin{align}\label{unic}
     \Pr(F(Y|\mathbf{X}=\mathbf{x})\leq s)=s.
-  \end{align}
-\item
-  Conditioning on \(\mathbf{X}=\mathbf{x}\), \eqref{unic} holds for
-  discrete \(Y\) if and only if \(s=F(k| \mathbf{x})\) for some integer
-  \(k\), i.e., \(\Pr \left(Y\leq k| F(k| \mathbf{X})=s\right)=s\).
-\item
-  Yang (2021) proposed to use the subset of the data for which
-  \(F(k| \mathbf{X})\approx s\) to estimate
-  \(\Pr(Y\leq k| F(k| \mathbf{X})\approx s)\) instead
-\end{itemize}
+\end{align}
+
+\vspace{12pt}
+
+Conditioning on \(\mathbf{X}=\mathbf{x}\), \eqref{unic} holds for
+discrete \(Y\) if and only if \(s=F(k| \mathbf{x})\) for some integer
+\(k\), i.e., \[\Pr \left(Y\leq k| F(k| \mathbf{X})=s\right)=s.\]
+
+\vspace{12pt}
+
+Yang (2021) proposed to use the subset of the data for which
+\(F(k| \mathbf{X})\approx s\) to estimate
+\(\Pr(Y\leq k| F(k| \mathbf{X})\approx s)\) instead
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-7}{}
-\begin{itemize}
-\tightlist
-\item
-  Define the grid point \(F(k| \mathbf{x})\) closest to \(s\) as
-  \(H( s;X,\beta)\)
-\item
-  A kernel function \(K(\cdot)\) to is used assign weights to the
-  observations depending on the distance of \(s\) and
-  \(H( s;X_{i},\beta)\), \(K((H( s;X_{i},\beta)-s)/h_n)\), \(h_n\) is
-  the bandwidth
+\protect\hypertarget{section-3}{}
+Define the grid point \(F(k| \mathbf{x})\) closest to \(s\) as
+\(H( s;X,\beta)\)
 
-  \begin{figure}[h]
-          \centering
-          \includegraphics[width=0.6\textwidth]{figures/Kernels}
-          \caption{Kernel Functions}
-      \end{figure}
-\end{itemize}
+\vspace{12pt}
+
+A kernel function \(K(\cdot)\) to is used assign weights to the
+observations depending on the distance of \(s\) and
+\(H( s;X_{i},\beta)\), \(K((H( s;X_{i},\beta)-s)/h_n)\), \(h_n\) is the
+bandwidth
+
+\vspace{12pt}
+        \begin{figure}[h]
+            \centering
+            \includegraphics[width=0.6\textwidth]{figures/Kernels}
+            \caption{Kernel Functions}
+        \end{figure}
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-8}{}
-\begin{itemize}
-        
-        \item 
-        Define the quasi-empirical residual distribution function
-        \begin{align}
-        \begin{split}\label{esti}
-        \hat{U}(s)=\sum_{i=1}^{n}W_{ni}1( F(Y_{i}|\mathbf{X}_i,\bm{\beta})\leq H( s;X_{i},{\beta})),
-        \end{split}
-        \end{align}
-        where 
-        $$W_{ni}=\frac{K((H( s;X_{i},{\beta})-s)/h_n)}
-        {\sum_{i=1}^{n}K((H( s;X_{i},{\beta})-s)/h_n)}$$
-        \item Comparison of empirical residual distribution function with $\hat{U}(s)$ 
-        
-        \begin{table}
-            
-            \begin{tabular}{cl}
-                Continuous&$ \sum_{i=1}^{n}\textcolor{BrickRed}{\frac{1}{n}}1(F(Y_{i}|X_{i},{\beta}) \leq \textcolor{blue}{s})$\\Discrete
-                &$\sum_{i=1}^{n}\textcolor{BrickRed}{W_{ni}}1( F(Y_{i}|\mathbf{X}_i,\bm{\beta})\leq \textcolor{blue}{H( s;X_{i},{\beta})})$
-            \end{tabular}
-        \end{table}
-            \end{itemize}
+\protect\hypertarget{section-4}{}
+Define the quasi-empirical residual distribution function \begin{align}
+\begin{split}\label{esti}
+\hat{U}(s)=\sum_{i=1}^{n}W_{ni}1( F(Y_{i}|\mathbf{X}_i,\bm{\beta})\leq H( s;X_{i},{\beta})),
+\end{split}
+\end{align} where \[W_{ni}=\frac{K((H( s;X_{i},{\beta})-s)/h_n)}
+{\sum_{i=1}^{n}K((H( s;X_{i},{\beta})-s)/h_n)}\]
+
+\vspace{12pt}
+
+Comparison of empirical residual distribution function with
+\(\hat{U}(s)\)
+
+\begin{table}
+\begin{tabular}{cl}
+                Continuous & $ \sum_{i=1}^{n}\textcolor{BrickRed}{\frac{1}{n}}1(F(Y_{i}|X_{i},{\beta}) \leq \textcolor{blue}{s})$\\
+                Discrete & $\sum_{i=1}^{n}\textcolor{BrickRed}{W_{ni}}1( F(Y_{i}|\mathbf{X}_i,\bm{\beta})\leq \textcolor{blue}{H( s;X_{i},{\beta})})$
+\end{tabular}
+\end{table}
 \end{frame}
 
 \begin{frame}{Model Diagnostics for LGPIF}
@@ -749,43 +558,6 @@ probability integral transform $F(Y_i|X_i,\beta)\sim \mathrm{Uniform}(0,1)$
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Double probability integral transform residuals (in
-progress)}
-\protect\hypertarget{double-probability-integral-transform-residuals-in-progress}{}
-\begin{itemize}
-\tightlist
-\item
-  \(F(Y|\mathbf{X})\) itself is not uniformly distributed for discrete
-  outcomes
-\item
-  Another layer of probability integral transform,
-  \(G_{0}\left(F(Y|\mathbf{X})\right)\), yields a uniform variable under
-  the true model, where \(G_{0}\) is the distribution of
-  \(F(Y|\mathbf{X})\)
-\item
-  The \textit{double probability integral transform residuals}
-  \[  \hat{r}(Y_i|\mathbf{X}_i)=\hat{G}_{i}\left(F(Y_{i}|\mathbf{X}_i,\bm{\beta})\right)\]
-  where \(\hat{G}_{i}\) is an estimator of \(G_{0}\) suited to the
-  \(i\)th observation
-  \[\hat{G}_{i}(s)=   \frac{1}{n-1}\sum_{j=1,j\neq i}^n {F}\left({F}^{(-1)}(s| \mathbf{X}_{j},\hat{\bm\beta})| \mathbf{X}_{j},\hat{\bm\beta}\right).\]
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Causes of misspecification}
-\protect\hypertarget{causes-of-misspecification}{}
-\begin{itemize}
-\tightlist
-\item
-  Overdispersion: S-shaped pattern
-\end{itemize}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{figures/othercause202111} 
-\caption{QQ plots of the double  probability integral transform residuals under the correctly specified model (left) and models with overdispersion (middle) and an incorrect link function (right). \label{fig:other}}
-\end{figure}
-\end{frame}
-
 \begin{frame}{References}
 \protect\hypertarget{references}{}
 \hypertarget{refs}{}
@@ -794,11 +566,6 @@ progress)}
 Cox, David R, and E Joyce Snell. 1968. {``A General Definition of
 Residuals.''} \emph{Journal of the Royal Statistical Society. Series B
 (Methodological)}, 248--75.
-
-\leavevmode\vadjust pre{\hypertarget{ref-dunn1996randomized}{}}%
-Dunn, Peter K, and Gordon K Smyth. 1996. {``Randomized Quantile
-Residuals.''} \emph{Journal of Computational and Graphical Statistics} 5
-(3): 236--44.
 
 \leavevmode\vadjust pre{\hypertarget{ref-pierce1986residuals}{}}%
 Pierce, Donald A, and Daniel W Schafer. 1986. {``Residuals in

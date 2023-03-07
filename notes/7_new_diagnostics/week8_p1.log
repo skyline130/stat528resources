@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  6 MAR 2023 17:10
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  7 MAR 2023 09:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -993,7 +993,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 {/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    Trying to load font information for OT1+lmss on input line 
-201.
+202.
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/ot1lmss.fd
 File: ot1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -1002,34 +1002,34 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 2
-01.
+02.
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-201.
+202.
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-201.
+202.
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 201.
+(Font)              <10.95> on input line 202.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 201.
+(Font)              <8> on input line 202.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 201.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 201
+(Font)              <6> on input line 202.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 202
 .
 (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) (/usr/local/texlive/2022/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 201
+LaTeX Font Info:    Trying to load font information for U+msb on input line 202
 .
 (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -1037,13 +1037,13 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 201.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 202.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <8> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 201.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 202.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <6> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 201.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 202.
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 2
-01.
+02.
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) (/usr/local/texlive/2022/texmf-dist/tex/latex/microtype/mt-cmr.cfg
@@ -1051,207 +1051,68 @@ File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman
 (RS)
 )
 LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <10.95> not available
-(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 201.
+(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 202.
 
 LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <8> not available
-(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 201.
+(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 202.
 
 LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <6> not available
-(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 201.
+(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 202.
 
 [2
 
-] [3
-
 ]
-LaTeX Font Info:    Font shape `T1/lmss/b/n' in size <10.95> not available
-(Font)              Font shape `T1/lmss/bx/n' tried instead on input line 232.
-LaTeX Font Info:    Font shape `T1/lmss/b/n' in size <8> not available
-(Font)              Font shape `T1/lmss/bx/n' tried instead on input line 232.
-LaTeX Font Info:    Font shape `T1/lmss/b/n' in size <6> not available
-(Font)              Font shape `T1/lmss/bx/n' tried instead on input line 232.
-[4
-
-]
-\openout4 = `week8_p1.vrb'.
-
-(./week8_p1.vrb
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 1
-4.
-(/usr/local/texlive/2022/texmf-dist/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)) [5
-
-]
-\openout4 = `week8_p1.vrb'.
-
-(./week8_p1.vrb
-<week8_p1_files/figure-beamer/unnamed-chunk-2-1.pdf, id=58, 551.05875pt x 229.8
-5875pt>
-File: week8_p1_files/figure-beamer/unnamed-chunk-2-1.pdf Graphic file (type pdf
-)
-<use week8_p1_files/figure-beamer/unnamed-chunk-2-1.pdf>
-Package pdftex.def Info: week8_p1_files/figure-beamer/unnamed-chunk-2-1.pdf  us
-ed on input line 13.
-(pdftex.def)             Requested size: 307.30429pt x 128.18338pt.
-) [6
-
- <./week8_p1_files/figure-beamer/unnamed-chunk-2-1.pdf>]
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 30
-0.
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 21
+9.
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [7
+) [3
+
+] [4
+
+] [5
+
+]
+Overfull \vbox (2.25609pt too high) detected at line 272
+ []
+
+[6
 
 ]
 \openout4 = `week8_p1.vrb'.
 
 (./week8_p1.vrb
-<week8_p1_files/figure-beamer/unnamed-chunk-3-1.pdf, id=81, 406.51875pt x 212.7
-95pt>
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 6
+.
+(/usr/local/texlive/2022/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)) [7
+
+]
+<week8_p1_files/figure-beamer/unnamed-chunk-3-1.pdf, id=69, 400.49625pt x 248.9
+3pt>
 File: week8_p1_files/figure-beamer/unnamed-chunk-3-1.pdf Graphic file (type pdf
 )
 <use week8_p1_files/figure-beamer/unnamed-chunk-3-1.pdf>
 Package pdftex.def Info: week8_p1_files/figure-beamer/unnamed-chunk-3-1.pdf  us
-ed on input line 13.
-(pdftex.def)             Requested size: 307.30125pt x 160.85892pt.
-) [8
+ed on input line 327.
+(pdftex.def)             Requested size: 307.30751pt x 191.00816pt.
+[8
 
  <./week8_p1_files/figure-beamer/unnamed-chunk-3-1.pdf>]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 342.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 342.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 342.
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 342.
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <7> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 342.
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <5> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 342.
-LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <10> not available
-(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 342.
-
-LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <7> not available
-(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 342.
-
-LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <5> not available
-(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 342.
-
-LaTeX Font Info:    Font shape `T1/lmss/b/n' in size <10> not available
-(Font)              Font shape `T1/lmss/bx/n' tried instead on input line 342.
-LaTeX Font Info:    Font shape `T1/lmss/b/n' in size <7> not available
-(Font)              Font shape `T1/lmss/bx/n' tried instead on input line 342.
-LaTeX Font Info:    Font shape `T1/lmss/b/n' in size <5> not available
-(Font)              Font shape `T1/lmss/bx/n' tried instead on input line 342.
-[9
-
-]
-\openout4 = `week8_p1.vrb'.
-
-(./week8_p1.vrb
-<week8_p1_files/figure-beamer/unnamed-chunk-4-1.pdf, id=102, 761.84625pt x 499.
-8675pt>
+<week8_p1_files/figure-beamer/unnamed-chunk-4-1.pdf, id=84, 400.49625pt x 248.9
+3pt>
 File: week8_p1_files/figure-beamer/unnamed-chunk-4-1.pdf Graphic file (type pdf
 )
 <use week8_p1_files/figure-beamer/unnamed-chunk-4-1.pdf>
 Package pdftex.def Info: week8_p1_files/figure-beamer/unnamed-chunk-4-1.pdf  us
-ed on input line 12.
-(pdftex.def)             Requested size: 307.27893pt x 201.61385pt.
-) [10
-
- <./week8_p1_files/figure-beamer/unnamed-chunk-4-1.pdf>]
-\openout4 = `week8_p1.vrb'.
-
-(./week8_p1.vrb
-<week8_p1_files/figure-beamer/unnamed-chunk-5-1.pdf, id=117, 183.68625pt x 142.
-5325pt>
-File: week8_p1_files/figure-beamer/unnamed-chunk-5-1.pdf Graphic file (type pdf
-)
-<use week8_p1_files/figure-beamer/unnamed-chunk-5-1.pdf>
-Package pdftex.def Info: week8_p1_files/figure-beamer/unnamed-chunk-5-1.pdf  us
-ed on input line 22.
-(pdftex.def)             Requested size: 183.68578pt x 142.53214pt.
-) [11
-
- <./week8_p1_files/figure-beamer/unnamed-chunk-5-1.pdf>]
-\openout4 = `week8_p1.vrb'.
-
-(./week8_p1.vrb
-Overfull \hbox (41.20613pt too wide) in paragraph at lines 31--31
-[]\T1/lmtt/m/n/8 ##    0    1    2    3    4    5    6    7    8    9   10   11
-   12   13   14   15[] 
- []
-
-
-Overfull \hbox (41.19214pt too wide) in paragraph at lines 31--31
-[]\T1/lmtt/m/n/8 ## 3976  997  333  136   76   31   19   19   16    5    7    2
-    4    5    5    2[] 
- []
-
-
-Overfull \hbox (41.20013pt too wide) in paragraph at lines 31--31
-[]\T1/lmtt/m/n/8 ##   16   17   18   20   22   23   24   33   34   53   55   65
-   78   86   89   97[] 
- []
-
-
-Overfull \hbox (41.21013pt too wide) in paragraph at lines 31--31
-[]\T1/lmtt/m/n/8 ##    4    3    1    1    1    1    1    1    1    1    1    1
-    1    1    1    1[] 
- []
-
-) [12
-
-]
-\openout4 = `week8_p1.vrb'.
-
-(./week8_p1.vrb) [13
-
-]
-<week8_p1_files/figure-beamer/unnamed-chunk-8-1.pdf, id=145, 400.49625pt x 248.
-93pt>
-File: week8_p1_files/figure-beamer/unnamed-chunk-8-1.pdf Graphic file (type pdf
-)
-<use week8_p1_files/figure-beamer/unnamed-chunk-8-1.pdf>
-Package pdftex.def Info: week8_p1_files/figure-beamer/unnamed-chunk-8-1.pdf  us
-ed on input line 444.
+ed on input line 332.
 (pdftex.def)             Requested size: 307.30751pt x 191.00816pt.
-[14
+[9
 
- <./week8_p1_files/figure-beamer/unnamed-chunk-8-1.pdf>]
-<week8_p1_files/figure-beamer/unnamed-chunk-9-1.pdf, id=160, 400.49625pt x 248.
-93pt>
-File: week8_p1_files/figure-beamer/unnamed-chunk-9-1.pdf Graphic file (type pdf
-)
-<use week8_p1_files/figure-beamer/unnamed-chunk-9-1.pdf>
-Package pdftex.def Info: week8_p1_files/figure-beamer/unnamed-chunk-9-1.pdf  us
-ed on input line 449.
-(pdftex.def)             Requested size: 307.30751pt x 191.00816pt.
-[15
+ <./week8_p1_files/figure-beamer/unnamed-chunk-4-1.pdf>] [10
 
- <./week8_p1_files/figure-beamer/unnamed-chunk-9-1.pdf>]
-\openout4 = `week8_p1.vrb'.
-
-(./week8_p1.vrb
-<week8_p1_files/figure-beamer/unnamed-chunk-10-1.pdf, id=176, 761.84625pt x 499
-.8675pt>
-File: week8_p1_files/figure-beamer/unnamed-chunk-10-1.pdf Graphic file (type pd
-f)
-<use week8_p1_files/figure-beamer/unnamed-chunk-10-1.pdf>
-Package pdftex.def Info: week8_p1_files/figure-beamer/unnamed-chunk-10-1.pdf  u
-sed on input line 15.
-(pdftex.def)             Requested size: 307.27893pt x 201.61385pt.
-)
-Overfull \vbox (19.09622pt too high) detected at line 466
- []
-
-[16
-
- <./week8_p1_files/figure-beamer/unnamed-chunk-10-1.pdf>] [17
-
-] [18
+] [11
 
 ]
 Package epstopdf Info: Source file: <figures/lmexam.eps>
@@ -1262,123 +1123,118 @@ Package epstopdf Info: Source file: <figures/lmexam.eps>
 (epstopdf)                    size: 48044 bytes
 (epstopdf)             Command: <repstopdf --outfile=figures/lmexam-eps-convert
 ed-to.pdf figures/lmexam.eps>
-(epstopdf)             \includegraphics on input line 493.
+(epstopdf)             \includegraphics on input line 359.
 Package epstopdf Info: Output file is already uptodate.
-<figures/lmexam-eps-converted-to.pdf, id=204, 657.45625pt x 327.2225pt>
+<figures/lmexam-eps-converted-to.pdf, id=112, 657.45625pt x 327.2225pt>
 File: figures/lmexam-eps-converted-to.pdf Graphic file (type pdf)
 <use figures/lmexam-eps-converted-to.pdf>
 Package pdftex.def Info: figures/lmexam-eps-converted-to.pdf  used on input lin
-e 493.
+e 359.
 (pdftex.def)             Requested size: 245.83322pt x 122.35362pt.
-[19
+[12
 
- <./figures/lmexam-eps-converted-to.pdf>] [20
+ <./figures/lmexam-eps-converted-to.pdf>]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 380.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 380.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 380.
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 380.
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <7> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 380.
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <5> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 380.
+LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <10> not available
+(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 380.
+
+LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <7> not available
+(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 380.
+
+LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <5> not available
+(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 380.
+
+[13
 
 ]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <20.74> on input line 532.
+(Font)              <20.74> on input line 398.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <14.4> on input line 532.
+(Font)              <14.4> on input line 398.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 532.
+(Font)              <12> on input line 398.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <20.74> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 532.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 398.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <14.4> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 532.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 398.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <12> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 532.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 398.
 LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <20.74> not available
-(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 532.
+(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 398.
 
 LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <14.4> not available
-(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 532.
+(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 398.
 
 LaTeX Font Info:    Font shape `T1/lmss/bx/it' in size <12> not available
-(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 532.
+(Font)              Font shape `T1/lmss/bx/sl' tried instead on input line 398.
 
-LaTeX Font Info:    Font shape `T1/lmss/b/n' in size <20.74> not available
-(Font)              Font shape `T1/lmss/bx/n' tried instead on input line 532.
-LaTeX Font Info:    Font shape `T1/lmss/b/n' in size <14.4> not available
-(Font)              Font shape `T1/lmss/bx/n' tried instead on input line 532.
-LaTeX Font Info:    Font shape `T1/lmss/b/n' in size <12> not available
-(Font)              Font shape `T1/lmss/bx/n' tried instead on input line 532.
 
-Overfull \hbox (28.7835pt too wide) in paragraph at lines 532--532
+Overfull \hbox (28.7835pt too wide) in paragraph at lines 398--398
  [] 
  []
 
-[21
+[14
 
 ]
-<figures/continuous.png, id=234, 803.0pt x 401.5pt>
+<figures/continuous.png, id=144, 803.0pt x 401.5pt>
 File: figures/continuous.png Graphic file (type png)
 <use figures/continuous.png>
-Package pdftex.def Info: figures/continuous.png  used on input line 550.
+Package pdftex.def Info: figures/continuous.png  used on input line 417.
 (pdftex.def)             Requested size: 245.82747pt x 122.91373pt.
-[22
+
+Overfull \vbox (16.31418pt too high) detected at line 417
+ []
+
+[15
 
  <./figures/continuous.png>]
-<figures/poisson2coefslides2.png, id=243, 803.0pt x 401.5pt>
+<figures/poisson2coefslides2.png, id=153, 803.0pt x 401.5pt>
 File: figures/poisson2coefslides2.png Graphic file (type png)
 <use figures/poisson2coefslides2.png>
-Package pdftex.def Info: figures/poisson2coefslides2.png  used on input line 56
-9.
+Package pdftex.def Info: figures/poisson2coefslides2.png  used on input line 43
+2.
 (pdftex.def)             Requested size: 245.82747pt x 122.91373pt.
+[16
 
-Overfull \vbox (13.90205pt too high) detected at line 569
- []
-
-[23
-
- <./figures/poisson2coefslides2.png>] [24
-
-] [25
+ <./figures/poisson2coefslides2.png>] [17
 
 ]
-\openout4 = `week8_p1.vrb'.
-
-(./week8_p1.vrb
-<week8_p1_files/figure-beamer/unnamed-chunk-11-1.pdf, id=265, 546.04pt x 246.92
-25pt>
-File: week8_p1_files/figure-beamer/unnamed-chunk-11-1.pdf Graphic file (type pd
-f)
-<use week8_p1_files/figure-beamer/unnamed-chunk-11-1.pdf>
-Package pdftex.def Info: week8_p1_files/figure-beamer/unnamed-chunk-11-1.pdf  u
-sed on input line 19.
-(pdftex.def)             Requested size: 307.28839pt x 138.9576pt.
-) [26
-
- <./week8_p1_files/figure-beamer/unnamed-chunk-11-1.pdf>]
-<figures/randomizeseeds.png, id=280, 803.0pt x 401.5pt>
-File: figures/randomizeseeds.png Graphic file (type png)
-<use figures/randomizeseeds.png>
-Package pdftex.def Info: figures/randomizeseeds.png  used on input line 634.
-(pdftex.def)             Requested size: 245.82747pt x 122.91373pt.
-[27
-
- <./figures/randomizeseeds.png>]
-<figures/quickexample.png, id=288, 803.0pt x 401.5pt>
+<figures/quickexample.png, id=171, 803.0pt x 401.5pt>
 File: figures/quickexample.png Graphic file (type png)
 <use figures/quickexample.png>
-Package pdftex.def Info: figures/quickexample.png  used on input line 650.
+Package pdftex.def Info: figures/quickexample.png  used on input line 464.
 (pdftex.def)             Requested size: 245.82747pt x 122.91373pt.
+[18
 
-Overfull \vbox (0.14233pt too high) detected at line 650
- []
-
-[28
-
- <./figures/quickexample.png>] [29
+ <./figures/quickexample.png>]
+LaTeX Font Info:    Font shape `T1/lmss/b/n' in size <10.95> not available
+(Font)              Font shape `T1/lmss/bx/n' tried instead on input line 484.
+LaTeX Font Info:    Font shape `T1/lmss/b/n' in size <8> not available
+(Font)              Font shape `T1/lmss/bx/n' tried instead on input line 484.
+LaTeX Font Info:    Font shape `T1/lmss/b/n' in size <6> not available
+(Font)              Font shape `T1/lmss/bx/n' tried instead on input line 484.
+[19
 
 ]
-<figures/Kernels.png, id=305, 602.25pt x 433.62pt>
+<figures/Kernels.png, id=188, 602.25pt x 433.62pt>
 File: figures/Kernels.png Graphic file (type png)
 <use figures/Kernels.png>
-Package pdftex.def Info: figures/Kernels.png  used on input line 691.
+Package pdftex.def Info: figures/Kernels.png  used on input line 504.
 (pdftex.def)             Requested size: 184.37979pt x 132.75345pt.
-[30
+[20
 
- <./figures/Kernels.png>] [31
+ <./figures/Kernels.png>] [21
 
 ]
 Package epstopdf Info: Source file: <figures/marginplot.eps>
@@ -1389,45 +1245,29 @@ Package epstopdf Info: Source file: <figures/marginplot.eps>
 (epstopdf)                    size: 18632 bytes
 (epstopdf)             Command: <repstopdf --outfile=figures/marginplot-eps-con
 verted-to.pdf figures/marginplot.eps>
-(epstopdf)             \includegraphics on input line 727.
+(epstopdf)             \includegraphics on input line 536.
 Package epstopdf Info: Output file is already uptodate.
-<figures/marginplot-eps-converted-to.pdf, id=321, 722.7pt x 722.7pt>
+<figures/marginplot-eps-converted-to.pdf, id=203, 722.7pt x 722.7pt>
 File: figures/marginplot-eps-converted-to.pdf Graphic file (type pdf)
 <use figures/marginplot-eps-converted-to.pdf>
 Package pdftex.def Info: figures/marginplot-eps-converted-to.pdf  used on input
- line 727.
+ line 536.
 (pdftex.def)             Requested size: 199.73007pt x 199.73007pt.
+LaTeX Font Info:    Font shape `T1/lmss/b/n' in size <10> not available
+(Font)              Font shape `T1/lmss/bx/n' tried instead on input line 536.
+LaTeX Font Info:    Font shape `T1/lmss/b/n' in size <7> not available
+(Font)              Font shape `T1/lmss/bx/n' tried instead on input line 536.
+LaTeX Font Info:    Font shape `T1/lmss/b/n' in size <5> not available
+(Font)              Font shape `T1/lmss/bx/n' tried instead on input line 536.
 
-Overfull \vbox (2.95694pt too high) detected at line 727
+Overfull \vbox (2.95694pt too high) detected at line 536
  []
 
-[32
+[22
 
- <./figures/marginplot-eps-converted-to.pdf>] [33
+ <./figures/marginplot-eps-converted-to.pdf>] [23
 
-] [34
-
-]
-Package epstopdf Info: Source file: <figures/othercause202111.eps>
-(epstopdf)                    date: 2023-03-06 17:08:44
-(epstopdf)                    size: 215822 bytes
-(epstopdf)             Output file: <figures/othercause202111-eps-converted-to.
-pdf>
-(epstopdf)                    date: 2023-03-06 17:08:44
-(epstopdf)                    size: 61174 bytes
-(epstopdf)             Command: <repstopdf --outfile=figures/othercause202111-e
-ps-converted-to.pdf figures/othercause202111.eps>
-(epstopdf)             \includegraphics on input line 787.
-Package epstopdf Info: Output file is already uptodate.
-<figures/othercause202111-eps-converted-to.pdf, id=351, 867.24pt x 289.08pt>
-File: figures/othercause202111-eps-converted-to.pdf Graphic file (type pdf)
-<use figures/othercause202111-eps-converted-to.pdf>
-Package pdftex.def Info: figures/othercause202111-eps-converted-to.pdf  used on
- input line 787.
-(pdftex.def)             Requested size: 307.2835pt x 102.42783pt.
-[35
-
- <./figures/othercause202111-eps-converted-to.pdf>] [36
+] [24
 
 ]
 \tf@nav=\write6
@@ -1441,13 +1281,13 @@ Package pdftex.def Info: figures/othercause202111-eps-converted-to.pdf  used on
 
 (./week8_p1.aux) ) 
 Here is how much of TeX's memory you used:
- 26372 strings out of 478268
- 508799 string characters out of 5846347
- 799184 words of memory out of 5000000
- 43549 multiletter control sequences out of 15000+600000
- 683035 words of font info for 295 fonts, out of 8000000 for 9000
+ 26175 strings out of 478268
+ 503553 string characters out of 5846347
+ 801144 words of memory out of 5000000
+ 43433 multiletter control sequences out of 15000+600000
+ 676221 words of font info for 283 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 128i,16n,122p,1005b,502s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,16n,122p,1005b,486s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mat
 hit.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/
 usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texl
@@ -1468,13 +1308,12 @@ usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsso12.pfb></usr/local
 022/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2022/texmf-
 dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2022/texmf-dist/fonts/
 type1/public/lm/lmsy8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/publi
-c/lm/lmtt8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmtti1
-0.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbols/m
-sam10.pfb>
-Output written on week8_p1.pdf (36 pages, 2387333 bytes).
+c/lm/lmtt8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/
+symbols/msam10.pfb>
+Output written on week8_p1.pdf (24 pages, 954774 bytes).
 PDF statistics:
- 502 PDF objects out of 1000 (max. 8388607)
- 363 compressed objects within 4 object streams
- 116 named destinations out of 1000 (max. 500000)
- 131203 words of extra memory for PDF output out of 154059 (max. 10000000)
+ 348 PDF objects out of 1000 (max. 8388607)
+ 249 compressed objects within 3 object streams
+ 78 named destinations out of 1000 (max. 500000)
+ 127067 words of extra memory for PDF output out of 128383 (max. 10000000)
 
