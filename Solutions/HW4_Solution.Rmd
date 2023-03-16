@@ -1,0 +1,582 @@
+---
+title: "Homework 4: Data separation and multinomial regression"
+author: "your name"
+date: 'Due: March 3rd at 11:59 PM'
+output: pdf_document
+header-includes: 
+ - \usepackage{amsthm}
+ - \usepackage{amsmath}
+ - \usepackage{amsfonts}
+ - \usepackage{amscd}
+ - \usepackage{amssymb}
+ - \usepackage{natbib}
+ - \usepackage{url}
+---
+
+\allowdisplaybreaks
+
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\inner}[1]{\langle #1 \rangle}
+\newcommand{\yobs}{y_{\text{obs}}}
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+
+
+\noindent{\bf Problem 1}: Do the following regarding the Sabermetrics dataset (bball.csv), 
+\begin{itemize}
+  \item[(a)] Fit the \texttt{nnet} model and comment on the similarities and differences between the \texttt{nnet} and \texttt{VGAM} fits in the Sabermetrics example in the ordinal and multinomial regression notes. Report interesting conclusions using either implementation.
+  \item[(b)] Provide recommendations on how an aspiring baseball player should approach hitting. You may want to consider success metrics like hits where hits = 1B + 2B + 3B + HR, or weighted hits where weighted hits = 1B + 2$\times$2B + 3$\times$3B + 4$\times$HR. Note these metrics are conditional on a ball being put into play in the context of this analysis.
+\end{itemize}
+
+### 
+
+
+### Solution 1
+
+#### (a)
+
+```{r}
+library(VGAM)
+library(nnet)
+library(tidyverse)
+#setwd('/Users/diptarka/Documents/GitHub/stat528resources/notes/5_multinomial') ## set your own WD
+bball <- read.csv("../notes/5_multinomial/bball.csv")
+bball$events <- as.factor(bball$events)
+```
+
+```{r}
+system.time(mod_vgam_small <- vglm(events ~ launch_speed + launch_angle + spray_angle +
+                        I(launch_angle^2) ,
+                 family=multinomial, data=bball))
+system.time(mod_nnet_small <- multinom(events ~ launch_speed + launch_angle + spray_angle +
+               I(launch_angle^2) , trace = F,
+             data=bball, maxit = 1e3))
+```
+
+```{r}
+(mod_vgam_small)
+```
+
+```{r}
+(mod_nnet_small)
+```
+
+```{r}
+system.time(mod_vgam <- vglm(events ~ launch_speed + launch_angle + spray_angle +
+                        I(launch_angle^2) + I(spray_angle^2) + I(spray_angle^3) + I(spray_angle^4) +
+                        I(spray_angle^5) + I(spray_angle^6) + I(spray_angle*launch_angle) +
+                          I(spray_angle*launch_speed) + I(launch_angle*launch_speed),
+                 family=multinomial, data=bball))
+system.time(mod_nnet <- multinom(events ~ launch_speed + launch_angle + spray_angle +
+               I(launch_angle^2) +
+               I(spray_angle^2) + I(spray_angle^3) + I(spray_angle^4) +
+               I(spray_angle^5) + I(spray_angle^6) +
+               I(spray_angle*launch_angle) + I(spray_angle*launch_speed) +
+               I(launch_angle*launch_speed),
+             data=bball, maxit = 1e3, trace = F))
+```
+
+```{r}
+(mod_vgam)
+```
+
+```{r}
+(mod_nnet)
+```
+
+Similarity:
+
+-   `vgam` and `nnet` are just different implementations of the the same underlying theoretical model. So they should give the same fitted coefficients and deviance and everything, which is the case for the smaller models fitted above, `mod_vgam_small` and `mod_nnet_small`.
+
+Differences:
+
+-   Two implementations of models pick different baseline category. For model fitted by `vgam`, the chosen baseline category is `out`, while in model fitted by `nnet`, the chosen baseline category is `b1`. Considering this difference, we can notice that two smaller models actually give identical coefficients.
+
+-   However, the fitting results of the larger model by two implementations completely disagree. Also, the estimated standard errors of coefficients of smaller models are slightly different. This is probably caused by different optimization algorithms. `vgam` uses IRLS, while `nnet` uses BFGS. We can see this from the number of iterations of two models.
+
+-   The fitting time of `nnet` is much longer than `vgam` for large model, while for smaller model `nnet` is faster. This on the other hand may be caused by different underlying structure of two packages. `nnet` uses neural network to represent the model, of which the number of learnable parameters will grow at a faster speed as the model gets larger.
+
+Interesting findings(according to summary table of `mod_vgam`):
+
+-   Note that the estimated coefficients of `launch_speed` for HR has considerably greater magnitude than that of 1B, 2B, 3B. This probably means that launch speed is more crucial for a player to hit a HR. That is to say, good spray angle and launch angle may be sufficient to hit 1B, 2B and 3B, but for a HR, great launch speed is a must.
+
+-   For higher order(greater than 2) polynomials of `spray_angle`, only few of them are significant. In particular, for HR, none of the higher order polynomials of `spary_angle` is significant for HR. On the other hand, all coefficients of even order polynomials of `spray_angle` are significant for 2B and 3B. Our conclusion from last bullet point is supported by these findings: good angles are important for 2B and 3B, but for HR, launch speed is the one that makes difference.
+
+-   More interestingly, as mentioned in the last point, basically only even order polynomials of `spray_angle` display significance. Does this mean that actually only the magnitude is needed for `spray angle`? The reason we include `spray_angle` up to order of 6 is that we want to account for the positions of opponent catchers. But this model is probably saying that this is not necessary.
+
+#### (b)
+
+Calculate the weighted hits as success metric.
+
+```{r}
+weighted_hits <- function(lspeed, langle) {
+  ## obtain predictions
+  new_data = data.frame(spray_angle = seq(-55,55, by = 0.1),
+             launch_speed = lspeed,
+             launch_angle = langle)
+  pred <- predict(mod_vgam, newdata = new_data, type = 'response')
+  weighted_hits <- pred[,1] + 2*pred[,2] + 3*pred[,3] + 4*pred[,4]
+
+  ## Make plot
+  plot.new()
+  title(paste0( "langle = ",langle, ", lspeed = ", lspeed))
+  plot.window(xlim = c(-55,55), ylim = c(min(weighted_hits), max(weighted_hits)))
+  points(new_data$spray_angle, weighted_hits, pch = 19, col = rgb(0,0,0,alpha=0.2))
+  axis(1)
+  axis(2)
+}
+```
+
+
+Plot weighted hits against spray angle, under different combinations of launch speed and launch angle.
+
+```{r}
+par(mfrow = c(3,3))
+weighted_hits(80, 5)
+weighted_hits(80, 25)
+weighted_hits(80, 45)
+weighted_hits(100, 5)
+weighted_hits(100, 25)
+weighted_hits(100, 45)
+weighted_hits(120, 5)
+weighted_hits(120, 25)
+weighted_hits(120, 45)
+```
+
+According to plots above, we recommend a player to - hit the ball as hard as possible(so launch speed will be fast), - keep the launch angle in the positive middle range, i.e. 20-30 degrees - and try to hit the ball around side line.
+
+
+###
+
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 2}: Comment on the differences between the \texttt{vglm} and \texttt{polr} implementations in the happiness and trauma example.
+
+We first load in the happiness data.
+
+```{r}
+#gsetwd('/Users/diptarka/Documents/GitHub/stat528resources/notes/5_multinomial') ## set your own WD
+happiness <- read.table("../notes/5_multinomial/happiness.txt", header=TRUE)
+head(happiness)
+```
+
+We first use the `vglm` function to fit a proportional odds model (cumulative logit):
+```{r}
+library(VGAM)
+mod <- vglm(happy ~ trauma + race, family=propodds(reverse=FALSE),
+data=happiness)
+summary(mod)
+```
+We now do the same using the `polr` function
+
+```{r}
+library(MASS)
+mod2 <- polr(factor(happy) ~ trauma + race, data=happiness)
+summary(mod2)
+
+```
+Comparing the two functions:
+
+Again we can note that the `vglm` function gives more information. The estimates for the intercepts and their standard deviations are exactly the same from both models. Note that the estimates for the coefficients have their signs flipped in the two models while their values are exactly the same. This is because the `vglm` function models the data as  $G^{-1}(P(Y \leq j | x)) = \alpha_j + x^T \beta$
+
+whereas the `polr` function considers the model $G^{-1}(P(Y \leq j | x))$ = $\alpha_j - x^T \beta$
+
+and thus the signs of the $\beta$ estimates are flipped. Also note that the former function gives the z-values whereas the latter gives the t values. They serve the same purpose of testing for significance. The values of the residual deviance are also the same from both the models. Note that if we use the log-likelihood value that is given in the summary of the `vglm` function to obtain the AIC we would get the value of AIC in the `polr` function. Finally again `vglm` enjoys the advantage of printing out the names of the linear predictors which makes it easier for the user to keep track of the model the function is using.
+
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 3}: A study of factors affecting alcohol consumption measures the response variable with the scale (abstinence, a drink a day or less, more than one drink a day). For a comparison of two groups while adjusting for relevant covariates, the researchers hypothesize that the two groups will have about the same prevalence of abstinence, but that one group will have a considerably higher proportion who have more than one drink a day. Even though the response variable is ordinal, explain why a cumulative logit model with proportional odds structure may be inappropriate for this study.
+
+
+### Solution 3:
+The study has two groups let us assume they are $G_1$ and $G_2$. 
+
+Now the researchers hypothesize that the two groups have about the same prevalance of abstinence which means that 
+$$\pi_1(G_1) \approx \pi_1(G_2)$$
+Also they hypothesize that one group will have a considerably higher proportion who have more than one drink a day i.e.
+
+$$\pi_3(G_1) > \pi_3(G_2)$$
+
+Now in the cumulative logit model with proportional odds structure we have the property that 
+
+$$logit(P(Y\leq j|G_1)) - logit(P(Y\leq j|G_2)) \text{ does not depend on j}$$
+For j = 1 we have 
+$$logit(P(Y\leq 1|G_1)) - logit(P(Y\leq1|G_2)) = log\left(\frac{\pi_1(G_1)}{1 - \pi_1(G_1)}\right) - log\left(\frac{\pi_1(G_2)}{1 - \pi_1(G_2)}\right) \approx 0$$
+But for j = 3
+$$logit(P(Y\leq 3|G_1)) - logit(P(Y\leq 3|G_2)) = log\left(\frac{\pi_3(G_1)}{1 - \pi_3(G_1)}\right) - log\left(\frac{\pi_3(G_2)}{1 - \pi_3(G_2)}\right) \neq 0$$
+Thus the cumulative logit model with proportional odds structure is not appropriate here. 
+\vspace*{1cm}
+###
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 4}: Refer to the table below:
+
+\begin{center}
+\begin{tabular}{llccc}
+\hline 
+	& & \multicolumn{3}{c}{Belief in Heaven} \\
+    \cline{3-5} 
+Race & Gender & Yes & Unsure & No \\	
+\hline
+Black & Female &  88 &  16 & 2 \\
+ 	  &   Male &  54 &  17 & 5 \\
+White & Female & 397 & 141 & 24 \\
+  	  & Male   & 235 & 189 & 39 \\
+\hline
+	
+\end{tabular}
+	
+\end{center}
+
+
+\begin{itemize}
+\item[(a)] Fit the model
+$$
+ \log(\pi_j/\pi_3) = \alpha_j + \beta_j^Gx_1 + \beta_j^R x_2, \qquad j = 1,2.
+$$
+\item[(b)] Find the prediction equation for $\log(\pi_1/\pi_2)$.
+\item[(c)] Treating belief in heaven as ordinal fit and interpret a cumulative logit model and a cumulative probit model. Compare results and state interpretations in each case.
+\end{itemize}
+
+
+\vspace*{1cm}
+
+
+
+### Solution 4
+
+(a) Want to fit the model 
+
+$$\log(\pi_j/\pi_3) = \alpha_j + \beta^G_jx_1 + \beta_j^Rx_2$$
+We consider belief in heaven to be a nominal variable and create a dataset which reflects the table
+```{r}
+nominal_heaven = data.frame("Race" = c("Black","Black","White","White"),"Gender" =c("Female","Male","Female","Male"), "Belief_Yes" = c(88,54,397,235),"Belief_Unsure" = c(16,17,141,189), "Belief_No" = c(2,5,24,39))
+nominal_heaven
+```
+Now that we have the data we fit the baseline-category logistic model for the multinomial response data
+```{r}
+library(VGAM)
+mod_nom <- vglm(cbind(Belief_Yes, Belief_Unsure, Belief_No) ~ Race + Gender,
+family=multinomial, data=nominal_heaven)
+summary(mod_nom)
+```
+
+Thus $\alpha_1 = 3.5318, \alpha_2 = 1.7026, \beta^G_1 = -1.0435, \beta_2^G = -0.2545, \beta^R_1 = -0.7031, \beta_2^R = 0.1056$
+
+(b) Find the prediction equation for $\log(\pi_1/\pi_2)$
+
+We use the fact that $$\log(\pi_1/\pi_2) = \log(\pi_1/\pi_3) -\log(\pi_1/\pi_3)$$
+
+Thus the prediction equation for $\log(\pi_1/\pi_2)$ is
+
+\begin{align*}
+log(\pi_1/\pi_2) &= log(\pi_1/\pi_3) -log(\pi_1/\pi_3)\\
+&=  \alpha_1 - \alpha_2 + (\beta^G_1 - \beta^G_2)x_1 + (\beta_1^R - \beta_2^R)x_2\\
+&= (3.5318 - 1.7026) + (-1.0435 + 0.2545)x_1 + (-0.7031 - 0.1056)x_2\\
+&= 1.8292 -0.789x_1 - 0.8087x_2
+\end{align*}
+
+(c) Treating belief in heaven as ordinal fit and interpret a cumulative logit model and a cumulative
+probit model. Compare results and state interpretations in each case.
+
+We first create the data treating "Belief in heaven" as an ordinal variable. 
+
+```{r}
+rep.row<-function(x,n){
+   matrix(rep(x,each=n),nrow=n)
+}
+
+data_heaven = rbind(rep.row(c("B","F",1),88),rep.row(c("B","F",2),16),rep.row(c("B","F",3),2),rep.row(c("B","M",1),54),rep.row(c("B","M",2),17),rep.row(c("B","M",3),5),rep.row(c("W","F",1),397),rep.row(c("W","F",2),141),rep.row(c("W","F",3),24),rep.row(c("W","M",1),235),rep.row(c("W","M",2),189),rep.row(c("W","M",3),39))
+
+
+colnames(data_heaven) = c("Race","Gender","Belief") 
+
+data_heaven = as.data.frame(data_heaven)
+head(data_heaven)
+
+
+data_heaven$Race = factor(data_heaven$Race)
+data_heaven$Gender = factor(data_heaven$Gender)
+data_heaven$Belief = factor(data_heaven$Belief,ordered = T )
+```
+
+We fit the cumulative logit model i.e.
+
+$G^{-1}(P(Y \leq j | x))$ = $\alpha_j - x^T \beta$ {where $G^{-1}$ is the logit function}
+```{r}
+mod <- vglm(Belief ~ Race+Gender, family=propodds(reverse=FALSE),
+data=data_heaven)
+summary(mod)
+```
+We fit the cumulative probit model i.e.
+
+$G^{-1}(P(Y \leq j | x))$ = $\alpha_j - x^T \beta$ {where $G^{-1}$ is the probit function}
+
+```{r}
+mod_prob <- vglm(Belief ~ Race+Gender, family=cumulative(link="probitlink",parallel=TRUE),
+data=data_heaven)
+summary(mod_prob)
+```
+We can see that the log-likelihood value (and thus the AIC) and the residual deviance for both the models is approximately the same and thus both the models have a similar performance despite the underlying models being different. Also note that the signs of the estimates of the coefficients are also the same in both models which means that the variables have the same relationship with the response in both models.
+ 
+
+
+
+\noindent{\bf Problem 5}: Suppose that you have a coin that when flipped has a probability $0 < p < 1$ of landing heads, and that we know nothing about $p$. Suppose that you flip the coin four times and all four flips resulted in heads. Derive the MLE of $p$ and the MLE of $\Var(Y_i)$ under the standard Bernoulli model. Now, for some error tolerance $0 < \alpha < 1$, derive a valid one-sided confidence interval for $p$ making use of the statement $\Prob\left(\sum_{i=1}^4y_i = 4\right)$.
+
+
+### Solution 5:  
+
+The log-likelihood of the Bernoulli distribution is 
+$$l(p|y_i) = \log p\sum y_i + (n - \sum y_i)\log (1 - p)$$
+To find MLE, 
+
+$$ \log \hat p\sum y_i + (n - \sum y_i)\log (1 - \hat p) = 0 $$
+$$\implies \frac{\sum y_i}{\hat p} - \frac{(n - \sum y_i)}{1 - \hat p} = 0 $$
+$$\implies \hat p = \frac1n \sum y_i$$
+Since we get four heads in four tosses $\sum y_i = 4$ and n = 4. 
+
+$$\implies \hat p = 1$$
+Now $Var(Y_i) = p(1-p) \implies \hat{Var(Y_i)} = \hat p (1- \hat p)$
+$$\implies \hat Var(Y_i) = 0$$
+
+This means that the space of $\gamma$ such that $\gamma$ belongs to the null space of $Var(Y_i)$ is $\R$ 
+ 
+Thus the lower boundary of the Confidence interval for p is 
+$$\min_{P_p(\sum y_i = 4)\geq \alpha}p$$
+
+Now \begin{align*}
+P_p(\sum y_i = 4)\geq \alpha &\implies p^{\sum y_i}(1-p)^{n - \sum y_i} \geq \alpha\\
+&\implies p^4(1-p)^{4-4}\geq \alpha
+\end{align*}
+
+Now since the log likelihood is a concave function the min p which satisfies the constraint will satisfy
+
+$$p^4 =  \alpha$$
+$$\implies p = \alpha^{1/4}$$
+
+Thus the $100(1-\alpha)\%$ one sided confidence interval is
+$$CI = (\alpha^{1/4},1)$$
+\vspace*{1cm}
+
+###
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 6}: Complete the following with respect to the \texttt{endometrial} example:
+\begin{itemize}
+  \item[(a)] Write your own Fisher scoring algorithm for this example. Argue that $\hat\beta$ diverges in some sense as the iterations of your algorithm increase.
+  \item[(b)] Show that the log likelihood has an asymptote in $\|\beta\|$.
+  \item[(c)] Code the likelihood function for this dataset, pick a value of $\tilde\beta$ that is in the LCM, find an eigenvector of estimated Fisher information $\eta$ such that the likelihood asymptotes, and then show that the likelihood asymptotes in $\tilde\beta + s\eta$ as $s \to \infty$.
+  \item[(d)] Explain why the likelihood asymptotes in $\tilde\beta + s\eta$ as $s \to \infty$.
+\end{itemize}
+
+
+### Solution 6:
+
+(a) Write your own Fisher scoring algorithm for this example. Argue that $\hat \beta$ diverges in some
+sense as the iterations of your algorithm increase.
+
+```{r}
+#Creating a function to compute the log-likelihood
+log_lik = function(X,Y,beta)
+{
+  t(Y)%*%X%*%beta - sum(log(1 + exp(X%*%beta)))
+}
+```
+
+```{r}
+library(enrichwith)
+data(endometrial)
+
+#Creating the model matrix
+X = model.matrix(HG ~ .,data = endometrial)
+n = nrow(X)
+p = ncol(X)
+Y = endometrial$HG
+
+# Initializing the beta
+beta = matrix(rep(0,p))
+beta_list = NULL
+#Running the Fisher scoring iterations
+for(t in 1:25)
+{
+  pi =  exp(X%*%beta)/(1+exp(X%*%beta))
+  W = diag(c(pi*(1-pi)))
+  beta = beta + solve(t(X) %*% W %*% X)%*%t(X)%*%(Y - pi)
+  beta_list = cbind(beta_list,beta)
+}
+```
+
+To show that the $\hat \beta$ diverges in some sense we plot the $\hat \beta$ corresponding to the NV variable over the iterations
+
+```{r}
+plot(1:25,beta_list[2,],main = "Beta coefficient of NV covariate",xlab = "iteration",ylab = "beta")
+```
+
+Clearly it diverges. 
+
+(b) Show that the log likelihood has an asymptote in $\|\beta\|$
+
+```{r}
+#Computing the log likelihood for each of the beta values that we get
+yvalues = apply(beta_list,2,function(t) log_lik(X,Y,t))
+
+#Computing the norm of the beta values
+xvalues = log(apply(beta_list,2,function(t) sum(t^2)))
+
+#Plotting
+plot(xvalues,yvalues,ty = "b",lwd = 2,col = "darkgreen", main = "Asymptote of the log likelihood",xlab = expression(log(norm(beta))),ylab = "log-likelihood")
+```
+
+Clearly it aysmptotes in $\|\beta\|$
+
+(c) Code the likelihood function for this dataset, pick a value of $\hat \beta$ that is in the LCM, extract
+the null eigen vector of estimated Fisher information $\eta$, and then show that the likelihood
+asymptotes in $\beta + s\eta$ as $s \rightarrow \infty$.
+
+
+```{r}
+#Creating a logistic model model for the endometrial data
+mod <- glm(HG ~ ., family = "binomial",
+control = list(maxit = 25, epsilon = 1e-100),data = endometrial)
+summary(mod)
+```
+We can see that the Fisher Scoring algorithm goes through all the 25 iterations (which was specified as the max number of iterations). We have seen from part (b) that after 25 fisher scoring iteration the likelihood has already converged and thus the null space of the fisher scoring matrix obtained using the parameters of the OM at this stage estimate the null space of the fisher scoring matrix of the LCM well. 
+
+
+```{r}
+#Computing the beta belonging to the LCM
+beta_tilde = mod$coefficients
+beta_tilde
+
+#Finding the null eigenvector of the Fisher scoring matrix
+invFI <- vcov(mod)
+FI <- solve(invFI)
+eig = eigen(FI)
+eig
+```
+Clearly the last eigen value is 0 thus the corresponding eigen vector belongs to the null space of the Fisher information matrix. We can see that the null vector is $-e_2$ i.e $(0,-1,0,0)$. Thus we can consider $\eta = (0,1,0,0)$
+
+```{r}
+eta = -eig$vectors[,4]
+
+#Considering s from 1 to 50
+s = c(1:50)
+
+#Creating a list of beta of the form beta_tilde + s*eta
+vals = matrix(unlist(lapply(s,function(t) beta_tilde + t*eta)),nrow = 4)
+
+#Computing the loglik values for these beta
+yvalues = apply(vals,2,function(t) log_lik(X,Y,t))
+
+#Plotting the loglik values against s
+plot(s,yvalues,ty = "b",lwd = 2,col = "darkgreen", main = "Asymptote of the log likelihood",xlab = "s",ylab = "log-likelihood")
+```
+
+Again clearly it asymptotes as $s\rightarrow \infty$
+
+(d)
+LCM is the OM with lost dimensions. In other words, the sub-model canonical statistics of LCM is restricted to a hyper-plane in the support set. Since sub-model canonical statistics of LCM is constrained to the hyper-plane, it can not vary along the direction that is orthogonal to the hyper-plane, hence vectors $\eta$ that are orthogonal to the hyper-plane span the null space of the Fisher information matrix of LCM. Recall that null space of Fisher information matrix can be approximated by Fisher information matrix of OM, so eigen vectors of OM are approximately orthogonal to the hyper-plane. Therefore, $\tilde{\beta} + s\eta$ is gradually moving $\tilde{\beta}$ towards to the orthogonal direction of hyper-plane. But sub-model canonical statistics can not vary along that direction. So, as $s \rightarrow \infty$, sub-model canonical statistics will gradually stop moving, leading to asymptote of likelihood.
+
+
+###
+\vspace*{1cm}
+
+
+\noindent{\bf Problem 7}: Summarise the Firth approach mentioned in Section 7.4.7 and 7.4.8 of Agresti. Compare and contrast the Firth approach with the direct MLE approach outlined in the complete separation notes. What are the strengths and weaknesses of each approach?
+
+\vspace*{1cm}
+
+### Solution 7:
+
+In the Firth approach we penalise the log-likelihood function to ensure that the MLE always exists. The
+penalized log-likelihood function utilizes the determinant of the information matrix $\mathcal{J}$,
+$$L^*(\beta) = L(\beta) + \frac12\log|\mathcal{J}|$$
+It turns out that this approach coincides with the Bayesian approach with Jeffrey's prior.
+
+Comparison:
+
+-   Even under the case of complete and quasi-separation, Firth's approach can still give finite and unique estimates of coefficients with decent certainty. On the other hand, the direct MLE approach(OM and LCM) can only give unbouded estimate intervals for separable variables. That being said, both approaches provide estimates for all mean-value parameters.
+
+-   However, the introduction of penalization makes Firth's approach tend to give larger estimated coefficients than MLE, leading to inaccurate estimation under certain cases. As for the direct MLE approach, estimated coefficients of non-separable covariates are generally reliable.
+
+-   Firth's approach uses second order approximation, hence can reduce asymptotic bias to order $1/n^2$, while direct MLE only uses first order approximation, which has asymptotic bias of order $1/n$. The observation of data separation may indicate that asymptotic approximation may be suspect, since $\hat{p}_i \in \{0,1\}$ for some observations $i$.
+
+-   Note that Firth's approach actually falls into the category of Bayesian approaches, which come with the problem of choosing priors. It is shown that different priors have different merits, and can all give reasonable results. These facts make such approaches less objective. However, the frequentist approach, direct MLE, is always objective. 
+
+- It is interesting to note that there is debate among Bayesian authors about the appropriateness of Firth's approach when data separation is observed, and that switching to a Bayesian modeling framework itself is usually presented as an ad hoc fix to a breakdown in traditional MLE based inference. Different justifiable priors can yield different inferences about modeling variables as we saw in class.  
+
+
+
+
+
+<!-- %\noindent{\bf Problem 4}: Use \texttt{glmdr} software to analyze the following data: -->
+<!-- %\begin{verbatim} -->
+<!-- %x <- 1:30 -->
+<!-- %y <- c(rep(0, 12), rep(1, 11), rep(0, 7))	 -->
+<!-- %\end{verbatim} -->
+<!-- %Fit a logistic regression model that includes a quadratic $x$ term. Produce an informative plot of the estimated 95\% confidence intervals for the estimated mean-value parameters under this quadratic logistic model. -->
+
+<!-- %\vspace*{1cm} -->
+
+\noindent{\bf Problem 8}: Use \texttt{glmdr} software to analyze the \texttt{catrec.txt} data using Poisson regression. Specifically, fit a third order model and provide confidence intervals for all mean-value parameter estimates, both one-sided intervals for responses that are constrained on the boundary and two-sided intervals for responses that are unconstrained. Also verify that the third order model is appropriate.
+
+
+First, we see that a third order model fits this data well.
+
+```{r}
+library(glmdr)
+dat <- read.table("catrec.txt", header = TRUE)
+head(dat)
+m2 <- glm(y ~ (v1 + v2 + v3 + v4 + v5 + v6 + v7)^2, 
+          family = "poisson", data = dat)
+m3 <- glm(y ~ (v1 + v2 + v3 + v4 + v5 + v6 + v7)^3, 
+          family = "poisson", data = dat)
+anova(m2, m3, test = "LRT")
+```
+
+We fit the third order model using glmdr software and obtain one-sided confidence intervals for responses that are constrained on the boundary.
+
+```{r}
+mod <- glmdr(y ~ (v1 + v2 + v3 + v4 + v5 + v6 + v7)^3, 
+          family = "poisson", data = dat)
+inference(mod)
+```
+
+
+Standard two-sided confidence intervals for mean-value parameters corresponding to responses that are unconstrained are provided below.
+
+```{r}
+mod_lcm <- glm(y ~ (v1 + v2 + v3 + v4 + v5 + v6 + v7)^3, 
+          family = "poisson", data = dat[mod$linearity, ] )
+p_lcm <- predict(mod_lcm, type = "response", se.fit = TRUE)
+CIs <- cbind(p_lcm$fit + qnorm(0.025) * p_lcm$se.fit, 
+             p_lcm$fit + qnorm(0.975) * p_lcm$se.fit)
+head(CIs)
+```
+
+
+\vspace*{1cm}
+
+\noindent{\bf Problem 9}: Do you think that the \texttt{glm} function can be used to provide an appropriate value of the Akaike information criterion (AIC) when complete separation or quasi-complete separation exists? Why or why not?
+
+Yes, glm software can be used to calculate an appropriate value of the Akaike information criterion (AIC) when complete separation or quasi-complete separation exists. The reason for this is that the Fisher scoring algorithm implemented by glm nearly maximizes the log likelihood even though submodel canonical parameter estimates are infinitely far away from their values in the completion of the exponential family.
+
+An acceptable counter answer is:
+When complete separation exists, the MLE is at the boundary of the closure of its parameter space, MLEs are “at infinity” and the log-likelihood will converges and asymptotes to 0. Thus the the AIC we get from glm asymptotes 2K. In that case, we will always get a smaller AIC by fitting a smaller model, thus we could not identify which model is better or more adeqate by using AIC from glm function.
+Although it should be noted that this answer indicates a problem with AIC, and not whether glm can be used to calculate an appropriate value of AIC.
+
+
+
+
