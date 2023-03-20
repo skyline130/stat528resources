@@ -6,6 +6,7 @@ See the Syllabus for more details. See the notes directory for course notes.
 
 # News
 
+ - We will go over midterm and some HW4 solutions on Tuesday, March 21st.
  - Solutions to midterm and HW4 are posted.
 
 
