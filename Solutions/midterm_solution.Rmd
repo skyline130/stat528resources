@@ -434,12 +434,12 @@ heatmap.fit(y_train, p_train)
 ```
 
 \vspace{12pt}
-We will now investigate classification using a confusion matrix on the test data where we encode a success when $\hat{p} > 0.5$, and a failure when $\hat{p} \leq 0.5$. From the output below, we see that classification accuracy of 0.8439 is much higher than the no information rate of 0.7081. Importantly, the [sensitivity and specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity) are, respectively, 0.9023 and 0.8198.
+We will now investigate classification using a confusion matrix on the test data where we encode a success when $\hat{p} > 0.5$, and a failure when $\hat{p} \leq 0.5$. From the output below, we see that classification accuracy of 0.8511 is much higher than the no information rate of 0.7081. Importantly, the [sensitivity and specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity) are, respectively, 0.8076 and 0.8691.
 
 \vspace{12pt}
 ```{r, warning=FALSE, message=FALSE}
 y_test <- test$MIS_Status
-p_test <- predict(m, newdata = test)
+p_test <- predict(m, newdata = test, type = "response")
 conf_mat <- confusionMatrix(data=factor(as.numeric(p_test>0.5)), 
                            reference = factor(y_test))
 conf_mat
@@ -480,7 +480,7 @@ n1$convergence
 
 
 \vspace{12pt}
-This neural network had comparable, albeit lower, classification accuracy (0.8087) with our logistic regression model (0.8439). However, the neural network's sensitivity was relatively poor.
+This neural network had  lower classification accuracy (0.8087) than our logistic regression model (0.8511). And the neural network's sensitivity was relatively poor.
 
 
 \vspace{12pt}
@@ -519,7 +519,7 @@ p_rf <- predict(rforest, newdata = modmat_test[, -1])
 
 
 \vspace{12pt} 
-The random forest had superior classification accuracy (0.9139) with our logistic regression model (0.8439). It is interesting to note that our logistic regression model beat the random forest in terms of sensitivity (0.9023 vs 0.8583).
+The random forest had superior classification accuracy (0.9139) with our logistic regression model (0.8511). 
 
 \vspace{12pt}
 ```{r}
@@ -556,7 +556,7 @@ varImpPlot(rforest, sort = TRUE)
 
 3. We compared our logistic regression model with a simple neural network, and this comparison was favorable for our logistic regression. However, it should be noted that not much attention was given toward properly tuning the neural network. So it may be a bit premature to conclude that logistic regression modeling is better than a neural network based approach. That being said, the discrete and continuous nature of the term length variable may be difficult for neural networks. 
 
-4. We also compared our logistic regression model with a random forest, and this comparison was largely favorable for the random forest in terms of classification accuracy. Interestingly, the random forest did not win across the board in classification accuracy. The logistic regression model wins in sensitivity. Perhaps our logistic regression model can be improved by better modeling regions with higher probabilities of default. In the Appendix we go a different direction and explore an ensemble based approach to improve our logistic regression model by using the random forest predicted probabilities as a model input. This model is better on balance than both our original logistic regression model and the original random forest model, but it still loses in sensitivity.
+4. We also compared our logistic regression model with a random forest, and this comparison was largely favorable for the random forest in terms of classification accuracy. Perhaps our logistic regression model can be improved by better modeling regions with higher probabilities of default. In the Appendix we go a different direction and explore an ensemble based approach to improve our logistic regression model by using the random forest predicted probabilities as a model input. This model is better on balance than both our original logistic regression model and the original random forest model, but it still loses in sensitivity.
 
  
 5. Several potentially interesting variables were excluded. We did not consider inflation-adjusted disbursement gross, state effects, or recession effects for industries in this analysis. We also did not include the franchise code variable as we thought that new vs established business was more relevant. 

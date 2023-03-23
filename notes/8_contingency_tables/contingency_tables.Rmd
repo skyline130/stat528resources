@@ -110,7 +110,7 @@ We will let $n_{ij}$ be the count in row $i$ and column $j$, and let the total s
 $$
   n_{i+} = \sum_j n_{ij} \qquad n_{+j} = \sum_i n_{ij}
 $$
-With this construction, a natural estimate of $\pi_{ij}$ is $p_{ij} = n_{ij}/n$. We have similar estimates for the marginals $p_{i+} = \sum_j p_{ij}$, $p_{j+} = \sum_i p_{ij}$, and the conditionals $p_{j|i} = n_{ij}/n_{i+}$.
+With this construction, a natural estimate of $\pi_{ij}$ is $p_{ij} = n_{ij}/n$. We have similar estimates for the marginals $p_{i+} = \sum_j p_{ij}$, $p_{+j} = \sum_i p_{ij}$, and the conditionals $p_{j|i} = n_{ij}/n_{i+}$.
 
 ## Independence 
 
@@ -532,7 +532,7 @@ $$
 
 <!-- In the event that $\sigma^2 = \sigma^2(\theta)$, replace $\sigma$ with $\sigma(T_n)$.  -->
 
-We now consider the asymptotic distribution for the log odds ratio (the log of the odds ratio, a quantity that arises naturally from the logistic regression model). Standard errors for the log odds ratio result from a multiparameter version of the delta method. Suppose that $\{N_i,\ldots,N_c\}$ have a multinomial $(n, \pi)$ distribution where we recall that $c$ is the number of categories and $\pi$ is the vector of cell probabilities. Recall that $\hat\pi_i = n_i/n$ has $\E(\hat\pi_i) = \pi_i$ and $\Var(\hat\pi_i) = \pi_i(1-\pi_i)/n$. Also note that 
+We now consider the asymptotic distribution for the log odds ratio (the log of the odds ratio, a quantity that arises naturally from the logistic regression model). Standard errors for the log odds ratio result from a multiparameter version of the delta method. Suppose that $\{N_1,\ldots,N_c\}$ have a multinomial $(n, \pi)$ distribution where we recall that $c$ is the number of categories and $\pi$ is the vector of cell probabilities. Recall that $\hat\pi_i = n_i/n$ has $\E(\hat\pi_i) = \pi_i$ and $\Var(\hat\pi_i) = \pi_i(1-\pi_i)/n$. Also note that 
 $$
   \mathrm{cov}(\hat\pi_i,\hat\pi_j) = -\pi_i\pi_j/n.
 $$

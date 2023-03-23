@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  20 MAR 2023 15:31
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  23 MAR 2023 10:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1072,7 +1072,7 @@ ublic/lm/lmsy10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/l
 msy7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmtt10.pfb><
 /usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmtti10.pfb></usr/loca
 l/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on contingency_tables.pdf (19 pages, 366787 bytes).
+Output written on contingency_tables.pdf (19 pages, 366793 bytes).
 PDF statistics:
  390 PDF objects out of 1000 (max. 8388607)
  325 compressed objects within 4 object streams
