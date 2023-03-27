@@ -55,7 +55,7 @@ See the Syllabus for more details. See the notes directory for course notes.
 
 **TA**: Diptarka Saha (saha12@illinois.edu)
 
-**TA Office hours**: 2pm - 3pm on Fridays (Zoom link: https://illinois.zoom.us/j/94102816368?pwd=MTdXejNHeGU2RXVGY3o4TTVUdVVrZz09)
+**TA Office hours**: 1pm - 2pm on Fridays (Zoom link: https://illinois.zoom.us/j/94102816368?pwd=MTdXejNHeGU2RXVGY3o4TTVUdVVrZz09)
 
 **Course website**: 
 
