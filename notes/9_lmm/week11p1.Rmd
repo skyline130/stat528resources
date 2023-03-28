@@ -1,0 +1,466 @@
+---
+title: "STAT 528 - Advanced Regression Analysis II"
+author: "Linear Mixed Models"
+institute: |
+  | Daniel J. Eck
+  | Department of Statistics
+  | University of Illinois
+date: ""
+output: 
+    beamer_presentation:
+        keep_tex: true
+        fig_width: 11
+        fig_height: 7.5
+        includes:
+urlcolor: blue
+header-includes:
+- \usepackage{graphicx}
+- \usepackage{bm}
+- \definecolor{foreground}{RGB}{255,255,255}
+- \definecolor{background}{RGB}{34,28,54}
+- \definecolor{title}{RGB}{105,165,255}
+- \definecolor{gray}{RGB}{175,175,175}
+- \definecolor{lightgray}{RGB}{225,225,225}
+- \definecolor{subtitle}{RGB}{232,234,255}
+- \definecolor{hilight}{RGB}{112,224,255}
+- \definecolor{vhilight}{RGB}{255,111,207}
+- \setbeamertemplate{footline}[page number]
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy.opts=list(width.cutoff=40))
+library(ggplot2)
+
+mycols     = c("chartreuse3", "orangered", "deepskyblue3", "darkorchid1", "yellow")
+dark_theme = theme(plot.background   = element_blank(), 
+                   panel.background  = element_blank(),
+                   #legend.background = element_blank(), legend.key = element_blank(),
+                   axis.title.x      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(10,0,0,0)),
+                   axis.title.y      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(0,20,0,0)),
+                   axis.text         = element_text(size=18, color = "grey80"), 
+                   text              = element_text(size=20),
+                   axis.title        = element_text(size = 26),
+                   legend.title      = element_text(size = 26, colour = "grey80"),
+                   panel.border      = element_blank(),
+                   panel.grid.major  = element_line(colour = "grey50"), 
+                   panel.grid.minor  = element_line(colour = "grey30"))
+```
+
+
+## Learning Objectives Today
+
+- Linear Mixed Models examples
+
+## Example: pulp data set
+
+We illustrate the fitting methods using some data from an experiment which tests how the paper brightness is influenced by the shift operator on duty. 
+
+The pulp data frame has 20 rows and 2 columns. Data comes from an experiment to test the paper brightness depending on a shift operator. The variables are: 
+
+- **bright**: Brightness of the pulp as measured by a reflectance meter
+- **operator**: Shift operator a-d
+
+
+## 
+
+We start with a fixed effects one-way ANOVA.
+
+\vspace{12pt}
+\tiny
+```{r}
+library(ggplot2)
+library(faraway)
+data(pulp)
+## note that we are changing the contrasts to sum contrasts
+op <- options(contrasts = c("contr.sum", "contr.poly"))
+## aov is another wrapper for lm; results more appropriate for ANOVA models
+lmod <- aov(bright ~ operator, pulp)
+summary(lmod)
+coef(lmod)
+```
+
+
+
+## 
+
+We see that the p-value for the operator effect is roughly 0.023. We have $\hat{\sigma}^2 = .106$ and the overall mean is 60.40. 
+
+For sum contrasts, we have that $\sum_i\alpha_i = 0$, so we can calculate the effect for the fourth operator as 0.16 + 0.34 - 0.22 = 0.28. 
+
+Turing to the random effects model, we can calculate the variance of the operator effects $\hat{\sigma}^2_{\alpha}$ using the formula above as 
+
+\vspace{12pt}
+```{r}
+## (MSA - MSE) / n 
+(0.4467 - 0.1062)/5
+```
+
+
+
+## 
+
+We now demonstrate the MLE approach using REML. We will use the \texttt{lme4} package to accomplish this task.
+
+\vspace{12pt}
+\tiny
+```{r, message=FALSE, warning=FALSE}
+library(lme4)
+mmod <- lmer(bright ~ 1 + (1|operator), pulp)
+summary(mmod)
+```
+
+\vspace{12pt}
+\normalsize
+We see that this method gives identical estimates to the ANOVA results above. For unbalanced designs, the REML and ANOVA estimators are not necessarily identical.
+
+
+## 
+
+The model fitted has both fixed and random effects components. 
+
+The fixed effect here is just the intercept represented by the first \texttt{1} in the model formula. 
+
+The random effect is represented by the \texttt{(1|operator)} indicating that the data is grouped by the \texttt{operator} variable, and the \texttt{1} indicates that the random effect is constant within each group.
+
+
+## LRT 
+
+In this example the only fixed effect is the mean and there is not much interest in testing that.
+
+For models of the same class, we could use built in software to perform a statistical test. Here we have to do the testing manually
+
+\vspace{12pt}
+\small
+```{r}
+## null model fit
+nullmod <- lm(bright ~ 1, pulp) 
+
+## alternative model fit
+smod <- lmer(bright ~ 1 + (1|operator), pulp, REML = FALSE)
+
+## LRT
+as.numeric(2*(logLik(smod) - logLik(nullmod)))
+pchisq(2.568371, df = 1, lower = FALSE)
+```
+
+
+
+##
+
+The $p$-value for this test is well above a nominal 5\% significance level (assuming that testing is desired at this level). The use of the $\chi^2$ test with its noted shortcomings allows for some doubt in this finding. 
+
+We will now try the parametric bootstrap procedure to obtain a more accurate $p$-value. We need to estimate the probability, given the null hypothesis is true, of observation an LRT of 2.568371 or greater. 
+
+We have that 
+$$
+  y \overset{H_0}{\sim} N(\mu,\sigma^2).
+$$
+
+
+
+##
+
+A simulation approach would generate data under this model, fit the null and alternative models and then compute the LRT. 
+
+The process would be repeated a large number of times and the proportion of estimated LRTs exceeding the the observed LRT value of 2.568371 would be used to estimate the $p$-value. In practice we do not know the true values of $\mu$ and $\sigma$, but we can use plug-in. 
+
+Let's try it out. Fix the bootstrap sample size to be $B = 1000$ and then continue with the parametric bootstrap procedure.
+
+
+## parametric bootstrap
+
+\tiny
+```{r paraboot_pulp, warning = FALSE, message = FALSE, cache = TRUE}
+set.seed(13)
+B <- 1000
+lrtstat <- numeric(B)
+system.time(for(b in 1:B){
+  y <- unlist(simulate(nullmod))
+  bnull <- lm(y ~ 1)
+  balt <- lmer(y ~ 1 + (1|operator), pulp, REML = FALSE)
+  lrtstat[b] <- as.numeric(2*(logLik(balt) - logLik(bnull)))
+})
+```
+
+\vspace{12pt}
+\normalsize
+We may examine the distribution of the bootstrapped LRTs. We first compute the proportion that are close to zero
+
+\vspace{12pt}
+\tiny
+```{r}
+mean(lrtstat < 1e-5)
+```
+
+
+##
+
+The LRT clearly does not have a $\chi^2$ distribution. See Section 8.2 in Faraway for discussion on this. An interesting refinement can be seen [here](https://www.sciencedirect.com/science/article/pii/S0167947307004306?casa_token=z-BkV1gXcLQAAAAA:FbUGOMy6WR2WFBfIZ2e1OfpJBpzhhQd4zc3OFtNjUGiaCdlXKa4yQOwbw3xcgPXQ-JaZMbUuLQ). 
+
+The parametric bootstrap may be the simplest approach, and the method we have used above is transparent and could be computed much more efficiently if needed. With all of this in mind the estimated $p$-value is 
+
+\vspace{12pt}
+\tiny
+```{r}
+## p-value
+pval <- mean(lrtstat > 2.568371)
+pval
+
+## simple standard error of the above
+sqrt(pval*(1-pval)/B)
+```
+
+\vspace{12pt}
+\normalsize
+We can be fairly sure that the estimated $p$-value is under a 0.05 nominal level. If in doubt, do some more replications to make sure; this only costs computer time. As it happens, this $p$-value is close to the fixed effects $p$-value. 
+
+
+
+## Predicting random effects
+
+Approach this problem from a Bayesian perspective with a prior density for the $\alpha$s such that $E(\alpha_i) = 0$ is just the prior mean. 
+
+Let $f$ represent a density function, then the posterior density for $\alpha$ is given by
+$$
+  f(\alpha_i|Y) \propto f(Y|\alpha_i)f(\alpha_i)
+$$
+we can then find the posterior mean, denoted as $\hat{\alpha}$ as
+$$
+  E(\alpha_i|Y) = \int \alpha_i f(\alpha_i|Y) d\alpha_i.
+$$
+For the general case, this works out to be
+$$
+  \hat\alpha = DZ^TV^{-1}(Y - X\beta).
+$$
+
+## 
+
+We will take an empirical Bayesian point of view and substitute the MLEs into $D$, $V$, and $\beta$ to obtain predicted random effects. 
+
+These are be computed as
+
+\vspace{12pt}
+\tiny
+```{r}
+ranef(mmod)$operator
+```
+
+\vspace{12pt}
+\normalsize
+The predicted random effects are related to the fixed effects. We can show these for all operators
+
+\vspace{12pt}
+\tiny
+```{r}
+(cc <- model.tables(lmod))
+```
+
+
+##
+
+Look what happens when we compute the ratio of fixed effects to the random effects
+
+\vspace{12pt}
+```{r}
+## estimated fixed effects divided by 
+## predicted random effects
+cc[[1]]$operator / ranef(mmod)$operator
+```
+
+\vspace{12pt}
+We see that the predicted random effects are exactly in proportion to the fixed effects. Typically, the predicted random effects are smaller and could be viewed as a type of \textbf{shrinkage estimate}.
+
+
+## 
+
+95% confidence intervals for random effects:
+
+\vspace{12pt}
+\tiny
+```{r 95CI, message=FALSE, echo = FALSE}
+library(lattice)
+dotplot(ranef(mmod, condVar=TRUE))
+```
+
+
+
+## 
+
+Suppose we wish to predict a new value. If the prediction is to be made for a new operator or unknown operator, the best we can do is give $\hat\mu = 60.4$. 
+
+If we know the operator, then we can combine this with our fixed effects to give the best linear unbiased predictors (BLUPs) as follows
+
+\vspace{12pt}
+```{r}
+fixef(mmod) + ranef(mmod)$operator
+```
+
+
+## 
+
+We present a parametric bootstrap method for computing standard errors of the predicted random effects. 
+
+As in previous bootstrap, the first step is to simulate from the fitted model. We refit the model with the simulated response and generate a predicted value. 
+
+But there are two additional sources of variation. We have variation due to the new operator and also due to a new observation from that operator. 
+
+For this reason, we add normal sample values with standard deviations equal to those estimated earlier. If you really want a confidence interval for the mean prediction, you should not add these extra error terms. 
+
+
+##
+
+We repeat this 1000 times and take the appropriate quantiles to get a 95% interval. We start with the unknown operator case:
+
+\vspace{12pt}
+\tiny
+```{r bootpred, cache = TRUE, warnings=FALSE, message=FALSE}
+group.sd <- as.data.frame(VarCorr(mmod))$sdcor[1]
+resid.sd <- as.data.frame(VarCorr(mmod))$sdcor[2]
+B <- 1000
+pv <- numeric(B)
+system.time(for(i in 1:B){
+  y <- unlist(simulate(mmod, use.u = TRUE))
+  bmod <- suppressWarnings(refit(mmod, y))
+  pv[i] <- predict(bmod, re.form=~0)[1] + rnorm(n=1,sd=group.sd) + 
+    rnorm(n=1,sd=resid.sd)
+})
+quantile(pv, c(0.025, 0.975))
+```
+
+
+## 
+
+Some modification is necessary if we know the operator we are making the prediction interval for. 
+
+We use the option \texttt{use.u=TRUE} in the simulate function indicating that we should simulate new values conditional on the estimated random effects. 
+
+We need to do this because otherwise we would simulate an entirely new 'a' effect in each replication. Instead, we want to preserve the originally generated 'a' effect.
+
+\vspace{12pt}
+\tiny
+```{r bootpreda, cache = TRUE, warnings=FALSE, message=FALSE}
+system.time(for(i in 1:B){
+ y <- unlist(simulate(mmod, use.u=TRUE))
+  bmod <- suppressWarnings(refit(mmod, y))
+  pv[i] <- predict(bmod, newdata=data.frame(operator="a")) + 
+    rnorm(n=1,sd=resid.sd)
+})
+ 
+quantile(pv, c(0.025, 0.975))
+```
+
+
+
+## Soybean Analysis (see notes)
+
+The researchers are interested in determining which genotypes are associated with a different expression of apparent quantum efficiency (AqE) from the RC reference genotype. 
+
+AqE is a part of the photosynthetic process in plants where improvements in AqE allow for improvements in yield.
+
+This data consists of multiple measurements on the same day with only a few days of data collection.
+
+\vspace{12pt}
+\tiny
+```{r}
+dat <- read.csv("soybean.csv")
+dat$ID <- as.factor(dat$ID)
+head(dat)
+```
+
+
+## 
+
+We now fit three models in increasing complexity. The first is a standard linear regression model with linear terms for precipitation variables and day, and a quadratic term for days. The next model includes a random effect for plots. The full model includes an additional random effect for disk.
+
+
+\vspace{12pt}
+\tiny
+```{r}
+m <- lm(AqE ~ ID + days + I(days^2) + Precip + Precip_7day, 
+  data = dat)
+
+m_re_plot <- lmer(AqE ~ ID + days + I(days^2) + Precip + 
+  Precip_7day + (1|plot_number), data = dat, REML = FALSE)
+
+m_re_full <- lmer(AqE ~ ID + days + I(days^2) + Precip + 
+  Precip_7day + (1|plot_number) + (1|disk), data = dat, REML = FALSE)
+```
+
+##
+
+Both AIC and BIC select the largest model with random effects for plots and disk effects. 
+
+\vspace{12pt}
+\small
+```{r}
+## AIC
+c(AIC(m), AIC(m_re_plot), AIC(m_re_full))
+
+## BIC
+c(BIC(m), BIC(m_re_plot), BIC(m_re_full))  
+```
+
+\vspace{12pt}
+\normalsize
+See the notes for parametric bootstrapping of LRTs.
+
+
+##
+
+We see that the modeling assumptions of constant variance and normality of residuals are satisfied.
+
+\vspace{12pt}
+```{r, echo = FALSE}
+par(mfrow = c(1,2))
+plot(fitted(m_re_full), residuals(m_re_full), 
+		 xlab="Fitted", ylab="Residuals", pch = 19, 
+		 col = rgb(0,0,0,alpha=0.2))
+a <- qqnorm(residuals(m_re_full), main="", pch = 19, 
+						col = rgb(0,0,0,alpha=0.2))
+qqline(residuals(m_re_full))
+```
+
+
+## 
+
+We now investigate which genotypes are associated with AqE values that are different than the RC reference level. 
+
+To do this we will consider a simple approach in which we construct a model with a particular genotype level removed, and then compare this smaller model with the final model. 
+
+Model comparisons will be made using AIC (the difference of AIC values). We will perform this procedure for each genotype. 
+
+Results are displayed on later slides. Negative values indicate that a genotype is associated with AqE values that are different than the RC reference level.
+
+##
+
+\small
+```{r AqE_testing, cache = TRUE}
+## AIC for each ID variable from full AqE fixed-effects model
+M <- model.matrix(AqE ~ ID + days + I(days^2) + Precip + 
+                    Precip_7day, data = dat)
+
+# Note that likelihood ratios are asymptotic, i.e. don't 
+# account for uncertainty in the estimate of the residual 
+# variance
+library(parallel)
+ncores <- detectCores() - 2
+system.time({AIC_IDs <- matrix(unlist(lapply(
+	grep("ID", colnames(M)), function(j){
+	M1 <- M[, -j]	
+	foo <- lmer(AqE ~ -1 + M1 + (1|plot_number) + (1|disk), 
+							data = dat, REML = FALSE)
+	AIC(m_re_full) - AIC(foo) 
+})), ncol = 1)})
+```
+
+
+## 
+
+\tiny
+```{r}
+rownames(AIC_IDs) <- colnames(M)[grep("ID", colnames(M))]
+colnames(AIC_IDs) <- c("AqE")
+AIC_IDs[AIC_IDs < 0, ]
+```
