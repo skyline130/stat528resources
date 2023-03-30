@@ -479,7 +479,7 @@ Split plot designs originated in agriculture, but also occur in many other setti
 The design arises as a result of restrictions on full randomization. For example, consider an agricultural experiment that studies the effects of plant varieties and irrigation techniques. It may be difficult to vary irrigation techniques over a field while it is easy to plant different plant varieties across a field. To overcome this challenge we consider a split plot design in which a sample of main plots (fields) each receive one irrigation technique at random. Each main plot is then divided into a number of split plots equal to the number of levels of plant varieties under study. Then each plant variety is randomly assigned to each split plot at random. Generally speaking, split plot designs arise when one factor is easy to change and another factor takes much more effort to manipulate. [Here is a simple conceptual visual for split plot designs.](https://www.statology.org/split-plot-design/)
 
 
-## R example irrigation split plot design
+## Example: irrigation split plot design
 
 We now perform a data analysis corresponding to the motivating irrigation example. In this example we want to determine which irrigation and plant variety combination produces the highest yield. There are four irrigation methods and two plant varieties under consideration. Eight fields were available, but only one type of irrigation may be applied to each field. The whole plot factor is the irrigation method which should be randomly assigned to each of the fields. The fields may be divided into two halves with each plant variety randomly assigned to each of the halves. A summary and visualization of the data are included below: 
 
@@ -514,7 +514,7 @@ We consider normal distributions for the random effect terms that are indexed by
 lmod <- lmer(yield ~ irrigation * variety + (1|field) + (1|field:variety), 
              data = irrigation)
 ```
-However, if you try to fit such a model, it will fail because it is not possible to distinguish the variety within the field variation. We would need more than one observation per variety within each field for us to separate the two variabilities. We resort to a simpler model that omits the variety by field interaction random effect:
+However, if you try to fit such a model, it will fail because it is not possible to distinguish the variety within field variation. We would need more than one observation per variety within each field for us to separate the two variabilities. We resort to a simpler model that omits the variety by field interaction random effect:
 $$
   y_{ijk} = \mu + r_i + v_j + (rv)_{ij} + f_k + \varepsilon_{ijk}
 $$
@@ -561,11 +561,8 @@ In this Section we provide an example of nesting. Consistency between laboratory
 
 ```{r}
 data(eggs)
-
-## summary table
 summary(eggs)
 
-## plot
 ggplot(eggs, aes(y=Fat, x=Lab, color=Technician, shape=Sample)) + 
   geom_point(size = 2, position = position_jitter(width=0.1, height=0.0)) + 
   scale_color_grey() + 
@@ -606,7 +603,7 @@ We might drop any of the three random effect terms but it is not possible to be 
 <!-- Multilevel models is a term used for models for data with hierarchical structure. The term is most commonly used in the social sciences. We can use the methodology we have already developed to fit some of these models. -->
 
 
-## Repeated measures and longitudinal data
+## Repeated measures and longitudinal data 
 
 In repeated measures designs there are several individuals (or units) under study and multiple measurements are taken repeatedly on each individual. When these repeated measurements are taken over time, it is called a longitudinal study or, in some applications, a panel study. Typically there are various covariates concerning the individual that are also recorded and interest centers on how the response depends on these covariates over time. Often it is reasonable to believe that the response of each individual has several components: 
 
@@ -661,14 +658,12 @@ $$
 $$
 The log-likelihood for the data is then computed as previously and estimation, testing, standard errors and confidence intervals all follow using standard likelihood theory as before. There is no strong distinction between repeated measures methodology and the methodology of linear mixed-effects models.
 
-## R example Panel Study of Income Dynamics
+## Example: Panel Study of Income Dynamics
 
-The Panel Study of Income Dynamics (PSID), begun in 1968, is a longitudinal study of a representative sample of U.S. individuals described in Hill (1992). The study is conducted at the Survey Research Center, Institute for Social Research, University of Michigan, and is still continuing. There are currently 8700 households in the study and many variables are measured. We chose to analyze a random subset of this data, consisting of 85 heads of household who were aged 25–39 in 1968 and had complete data for at least 11 of the years between 1968 and 1990. The variables included were annual income, gender, years of education and age in 1968:
+The Panel Study of Income Dynamics (PSID), begun in 1968, is a longitudinal study of a representative sample of U.S. individuals described in Hill (1992). The study is conducted at the Survey Research Center, Institute for Social Research, University of Michigan, and is still continuing. There are currently 8700 households in the study and many variables are measured. We chose to analyze a random subset of this data, consisting of 85 heads of household who were aged 25–39 in 1968 and had complete data for at least 11 of the years between 1968 and 1990. The variables included were annual income, sex, years of education and age in 1968:
 ```{r, message = FALSE, warning = FALSE}
 library(tidyverse)
 data(psid)
-psid <- mutate(psid, gender = sex) %>% dplyr::select(-sex)
-head(psid)
 ```
 Now plot the data for the first 20 individuals:
 ```{r}
@@ -678,11 +673,11 @@ ggplot(psid20, aes(x=year, y=income)) +
   facet_wrap(~ person) + 
   theme_minimal()
 ```
-We see that some individuals have a slowly increasing income, typical of someone in steady employment in the same job. Other individuals have more erratic incomes. We can also show how the incomes vary by gender. Income is more naturally considered on a log-scale:
+We see that some individuals have a slowly increasing income, typical of someone in steady employment in the same job. Other individuals have more erratic incomes. We can also show how the incomes vary by sex. Income is more naturally considered on a log-scale:
 ```{r}
 ggplot(psid20, aes(x=year, y=income+100, group=person)) + 
   geom_line() + 
-  facet_wrap(~ gender) + 
+  facet_wrap(~ sex) + 
   scale_y_log10() + 
   theme_minimal()
 ```
@@ -701,17 +696,17 @@ slopes <- sapply(ml,coef)[2,]
 The \texttt{lmList} command fits a linear model to each group within the data, here specified by person. A list of linear models, one for each group, is returned from which we extract the intercepts and slopes.
 ```{r}
 plot(intercepts,slopes,xlab="Intercept",ylab="Slope")
-pgender <- psid$gender[match(1:85,psid$person)]
-boxplot(split(slopes,pgender))
+psex <- psid$sex[match(1:85,psid$person)]
+boxplot(split(slopes,psex))
 ```
 
 In the first panel, we see how the slopes relate to the intercepts — there is little correlation. This means we can test incomes and income growths separately. In the second panel, we compare the income growth rates where we see these as higher and more variable for women compared to men. We can test the difference in income growth rates for men and women:
 ```{r}
-t.test(slopes[pgender=="M"],slopes[pgender=="F"])
+t.test(slopes[psex=="M"],slopes[psex=="F"])
 ```
 We see that women have a significantly higher growth rate than men. We can also compare the incomes at the intercept (which is 1978):
 ```{r}
-t.test(intercepts[pgender=="M"],intercepts[pgender=="F"])
+t.test(intercepts[psex=="M"],intercepts[psex=="F"])
 ```
 We see that men have significantly higher incomes.
 
@@ -720,11 +715,11 @@ This is an example of a response feature analysis. It requires choosing an impor
 Suppose that the income change over time can be partly predicted by the subject’s age, sex and educational level. We do not expect a perfect fit. The variation may be partitioned into two components. Clearly there are other factors that will affect a subject’s income. These factors may cause the income to be generally higher or lower or they may cause the income to grow at a faster or slower rate. We can model this variation with a random intercept and slope, respectively, for each subject. We also expect that there will be some year-to-year variation within each subject. For simplicity, let us initially assume that this error is homogeneous and uncorrelated, that is, $\Lambda_i = I$. We also center the year to aid interpretation as before. We may express these notions in the model:
 ```{r}
 psid$cyear <- psid$year - 78
-mmod <- lmer(log(income) ~ cyear*gender + age + educ + (cyear|person), psid)
+mmod <- lmer(log(income) ~ cyear*sex + age + educ + (cyear|person), psid)
 ```
 This model can be written as:
 $$
-  \log(\text{income})_{ij} = \mu + \beta_y\text{year}_j + \beta_g \text{gender}_i + \beta_{yg}\text{gender}_i*\text{year}_j
+  \log(\text{income})_{ij} = \mu + \beta_y\text{year}_j + \beta_g \text{sex}_i + \beta_{yg}\text{sex}_i*\text{year}_j
     + \beta_e\text{education}_i + \beta_a\text{age}_i + \gamma_i^0 + \gamma_i^1 \text{year}_j + \varepsilon_{ij}
 $$
 where $i$ indexes the individuals and $j$ indexes the years, and $\log$ is the natural logarithm. We have: 

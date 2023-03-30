@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  28 MAR 2023 09:20
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  28 MAR 2023 13:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1104,42 +1104,39 @@ Overfull \vbox (8.1533pt too high) detected at line 310
 
 ] [7
 
+] [8
+
 ]
 \openout4 = `week11p1.vrb'.
 
 (./week11p1.vrb
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 14.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 8.
 
 LaTeX Font Warning: Font shape `T1/lmtt/bx/it' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/sl' tried instead on input line 14.
+(Font)              Font shape `T1/lmtt/b/sl' tried instead on input line 8.
 
-) [8
-
-] [9
+) [9
 
 ] [10
+
+] [11
 
 ]
 \openout4 = `week11p1.vrb'.
 
-(./week11p1.vrb) [11
+(./week11p1.vrb) [12
 
 ]
 \openout4 = `week11p1.vrb'.
 
 (./week11p1.vrb)
-Overfull \vbox (2.77296pt too high) detected at line 481
+Overfull \vbox (2.77296pt too high) detected at line 484
  []
 
-[12
+[13
 
-] [13
-
-]
-\openout4 = `week11p1.vrb'.
-
-(./week11p1.vrb) [14
+] [14
 
 ]
 \openout4 = `week11p1.vrb'.
@@ -1149,26 +1146,26 @@ Overfull \vbox (2.77296pt too high) detected at line 481
 ]
 \openout4 = `week11p1.vrb'.
 
+(./week11p1.vrb) [16
+
+]
+\openout4 = `week11p1.vrb'.
+
 (./week11p1.vrb
-<week11p1_files/figure-beamer/95CI-1.pdf, id=124, 749.80125pt x 506.89375pt>
+<week11p1_files/figure-beamer/95CI-1.pdf, id=130, 749.80125pt x 506.89375pt>
 File: week11p1_files/figure-beamer/95CI-1.pdf Graphic file (type pdf)
 <use week11p1_files/figure-beamer/95CI-1.pdf>
 Package pdftex.def Info: week11p1_files/figure-beamer/95CI-1.pdf  used on input
  line 12.
 (pdftex.def)             Requested size: 307.29465pt x 207.7427pt.
-) [16
+) [17
 
  <./week11p1_files/figure-beamer/95CI-1.pdf>]
 \openout4 = `week11p1.vrb'.
 
-(./week11p1.vrb) [17
+(./week11p1.vrb) [18
 
-] [18
-
-]
-\openout4 = `week11p1.vrb'.
-
-(./week11p1.vrb) [19
+] [19
 
 ]
 \openout4 = `week11p1.vrb'.
@@ -1191,27 +1188,32 @@ Package pdftex.def Info: week11p1_files/figure-beamer/95CI-1.pdf  used on input
 (./week11p1.vrb) [23
 
 ]
-<week11p1_files/figure-beamer/unnamed-chunk-14-1.pdf, id=183, 761.84625pt x 465
+\openout4 = `week11p1.vrb'.
+
+(./week11p1.vrb) [24
+
+]
+<week11p1_files/figure-beamer/unnamed-chunk-14-1.pdf, id=189, 761.84625pt x 465
 .74pt>
 File: week11p1_files/figure-beamer/unnamed-chunk-14-1.pdf Graphic file (type pd
 f)
 <use week11p1_files/figure-beamer/unnamed-chunk-14-1.pdf>
 Package pdftex.def Info: week11p1_files/figure-beamer/unnamed-chunk-14-1.pdf  u
-sed on input line 825.
+sed on input line 828.
 (pdftex.def)             Requested size: 307.27893pt x 187.84904pt.
-[24
+[25
 
- <./week11p1_files/figure-beamer/unnamed-chunk-14-1.pdf>] [25
-
-]
-\openout4 = `week11p1.vrb'.
-
-(./week11p1.vrb) [26
+ <./week11p1_files/figure-beamer/unnamed-chunk-14-1.pdf>] [26
 
 ]
 \openout4 = `week11p1.vrb'.
 
 (./week11p1.vrb) [27
+
+]
+\openout4 = `week11p1.vrb'.
+
+(./week11p1.vrb) [28
 
 ]
 \tf@nav=\write6
@@ -1225,13 +1227,13 @@ sed on input line 825.
 
 (./week11p1.aux) ) 
 Here is how much of TeX's memory you used:
- 25656 strings out of 478268
- 492910 string characters out of 5846347
+ 25661 strings out of 478268
+ 492955 string characters out of 5846347
  797689 words of memory out of 5000000
- 43091 multiletter control sequences out of 15000+600000
+ 43093 multiletter control sequences out of 15000+600000
  537486 words of font info for 128 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 128i,11n,122p,1005b,474s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,11n,122p,1005b,472s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ts1
 .enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/loc
 al/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive
@@ -1253,10 +1255,10 @@ live/2022/texmf-dist/fonts/type1/public/lm/lmtko10.pfb></usr/local/texlive/2022
 t/fonts/type1/public/lm/lmtt8.pfb></usr/local/texlive/2022/texmf-dist/fonts/typ
 e1/public/lm/lmtti10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public
 /amsfonts/symbols/msam10.pfb>
-Output written on week11p1.pdf (27 pages, 724065 bytes).
+Output written on week11p1.pdf (28 pages, 724381 bytes).
 PDF statistics:
- 325 PDF objects out of 1000 (max. 8388607)
- 244 compressed objects within 3 object streams
- 81 named destinations out of 1000 (max. 500000)
+ 331 PDF objects out of 1000 (max. 8388607)
+ 249 compressed objects within 3 object streams
+ 84 named destinations out of 1000 (max. 500000)
  38965 words of extra memory for PDF output out of 42996 (max. 10000000)
 

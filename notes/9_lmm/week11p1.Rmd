@@ -131,6 +131,10 @@ In this example the only fixed effect is the mean and there is not much interest
 
 For models of the same class, we could use built in software to perform a statistical test. Here we have to do the testing manually
 
+
+
+## 
+
 \vspace{12pt}
 \small
 ```{r}

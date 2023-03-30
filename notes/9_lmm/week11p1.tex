@@ -322,14 +322,17 @@ that the data is grouped by the \texttt{operator} variable, and the
 group.
 \end{frame}
 
-\begin{frame}[fragile]{LRT}
+\begin{frame}{LRT}
 \protect\hypertarget{lrt}{}
 In this example the only fixed effect is the mean and there is not much
 interest in testing that.
 
 For models of the same class, we could use built in software to perform
 a statistical test. Here we have to do the testing manually
+\end{frame}
 
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-4}{}
 \vspace{12pt}
 \small
 
@@ -362,7 +365,7 @@ a statistical test. Here we have to do the testing manually
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-4}{}
+\protect\hypertarget{section-5}{}
 The \(p\)-value for this test is well above a nominal 5\% significance
 level (assuming that testing is desired at this level). The use of the
 \(\chi^2\) test with its noted shortcomings allows for some doubt in
@@ -378,7 +381,7 @@ We have that \[
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-5}{}
+\protect\hypertarget{section-6}{}
 A simulation approach would generate data under this model, fit the null
 and alternative models and then compute the LRT.
 
@@ -435,7 +438,7 @@ compute the proportion that are close to zero
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-6}{}
+\protect\hypertarget{section-7}{}
 The LRT clearly does not have a \(\chi^2\) distribution. See Section 8.2
 in Faraway for discussion on this. An interesting refinement can be seen
 \href{https://www.sciencedirect.com/science/article/pii/S0167947307004306?casa_token=z-BkV1gXcLQAAAAA:FbUGOMy6WR2WFBfIZ2e1OfpJBpzhhQd4zc3OFtNjUGiaCdlXKa4yQOwbw3xcgPXQ-JaZMbUuLQ}{here}.
@@ -498,7 +501,7 @@ Let \(f\) represent a density function, then the posterior density for
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-7}{}
+\protect\hypertarget{section-8}{}
 We will take an empirical Bayesian point of view and substitute the MLEs
 into \(D\), \(V\), and \(\beta\) to obtain predicted random effects.
 
@@ -547,7 +550,7 @@ show these for all operators
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-8}{}
+\protect\hypertarget{section-9}{}
 Look what happens when we compute the ratio of fixed effects to the
 random effects
 
@@ -577,7 +580,7 @@ and could be viewed as a type of \textbf{shrinkage estimate}.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-9}{}
+\protect\hypertarget{section-10}{}
 95\% confidence intervals for random effects:
 
 \vspace{12pt}
@@ -591,7 +594,7 @@ and could be viewed as a type of \textbf{shrinkage estimate}.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-10}{}
+\protect\hypertarget{section-11}{}
 Suppose we wish to predict a new value. If the prediction is to be made
 for a new operator or unknown operator, the best we can do is give
 \(\hat\mu = 60.4\).
@@ -617,7 +620,7 @@ to give the best linear unbiased predictors (BLUPs) as follows
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-11}{}
+\protect\hypertarget{section-12}{}
 We present a parametric bootstrap method for computing standard errors
 of the predicted random effects.
 
@@ -636,7 +639,7 @@ terms.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-12}{}
+\protect\hypertarget{section-13}{}
 We repeat this 1000 times and take the appropriate quantiles to get a
 95\% interval. We start with the unknown operator case:
 
@@ -676,7 +679,7 @@ We repeat this 1000 times and take the appropriate quantiles to get a
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-13}{}
+\protect\hypertarget{section-14}{}
 Some modification is necessary if we know the operator we are making the
 prediction interval for.
 
@@ -754,7 +757,7 @@ few days of data collection.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-14}{}
+\protect\hypertarget{section-15}{}
 We now fit three models in increasing complexity. The first is a
 standard linear regression model with linear terms for precipitation
 variables and day, and a quadratic term for days. The next model
@@ -779,7 +782,7 @@ additional random effect for disk.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-15}{}
+\protect\hypertarget{section-16}{}
 Both AIC and BIC select the largest model with random effects for plots
 and disk effects.
 
@@ -815,7 +818,7 @@ See the notes for parametric bootstrapping of LRTs.
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-16}{}
+\protect\hypertarget{section-17}{}
 We see that the modeling assumptions of constant variance and normality
 of residuals are satisfied.
 
@@ -825,7 +828,7 @@ of residuals are satisfied.
 \end{frame}
 
 \begin{frame}{}
-\protect\hypertarget{section-17}{}
+\protect\hypertarget{section-18}{}
 We now investigate which genotypes are associated with AqE values that
 are different than the RC reference level.
 
@@ -842,7 +845,7 @@ reference level.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-18}{}
+\protect\hypertarget{section-19}{}
 \small
 
 \begin{Shaded}
@@ -873,7 +876,7 @@ reference level.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-19}{}
+\protect\hypertarget{section-20}{}
 \tiny
 
 \begin{Shaded}
