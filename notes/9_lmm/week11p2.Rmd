@@ -612,9 +612,9 @@ sumary(mmod, digits=3)
 
 We now analyze this summary table. Lets start with the fixed effects. We see that: 
 
-- income increases about 10% for each additional year of education. We see that age does not appear to be significant. 
-- For males, the reference level in this example, income increases about 7.2% a year, while for women, it increases about 7.2% + 1.3% = 8.5% a year. 
-- We see that, for this data, the incomes of women are exp(-0.575) = 0.563 times higher (far lower!). 
+- income increases about 10% (exp(0.104) $\approx$ 0.104) for each additional year of education. We see that age does not appear to be significant. 
+- For females, the reference level in this example, income increases about 8.5% a year, while for men, it increases about 8.5% - 2.6% = 5.9% a year. 
+- We see that, for this data, the incomes of men are exp(1.150) = 3.16 times higher (far higher!). 
 
 
 ##

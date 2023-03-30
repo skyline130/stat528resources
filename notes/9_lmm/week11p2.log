@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  30 MAR 2023 08:57
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  30 MAR 2023 15:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1299,11 +1299,11 @@ Overfull \hbox (14.64159pt too wide) detected at line 23
 
 (./week11p2.aux) ) 
 Here is how much of TeX's memory you used:
- 25718 strings out of 478268
- 494368 string characters out of 5846347
+ 25716 strings out of 478268
+ 494344 string characters out of 5846347
  798843 words of memory out of 5000000
  43092 multiletter control sequences out of 15000+600000
- 536159 words of font info for 129 fonts, out of 8000000 for 9000
+ 536058 words of font info for 128 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  128i,12n,122p,1005b,452s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.
@@ -1325,7 +1325,7 @@ sy8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmtko10.pfb><
 /texlive/2022/texmf-dist/fonts/type1/public/lm/lmtt8.pfb></usr/local/texlive/20
 22/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texliv
 e/2022/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on week11p2.pdf (40 pages, 330610 bytes).
+Output written on week11p2.pdf (40 pages, 331048 bytes).
 PDF statistics:
  424 PDF objects out of 1000 (max. 8388607)
  324 compressed objects within 4 object streams
