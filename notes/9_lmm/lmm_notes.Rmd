@@ -795,9 +795,9 @@ $\Lambda_i$ & $q_i \times q_i$ & Term-wise relative covariance factor \\
 
 The fixed-effects terms of a mixed-model formula are parsed to produce the fixed-effects model matrix, $X$, in the same way that the R \texttt{lm} function generates model matrices. 
 
-However, a mixed-model formula incorporates $k \geq 1$ random-effects terms as well. These $k$ terms are used to produce the random-effects model matrix $Z$, and the structure of the relative covariance factor $\Lambda_\theta$, which are matrices that typically have a sparse structure. 
+However, a mixed-model formula incorporates $k \geq 1$ random-effects terms $(r|f)$ as well. These $k$ terms are used to produce the random-effects model matrix $Z$, and the structure of the relative covariance factor $\Lambda_\theta$, which are matrices that typically have a sparse structure. 
 
-We now describe how one might construct these matrices from the random-effects terms, considering first a single term $(r|f)$ and then generalizing to multiple terms. The above tables summarize the matrices and vectors that determine the structure of $Z$ and $\Lambda_\theta$. 
+We now describe how one might construct these matrices from the random-effects terms, considering first a single term (written as $(r|f)$ in a formula for a linear mixed model) and then generalizing to multiple terms. The above tables summarize the matrices and vectors that determine the structure of $Z$ and $\Lambda_\theta$. 
 
 The expression $r$ in $(r|f)$ is a linear model formula that evaluates to an R model matrix $X_i$ of size $n \times p_i$, called the raw random-effects model matrix for term $i$. A term is said to be a \emph{scalar} random-effects term when $p_i = 1$, otherwise it is \emph{vector-valued}. For a simple, scalar random-effects term of the form $(1 | f)$, $X_i$ is the $n \times 1$ matrix of ones, which implies a random intercept model. 
 
@@ -813,7 +813,7 @@ library(Matrix)
 
 When $k > 1$ we order the random-effects terms so that $l_1 \geq l_2 \geq \cdots \geq l_k$; in general, this ordering reduces "fill-in" (i.e., the proportion of elements that are zero in the lower triangle of $\Lambda_\theta^TZ^TZ\Lambda_\theta + I$ but not in the lower triangle of its left [Cholesky factor](https://en.wikipedia.org/wiki/Cholesky_decomposition) $L_\theta$). This reduction in fill-in provides more efficient matrix operations within the penalized least squares algorithm described below.
 
-\textbf{Examples}: The PSID example above considered $k=1$ term \texttt{(cyear|person)} which corresponded to a random intercept and a random slope for an individual's income over time. In this example $X_i, i=k=1$, corresponds to a model matrix consisting of an intercept and a column for years centered around 1978, the median value, and $J_i$ provides indexes for each individual in the study. The Bliss (1967) example above concerning consistency of measurements considered $k=3$ terms \texttt{(1|Lab)},\texttt{(1|Lab:Technician)}, and \texttt{(1|Lab:Technician:Sample)}. Here, $X_i, i=1,2,3,$ correspond to intercept vectors and the $J_i$ matrices consider separate grouping factors which reflect the nested random effects.
+\textbf{Examples}: The PSID example above considered $k=1$ term \texttt{(cyear|person)} which corresponded to a random intercept and a random slope for an individual's income over time. In this example $X_i, i=k=1$, with $p_i  = 2$ corresponding to a model matrix consisting of an intercept and a column for years centered around 1978, the median value, and $J_i$ provides indexes for each individual in the study. The Bliss (1967) example above concerning consistency of measurements considered $k=3$ terms \texttt{(1|Lab)},\texttt{(1|Lab:Technician)}, and \texttt{(1|Lab:Technician:Sample)}. Here, $X_i, i=1,2,3,$ with $p_i = 1, i = 1,2,3$, corresponding to intercept vectors and the $J_i$ matrices consider separate grouping factors which reflect the nested random effects.
 
 
 
@@ -919,7 +919,7 @@ $$
     \end{array}\right]
   \Big\|^2.
 $$
-This pseudo-data approach shows that the PLS problem may also be thought of as a standard least squares problem for an extended response vector, which implies that the minimizing value $(\mu_{U|Y=\yobs}^T \; \hat\beta_\theta^T)^T$ satisfies the normal equations,
+This pseudo-data approach shows that the PLS problem may also be thought of as a standard least squares problem for an extended response vector, which implies that the minimizing value $(\mu_{U|Y=\yobs}^T, \; \hat\beta_\theta^T)^T$ satisfies the normal equations,
 $$
   \left[\begin{array}{c}
     \Lambda_\theta^TZ^T\yobs \\
@@ -959,7 +959,7 @@ $$
 
 ## Probability densities
 
-The residual sums-of-squares discussed in the previous section can be used to express various probability densities, which are required for maximum likelihood estimation of the LMM,
+The residual sums-of-squares discussed in the previous section can be used to express various probability densities, which are required for maximum likelihood estimation,
 \begin{align*}
   f_{Y|U}(\yobs|u) &= \frac{1}{(2\pi\sigma^2)^{n/2}}\exp\left(-\frac{\rho^2(\theta,\beta,u)}{2\sigma^2}\right), \\
   f_{U}(u) &= \frac{1}{(2\pi\sigma^2)^{q/2}}\exp\left(-\frac{\|u\|^2}{2\sigma^2}\right), \\  

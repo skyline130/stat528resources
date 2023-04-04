@@ -7,7 +7,7 @@ See the Syllabus for more details. See the notes directory for course notes.
 # News
 
  - LMM notes posted.
- - Homework is posted and it is due on April 7th at 11:59 PM.
+ - Homework 5 is posted and it is due on April 7th at 11:59 PM.
 
 
 ## Good Habits
