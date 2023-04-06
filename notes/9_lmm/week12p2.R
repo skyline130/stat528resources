@@ -24,9 +24,9 @@ y <- unlist(lapply(1:n , function(i){
 
 
 
-#########################################
-## initial values and hypperparameters
-#########################################
+########################################
+## initial values and hyperparameters
+########################################
 
 ## initial values
 mu <- 0
