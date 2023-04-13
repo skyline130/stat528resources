@@ -577,7 +577,7 @@ set.seed(13)
 clust <- makeCluster(8)
 system.time(m1 <- glmm(seizures ~ offset(log(timeadj)) + 
   expind + treat + I(expind*treat), random = list(~0+idF), 
-  family.glmm = poisson.glmm, m = 5e4, 
+  family.glmm = poisson.glmm, m = 7e4, 
   varcomps.names = c("idF"), cluster = clust, data=epilo))
 ```
 
@@ -725,7 +725,7 @@ then we see that the iterative procedure in \eqref{eq:betaopt} is equivalent to 
 
 At a given iteration $j$ the correlation parameters $\alpha$ and scale parameter $\phi$ can be estimated from the current Pearson residuals defined by 
 $$
-  r_{it} = \frac{y_{it} - \mu_{it}(\hat\beta_j)}{\sqrt{\phi a(\mu_{it}(\hat\beta_j))}}
+  r_{it} = \frac{y_{it} - \mu_{it}(\hat\beta_j)}{\sqrt{ a(\mu_{it}(\hat\beta_j))}}
 $$
 where $i = 1,\ldots,N$ and $t = 1,\ldots,n_i$. We can estimate 
 $$
