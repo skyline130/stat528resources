@@ -473,7 +473,7 @@ modglm <- glm(seizures ~offset(log(timeadj)) + expind + treat +
 summary(modglm)
 ```
 
-The interaction term is the primary parameter of interest. All the subjects were untreated in the baseline, even the ones who were subsequently treated. This means that the main effect for treatment does properly measure the response to treatment because it includes the baseline period.
+The interaction term is the primary parameter of interest. All the subjects were untreated in the baseline, even the ones who were subsequently treated. This means that the main effect for treatment does not properly measure the response to treatment because it includes the baseline period.
 
 As we have observed already, we suspect the response may have been different during the baseline time and the active period of the experiment. The interaction term represents the effect of the treatment during the baseline period after adjustment. In the output above we see that this interaction seems highly significant and negative (which is good since we want to reduce seizures).
 

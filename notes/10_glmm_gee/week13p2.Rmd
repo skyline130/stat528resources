@@ -1,0 +1,373 @@
+---
+title: "STAT 528 - Advanced Regression Analysis II"
+author: "GLMM and GEE"
+institute: |
+  | Daniel J. Eck
+  | Department of Statistics
+  | University of Illinois
+date: ""
+output: 
+    beamer_presentation:
+        keep_tex: true
+        fig_width: 11
+        fig_height: 7.5
+        includes:
+urlcolor: blue
+header-includes:
+- \usepackage{graphicx}
+- \usepackage{bm}
+- \definecolor{foreground}{RGB}{255,255,255}
+- \definecolor{background}{RGB}{34,28,54}
+- \definecolor{title}{RGB}{105,165,255}
+- \definecolor{gray}{RGB}{175,175,175}
+- \definecolor{lightgray}{RGB}{225,225,225}
+- \definecolor{subtitle}{RGB}{232,234,255}
+- \definecolor{hilight}{RGB}{112,224,255}
+- \definecolor{vhilight}{RGB}{255,111,207}
+- \setbeamertemplate{footline}[page number]
+---
+
+\newcommand{\R}{\mathbb{R}}
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy.opts=list(width.cutoff=40))
+library(ggplot2)
+
+mycols     = c("chartreuse3", "orangered", "deepskyblue3", "darkorchid1", "yellow")
+dark_theme = theme(plot.background   = element_blank(), 
+                   panel.background  = element_blank(),
+                   #legend.background = element_blank(), legend.key = element_blank(),
+                   axis.title.x      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(10,0,0,0)),
+                   axis.title.y      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(0,20,0,0)),
+                   axis.text         = element_text(size=18, color = "grey80"), 
+                   text              = element_text(size=20),
+                   axis.title        = element_text(size = 26),
+                   legend.title      = element_text(size = 26, colour = "grey80"),
+                   panel.border      = element_blank(),
+                   panel.grid.major  = element_line(colour = "grey50"), 
+                   panel.grid.minor  = element_line(colour = "grey30"))
+```
+
+
+## Learning Objectives Today
+
+- GLMM examples
+- GEE theory
+- GEE examples
+
+
+
+##
+
+We load in necessary packages.
+
+\vspace{12pt}
+```{r, message = FALSE}
+library(faraway)
+library(tidyverse)
+library(ggplot2)
+library(MASS)
+library(lme4)
+library(INLA)
+library(glmm)
+library(parallel)
+```
+
+
+## 
+
+In this example, we have data from a clinical trial of 59 epileptics. 
+
+For a baseline, patients were observed for 8 weeks and the number of seizures recorded. The patients were then randomized to treatment by the drug Progabide (31 patients) or to the placebo group (28 patients). 
+
+They were observed for four 2-week periods and the number of seizures recorded. We are interested in determining whether Progabide reduces the rate of seizures.
+
+We first perform some data manipulations and then look at the first few observations:
+
+\vspace{12pt}
+\tiny
+```{r}
+data(epilepsy, package="faraway")
+epilepsy$period <- rep(0:4, 59)
+epilepsy$drug <- factor(c("placebo","treatment")[epilepsy$treat+1])
+epilepsy$phase <- factor(c("baseline","experiment")[epilepsy$expind +1])
+epilepsy %>% filter(id < 2.5) %>% head(3)
+```
+
+
+## 
+
+The variables are \texttt{expind} variable indicates the baseline phase by 0 and the treatment phase by 1. The length of these time phases is recorded in the \texttt{timeadj} variable. 
+
+Three new convenience variables are created: \texttt{period}, denoting the 2- or 8- week periods, \texttt{drug} recording the type of treatment in nonnumeric form and \texttt{phase} indicating the phase of the experiment.
+
+We now compute the mean number of seizures per week broken down by the treatment and baseline vs. experimental period.
+
+
+\vspace{12pt}
+\tiny
+```{r, message = FALSE, warning = FALSE}
+epilepsy %>% 
+  group_by(drug, phase) %>% 
+  summarise(rate=mean(seizures/timeadj)) %>%
+xtabs(formula=rate ~ phase + drug)
+```
+
+
+##
+
+We see that the rate of seizures in the treatment group actually increases during the period in which the drug was taken. The rate of seizures increases even more in the placebo group. 
+
+Perhaps some other factor is causing the rate of seizures to increase during the treatment period and the drug is actually having a beneficial effect. 
+
+Now we make some plots to show the difference between the treatment and the control. The first plot shows the difference between the two groups during the experimental period only:
+
+## 
+
+```{r, echo = FALSE, warning=FALSE}
+ggplot(epilepsy, aes(x=period, y=seizures, linetype=drug, group=id)) + 
+  geom_line() + 
+  xlim(1,4) + 
+  scale_y_sqrt(breaks=(0:10)^2) + 
+  theme(legend.position = "top", legend.direction = "horizontal") + 
+  theme_minimal()
+```
+
+
+##
+
+We now compare the average seizure rate to the baseline for the two groups. The square-root transform is used to stabilize the variance; this is often used with count data.
+
+\vspace{12pt}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+ratesum <- epilepsy %>%
+  group_by(id, phase, drug) %>%
+  summarise(rate=mean(seizures/timeadj))
+comsum <- spread(ratesum, phase, rate)
+ggplot(comsum, aes(x=baseline, y=experiment, shape=drug)) + 
+  geom_point() + 
+  scale_x_sqrt() + 
+  scale_y_sqrt() + 
+  geom_abline(intercept=0, slope=1) + 
+  theme(legend.position = "top", legend.direction = "horizontal") + 
+  theme_minimal()
+```
+
+
+## 
+
+A treatment effect, if one exists, is not readily apparent. Now we fit GLMM models. Patient #49 is unusual because of the high rate of seizures observed. We exclude it:
+
+\vspace{12pt}
+\small
+```{r}
+epilo <- filter(epilepsy, id != 49)
+```
+
+\vspace{12pt}
+\normalsize
+Excluding a case should not be taken lightly. For projects where the analyst works with producers of the data, it will be possible to discuss substantive reasons for excluding cases. 
+
+It is worth starting with a GLM even though the model is not correct due to the grouping of the observations. We must use an offset to allow for the difference in lengths in the baseline and treatment periods.
+
+
+##
+
+\tiny
+```{r}
+modglm <- glm(seizures ~offset(log(timeadj)) + expind + treat + 
+  I(expind*treat), family=poisson, data=epilo)
+summary(modglm)
+```
+
+
+##
+
+The interaction term is the primary parameter of interest. All the subjects were untreated in the baseline. This means that the main effect for treatment does not properly measure the response to treatment because it includes the baseline period.
+
+As we have observed already, we suspect the response may have been different during the baseline time and the active period of the experiment. The interaction term represents the effect of the treatment during the baseline period after adjustment. In the output above we see that this interaction seems highly significant and negative (which is good since we want to reduce seizures).
+
+But this inference is suspect because we have made no allowance for the correlated responses within individuals. The p-value is far smaller than it should be. 
+<!-- We might also consider allowing for overdispersion in the response by using a quasi-Poisson model. However, this is a different consideration to the correlated response. -->
+
+
+## PQL methods
+
+\tiny
+```{r, message = FALSE, warning = FALSE}
+modpql <- glmmPQL(seizures ~offset(log(timeadj)) + expind + treat + 
+  I(expind*treat), random = ~1|id, family=poisson, data=epilo)
+summary(modpql)
+```
+
+
+## 
+
+The parameter estimates from the PQL fit are comparable to the GLM fit. However, the standard errors are larger in the PQL fit as might be expected given that the correlated responses have been allowed for. 
+
+As with the binary response example, we still have some doubts about the accuracy of the inference. This is a particular concern when some count responses are small.
+
+
+
+## Numerical integration
+
+Numerical quadrature can also be used. We use Gauss-Hermite in preference to Laplace as the model random effect structure is simple and so the computation is fast even though we have used the most expensive \texttt{nAGQ=25} setting.
+\vspace{12pt}
+\tiny
+```{r}
+modgh <- glmer(seizures ~offset(log(timeadj)) + expind + treat + 
+  I(expind*treat)+ (1|id), nAGQ=25, family=poisson, data=epilo)
+```
+
+
+##
+
+\tiny
+```{r}
+summary(modgh)
+```
+
+
+## 
+
+We see that the interaction effect is significant. Notice that the estimate of this effect has been quite consistent over all the estimation methods so we draw some confidence from this. We have
+
+\vspace{12pt}
+```{r}
+exp(-0.302)
+```
+
+\vspace{12pt}
+So the drug is estimated to reduce the rate of seizures by about 26\%. However, the subject SD is more than twice the drug effect of -0.3 at 0.718. This indicates that the expected improvement in the drug is substantially less than the variation between individuals.
+
+
+##
+
+Interpretation of the main effect terms is problematic in the presence of an interaction. For example, the treatment effect reported here represents the predicted difference in the response during the baseline period (i.e., \texttt{expind=0}). 
+
+Since none of the subjects are treated during the baseline period, we are reassured to see that this effect is not significant. 
+
+However, this does illustrate the danger in naively presuming that this is the treatment effect.
+
+
+## Bayesian methods
+
+We can also take a Bayesian approach using \texttt{INLA}.
+
+\vspace{12pt}
+\tiny
+```{r}
+formula <- seizures ~ offset(log(timeadj)) + expind + treat + 
+  I(expind*treat) + f(id,model="iid")
+result <- inla(formula, family="poisson", data = epilo)
+```
+
+\vspace{12pt}
+\normalsize
+We obtain a summary of the posteriors as: 
+
+\vspace{12pt}
+\tiny
+```{r}
+sigmaalpha <- inla.tmarginal(function(x) 1/sqrt(x), 
+  result$marginals.hyperpar$"Precision for id")
+restab <- sapply(result$marginals.fixed, 
+  function(x) inla.zmarginal(x, silent=TRUE))
+restab <- cbind(restab, 
+  inla.zmarginal(sigmaalpha, silent=TRUE))
+colnames(restab) = c("mu","expind","treat",
+  "interaction","alpha")
+data.frame(restab)
+```
+
+\vspace{12pt}
+\normalsize
+We see that the results are similar to those obtained previously. We observe that the 95\% credible interval for the interaction is (-0.44,-0.17) so we are sure that this parameter differs from zero. We compute similar plots as we did in the binary response example.
+
+
+##
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+x <- seq(-0.75,0.75,length.out = 100)
+rden <- sapply(result$marginals.fixed,function(y) inla.dmarginal(x, y))[,-1]
+ddf <- data.frame(domain=rep(x,3), 
+  density=as.vector(rden), 
+  treat=gl(3,100, labels=c("expind","treat","interaction")))
+ggplot(ddf, aes(x=domain, y=density, linetype=treat)) + 
+  geom_line() + 
+  theme_minimal()
+```
+
+
+## Monte Carlo likelihood approximation
+
+We can use the \texttt{glmm} package to implement the MCLA approach to fitting GLMM models with Poisson responses. 
+
+\vspace{12pt}
+\tiny
+```{r eplioglmm, cache = TRUE, message = FALSE, warning = FALSE}
+epilo$idF <- as.factor(epilo$id)
+epilo$seizures <- as.integer(epilo$seizures)
+set.seed(13)
+clust <- makeCluster(8)
+system.time(m1 <- glmm(seizures ~ 
+  expind + treat + I(expind*treat), random = list(~0+idF), 
+  family.glmm = poisson.glmm, m = 7e4, 
+  varcomps.names = c("idF"), cluster = clust, data=epilo))
+```
+
+
+##
+
+We obtain summary information. However, the fit is buggy. The Monte Carlo standard error is not returned and the summary table estimates are not depicted.
+
+\vspace{12pt}
+\tiny
+```{r, cache = TRUE, warning = FALSE, message = FALSE, error = TRUE}
+summary(m1)
+```
+
+
+##
+
+\tiny
+```{r, cache = TRUE, warning = FALSE, message = FALSE, error = TRUE}
+# Monte Carlo standard errors
+mcse_glmm <- mcse(m1)
+mcse_glmm
+```
+
+
+
+##
+
+That being said, we can obtain estimates of fixed effects and their standard errors from objects in the \texttt{glmm} object.
+
+\vspace{12pt}
+\tiny
+```{r, cache = TRUE, warning = FALSE, message = FALSE}
+# standard errors
+se_glmm <- se(m1)
+
+# table for fixed effects
+tab <- cbind(m1$beta, se_glmm[-5], m1$beta/se_glmm[-5])
+colnames(tab) <- c("Estimate", "Std. Error", "z value")
+round(tab, 3)
+```
+
+
+##
+
+We can also obtain estimates of random effect parameters and their standard errors from objects in the \texttt{glmm} object.
+
+\vspace{12pt}
+\tiny
+```{r}
+c(m1$nu, se_glmm[5])
+```
+
+\vspace{12pt}
+\normalsize
+Parameter estimates are similar to the other fitting techniques which instills confidence. 
