@@ -243,14 +243,28 @@ observations:
 
 \begin{frame}[fragile]{}
 \protect\hypertarget{section-2}{}
-The variables are \texttt{expind} variable indicates the baseline phase
-by 0 and the treatment phase by 1. The length of these time phases is
-recorded in the \texttt{timeadj} variable.
+The variables are:
 
-Three new convenience variables are created: \texttt{period}, denoting
-the 2- or 8- week periods, \texttt{drug} recording the type of treatment
-in nonnumeric form and \texttt{phase} indicating the phase of the
-experiment.
+\begin{itemize}
+\tightlist
+\item
+  \texttt{expind} indicates the baseline phase by 0 and the treatment
+  phase by 1.\\
+\item
+  \texttt{timeadj} indicates the time phases.
+\end{itemize}
+
+Three new convenience variables are created:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{period} denotes the separate 2- or 8- week periods
+\item
+  \texttt{drug} records the type of treatment in nonnumeric form
+\item
+  \texttt{phase} indicates the phase of the experiment
+\end{itemize}
 
 We now compute the mean number of seizures per week broken down by the
 treatment and baseline vs.~experimental period.
@@ -330,7 +344,11 @@ substantive reasons for excluding cases.
 
 It is worth starting with a GLM even though the model is not correct due
 to the grouping of the observations. We must use an offset to allow for
-the difference in lengths in the baseline and treatment periods.
+the difference in lengths in the baseline and treatment periods:
+
+\[
+\log\frac{\mu_i}{t_i} = x_i^T\beta
+\]
 \end{frame}
 
 \begin{frame}[fragile]{}
@@ -627,7 +645,7 @@ fitting GLMM models with Poisson responses.
 \NormalTok{epilo}\SpecialCharTok{$}\NormalTok{seizures }\OtherTok{\textless{}{-}} \FunctionTok{as.integer}\NormalTok{(epilo}\SpecialCharTok{$}\NormalTok{seizures)}
 \FunctionTok{set.seed}\NormalTok{(}\DecValTok{13}\NormalTok{)}
 \NormalTok{clust }\OtherTok{\textless{}{-}} \FunctionTok{makeCluster}\NormalTok{(}\DecValTok{8}\NormalTok{)}
-\FunctionTok{system.time}\NormalTok{(m1 }\OtherTok{\textless{}{-}} \FunctionTok{glmm}\NormalTok{(seizures }\SpecialCharTok{\textasciitilde{}} 
+\FunctionTok{system.time}\NormalTok{(m1 }\OtherTok{\textless{}{-}} \FunctionTok{glmm}\NormalTok{(seizures }\SpecialCharTok{\textasciitilde{}} \FunctionTok{offset}\NormalTok{(}\FunctionTok{log}\NormalTok{(timeadj)) }\SpecialCharTok{+} 
 \NormalTok{  expind }\SpecialCharTok{+}\NormalTok{ treat }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(expind}\SpecialCharTok{*}\NormalTok{treat), }\AttributeTok{random =} \FunctionTok{list}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\DecValTok{0}\SpecialCharTok{+}\NormalTok{idF), }
   \AttributeTok{family.glmm =}\NormalTok{ poisson.glmm, }\AttributeTok{m =} \FloatTok{7e4}\NormalTok{, }
   \AttributeTok{varcomps.names =} \FunctionTok{c}\NormalTok{(}\StringTok{"idF"}\NormalTok{), }\AttributeTok{cluster =}\NormalTok{ clust, }\AttributeTok{data=}\NormalTok{epilo))}
@@ -636,7 +654,7 @@ fitting GLMM models with Poisson responses.
 
 \begin{verbatim}
 ##    user  system elapsed 
-##   6.186   0.632  68.164
+##   6.095   0.653  66.986
 \end{verbatim}
 \end{frame}
 
@@ -651,6 +669,7 @@ not depicted.
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\DocumentationTok{\#\# takes awhile to load}
 \FunctionTok{summary}\NormalTok{(m1)}
 \end{Highlighting}
 \end{Shaded}
@@ -658,9 +677,9 @@ not depicted.
 \begin{verbatim}
 ## 
 ## Call:
-## glmm(fixed = seizures ~ expind + treat + I(expind * treat), random = list(~0 + 
-##     idF), varcomps.names = c("idF"), data = epilo, family.glmm = poisson.glmm, 
-##     m = 70000, cluster = clust)
+## glmm(fixed = seizures ~ offset(log(timeadj)) + expind + treat + 
+##     I(expind * treat), random = list(~0 + idF), varcomps.names = c("idF"), 
+##     data = epilo, family.glmm = poisson.glmm, m = 70000, cluster = clust)
 ## 
 ## 
 ## Link is: "log"
@@ -754,8 +773,244 @@ standard errors from objects in the \texttt{glmm} object.
 \vspace{12pt}
 \normalsize
 
-Parameter estimates are similar to the other fitting techniques which
-instills confidence.
+Important parameter estimates are similar to the other fitting
+techniques which instills some confidence.
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-18}{}
+\begin{center}
+\Large Discuss GEE
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-19}{}
+We will use the \texttt{geepack} package to fit GEEs. We will reanalyze
+the stability dataset using generalized estimating equations.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(geepack)}
+\FunctionTok{data}\NormalTok{(ctsib)}
+\NormalTok{ctsib}\SpecialCharTok{$}\NormalTok{stable }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(ctsib}\SpecialCharTok{$}\NormalTok{CTSIB}\SpecialCharTok{==}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{)}
+\NormalTok{ctsib }\OtherTok{\textless{}{-}}\NormalTok{ ctsib }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Age =} \FunctionTok{scale}\NormalTok{(Age), }\AttributeTok{Height =} \FunctionTok{scale}\NormalTok{(Height), }\AttributeTok{Weight =} \FunctionTok{scale}\NormalTok{(Weight))}
+\NormalTok{modgeep }\OtherTok{\textless{}{-}} \FunctionTok{geeglm}\NormalTok{(stable }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sex }\SpecialCharTok{+}\NormalTok{ Age }\SpecialCharTok{+}\NormalTok{ Height }\SpecialCharTok{+}\NormalTok{ Weight }\SpecialCharTok{+}\NormalTok{ Surface }\SpecialCharTok{+}\NormalTok{ Vision, }
+                  \AttributeTok{id=}\NormalTok{Subject, }\AttributeTok{corstr=}\StringTok{"exchangeable"}\NormalTok{, }\AttributeTok{scale.fix=}\ConstantTok{TRUE}\NormalTok{, }
+                  \AttributeTok{data=}\NormalTok{ctsib, }\AttributeTok{family=}\NormalTok{binomial)}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-20}{}
+We have specified the same fixed effects as in the corresponding GLMM
+earlier. Only simple groups are allowed while nested grouping variables
+cannot be accommodated easily in this function.
+
+We are required to choose the correlation structure within each group.
+If we choose no correlation, then the problem reduces to a standard GLM.
+For this data,
+\href{https://norcalbiostat.github.io/AppliedStatistics_notes/specifying-correlation-structures.html}{compound
+symmetry} is selected as a covariance structure, since it seems
+reasonable that any pair of observations between subjects has the same
+correlation (ignoring a learning effect).
+
+Note that compound symmetry is referred to as exchangeable correlation
+in the \texttt{corstr} argument of the \texttt{geeglm} fitting function.
+
+Also note that we have chosen to fix \(\phi\) at the default value of 1
+to ensure that our analysis is comparable with the GLMM fit. Otherwise,
+there would not be a strong reason to fix this.
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-21}{}
+Here is the summary information:
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(modgeep)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## geeglm(formula = stable ~ Sex + Age + Height + Weight + Surface + 
+##     Vision, family = binomial, data = ctsib, id = Subject, corstr = "exchangeable", 
+##     scale.fix = TRUE)
+## 
+##  Coefficients:
+##             Estimate  Std.err   Wald Pr(>|W|)    
+## (Intercept) -6.16128  1.08020 32.534 1.17e-08 ***
+## Sexmale      1.64487  0.90347  3.315   0.0687 .  
+## Age         -0.07659  0.30521  0.063   0.8019    
+## Height      -1.06930  0.44398  5.801   0.0160 *  
+## Weight       0.67199  0.52329  1.649   0.1991    
+## Surfacenorm  3.91631  0.56682 47.738 4.87e-12 ***
+## Visiondome   0.35888  0.40403  0.789   0.3744    
+## Visionopen   3.17990  0.46063 47.657 5.08e-12 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Correlation structure = exchangeable 
+## Scale is fixed.
+## 
+##   Link = identity 
+## 
+## Estimated Correlation Parameters:
+##       Estimate Std.err
+## alpha   0.2185 0.04467
+## Number of clusters:   40  Maximum cluster size: 12
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-22}{}
+There is one clear difference with the GLMM output: the estimates for
+the GEE are about half the size of the GLMM \(\beta\).
+
+It is expected that the GEE estimates are smaller because GLMMs model
+the data at the subject or individual level. The correlation between the
+measurements on the individual is generated by the random effect.
+
+Thus the \(\beta\)s for the GLMM represent the effect on an individual.
+A GEE models the data at the population level.
+\href{https://stats.stackexchange.com/questions/17331/what-is-the-difference-between-generalized-estimating-equations-and-glmm}{Here}
+is a good explanation of the difference. The \(\beta\)s for a GEE
+represent the effect of the predictors averaged across all individuals
+with the same predictor values. GEEs do not use random effects but model
+the correlation at the marginal level.
+\href{https://www.jstor.org/stable/25680575?seq=1\#metadata_info_tab_contents}{This
+is a major distinction}.
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-23}{}
+We can see that the estimated correlation between observations on the
+same subject is 0.22 with a standard error of 0.04. This suggests that
+there is correlation between responses within individuals.
+
+The standard errors are constructed using a sandwich estimator mentioned
+above. Further motivation for sandwich estimation is described in
+Section 8.5 of Faraway (2016).
+
+Note that sandwich estimation typically, but not always, leads to
+standard errors larger than those obtained directly from likelihood
+calculations.
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-24}{}
+The testing for vision is not entirely satisfactory since it has three
+levels meaning two tests---one being highly significant and the other
+not at all. If we want a single test for the significance of vision, we
+need to refit the model without vision and make the standard anova-type
+comparison:
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{modgeep2 }\OtherTok{\textless{}{-}} \FunctionTok{geeglm}\NormalTok{(stable }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sex }\SpecialCharTok{+}\NormalTok{ Age }\SpecialCharTok{+}\NormalTok{ Height }\SpecialCharTok{+}\NormalTok{ Weight }\SpecialCharTok{+}\NormalTok{ Surface,}
+  \AttributeTok{id =}\NormalTok{Subject, }\AttributeTok{corstr=}\StringTok{"exchangeable"}\NormalTok{, }\AttributeTok{scale.fix=}\ConstantTok{TRUE}\NormalTok{, }\AttributeTok{data=}\NormalTok{ctsib, }
+  \AttributeTok{family=}\NormalTok{binomial)}
+\FunctionTok{anova}\NormalTok{(modgeep2, modgeep)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of 'Wald statistic' Table
+## 
+## Model 1 stable ~ Sex + Age + Height + Weight + Surface + Vision 
+## Model 2 stable ~ Sex + Age + Height + Weight + Surface
+##   Df   X2 P(>|Chi|)    
+## 1  2 58.4   2.1e-13 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\vspace{12pt}
+\normalsize
+
+As expected, we see that vision is strongly significant.
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-25}{}
+We will now model the epilepsy data using GEEs.
+
+We exclude the 49th case as before (all the same caveats apply).
+
+An autoregressive AR(1) model for the correlation structure seems to be
+the most natural since consecutive measurements will be more correlated
+than measurements separated in time. Note that this does require that
+the clusters be sorted in time order (they are in this case).
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-26}{}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{modgeep }\OtherTok{\textless{}{-}} \FunctionTok{geeglm}\NormalTok{(seizures }\SpecialCharTok{\textasciitilde{}}\FunctionTok{offset}\NormalTok{(}\FunctionTok{log}\NormalTok{(timeadj)) }\SpecialCharTok{+}\NormalTok{ expind }\SpecialCharTok{+}\NormalTok{ treat }\SpecialCharTok{+} 
+  \FunctionTok{I}\NormalTok{(expind}\SpecialCharTok{*}\NormalTok{treat), }\AttributeTok{id=}\NormalTok{id, }\AttributeTok{family=}\NormalTok{poisson, }\AttributeTok{corstr=}\StringTok{"ar1"}\NormalTok{, }\AttributeTok{data=}\NormalTok{epilepsy, }
+  \AttributeTok{subset=}\NormalTok{(id}\SpecialCharTok{!=}\DecValTok{49}\NormalTok{))}
+\FunctionTok{summary}\NormalTok{(modgeep)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## geeglm(formula = seizures ~ offset(log(timeadj)) + expind + treat + 
+##     I(expind * treat), family = poisson, data = epilepsy, subset = (id != 
+##     49), id = id, corstr = "ar1")
+## 
+##  Coefficients:
+##                   Estimate Std.err  Wald Pr(>|W|)    
+## (Intercept)         1.3138  0.1616 66.10  4.4e-16 ***
+## expind              0.1509  0.1108  1.86    0.173    
+## treat              -0.0797  0.1983  0.16    0.688    
+## I(expind * treat)  -0.3987  0.1745  5.22    0.022 *  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Correlation structure = ar1 
+## Estimated Scale Parameters:
+## 
+##             Estimate Std.err
+## (Intercept)     10.6    2.35
+##   Link = identity 
+## 
+## Estimated Correlation Parameters:
+##       Estimate Std.err
+## alpha    0.783  0.0519
+## Number of clusters:   58  Maximum cluster size: 5
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-27}{}
+The drug effects, as measured by the interaction term, has a weakly
+significant effect.
+
+The dispersion parameter is estimated as 10.6. This means that if we did
+not account for the overdispersion, the standard errors would be much
+larger.
+
+The AR(1) correlation structure can be seen in the working correlation
+where adjacent measurements have 0.78 correlation.
 \end{frame}
 
 \end{document}

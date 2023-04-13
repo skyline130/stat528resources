@@ -574,8 +574,8 @@ We can use the \texttt{glmm} package to implement the MCLA approach to fitting G
 epilo$idF <- as.factor(epilo$id)
 epilo$seizures <- as.integer(epilo$seizures)
 set.seed(13)
-clust <- makeCluster(14)
-system.time(m1 <- glmm(seizures ~ 
+clust <- makeCluster(8)
+system.time(m1 <- glmm(seizures ~ offset(log(timeadj)) + 
   expind + treat + I(expind*treat), random = list(~0+idF), 
   family.glmm = poisson.glmm, m = 5e4, 
   varcomps.names = c("idF"), cluster = clust, data=epilo))
@@ -585,7 +585,7 @@ We obtain summary information. However, the fit is buggy. The Monte Carlo standa
 
 
 ```{r, cache = TRUE, warning = FALSE, message = FALSE, error = TRUE}
-# summary table
+# summary table (takes awhile to load)
 summary(m1)
 
 # Monte Carlo standard errors

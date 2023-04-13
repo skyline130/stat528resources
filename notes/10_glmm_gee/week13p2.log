@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  12 APR 2023 22:32
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  13 APR 2023 08:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1089,7 +1089,7 @@ File: week13p2_files/figure-beamer/unnamed-chunk-4-1.pdf Graphic file (type pdf
 )
 <use week13p2_files/figure-beamer/unnamed-chunk-4-1.pdf>
 Package pdftex.def Info: week13p2_files/figure-beamer/unnamed-chunk-4-1.pdf  us
-ed on input line 296.
+ed on input line 310.
 (pdftex.def)             Requested size: 307.27982pt x 209.86894pt.
 [8
 
@@ -1100,10 +1100,10 @@ File: week13p2_files/figure-beamer/unnamed-chunk-5-1.pdf Graphic file (type pdf
 )
 <use week13p2_files/figure-beamer/unnamed-chunk-5-1.pdf>
 Package pdftex.def Info: week13p2_files/figure-beamer/unnamed-chunk-5-1.pdf  us
-ed on input line 307.
+ed on input line 321.
 (pdftex.def)             Requested size: 307.27982pt x 209.07697pt.
 
-Overfull \vbox (8.53036pt too high) detected at line 307
+Overfull \vbox (8.53036pt too high) detected at line 321
  []
 
 [9
@@ -1156,19 +1156,19 @@ File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <6> not available
 (Font)              Font shape `T1/lmtt/b/n' tried instead on input line 26.
 )
-Overfull \vbox (68.16423pt too high) detected at line 609
+Overfull \vbox (68.16423pt too high) detected at line 627
  []
 
 [19
 
 ]
-<week13p2_files/figure-beamer/unnamed-chunk-14-1.pdf, id=154, 778.91pt x 529.98
+<week13p2_files/figure-beamer/unnamed-chunk-14-1.pdf, id=158, 778.91pt x 529.98
 pt>
 File: week13p2_files/figure-beamer/unnamed-chunk-14-1.pdf Graphic file (type pd
 f)
 <use week13p2_files/figure-beamer/unnamed-chunk-14-1.pdf>
 Package pdftex.def Info: week13p2_files/figure-beamer/unnamed-chunk-14-1.pdf  u
-sed on input line 614.
+sed on input line 632.
 (pdftex.def)             Requested size: 307.27982pt x 209.07697pt.
 [20
 
@@ -1180,7 +1180,12 @@ sed on input line 614.
 ]
 \openout4 = `week13p2.vrb'.
 
-(./week13p2.vrb) [22
+(./week13p2.vrb
+
+LaTeX Font Warning: Font shape `T1/lmtt/bx/it' in size <6> not available
+(Font)              Font shape `T1/lmtt/b/sl' tried instead on input line 12.
+
+) [22
 
 ]
 \openout4 = `week13p2.vrb'.
@@ -1197,6 +1202,38 @@ sed on input line 614.
 
 (./week13p2.vrb) [25
 
+] [26
+
+]
+\openout4 = `week13p2.vrb'.
+
+(./week13p2.vrb) [27
+
+] [28
+
+]
+\openout4 = `week13p2.vrb'.
+
+(./week13p2.vrb) [29
+
+] [30
+
+] [31
+
+]
+\openout4 = `week13p2.vrb'.
+
+(./week13p2.vrb) [32
+
+] [33
+
+]
+\openout4 = `week13p2.vrb'.
+
+(./week13p2.vrb) [34
+
+] [35
+
 ]
 \tf@nav=\write6
 \openout6 = `week13p2.nav'.
@@ -1209,27 +1246,32 @@ sed on input line 614.
 
 (./week13p2.aux) ) 
 Here is how much of TeX's memory you used:
- 25609 strings out of 478268
- 492357 string characters out of 5846347
+ 25688 strings out of 478268
+ 493391 string characters out of 5846347
  802598 words of memory out of 5000000
- 43059 multiletter control sequences out of 15000+600000
- 532717 words of font info for 120 fonts, out of 8000000 for 9000
+ 43099 multiletter control sequences out of 15000+600000
+ 533037 words of font info for 121 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 128i,11n,122p,1005b,442s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,11n,122p,1005b,453s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.
-enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}</usr/loc
-al/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss10.pfb></usr/local/texlive
-/2022/texmf-dist/fonts/type1/public/lm/lmss12.pfb></usr/local/texlive/2022/texm
-f-dist/fonts/type1/public/lm/lmss8.pfb></usr/local/texlive/2022/texmf-dist/font
-s/type1/public/lm/lmtk10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/pu
-blic/lm/lmtt10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lm
-tt8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmtti10.pfb><
-/usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.p
-fb>
-Output written on week13p2.pdf (25 pages, 216193 bytes).
+enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{/usr/loc
+al/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive
+/2022/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}</usr/local/texlive/2022/texmf-di
+st/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2022/texmf-dist/fonts/t
+ype1/public/lm/lmss10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/publi
+c/lm/lmss12.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss8
+.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsso10.pfb></us
+r/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsso8.pfb></usr/local/te
+xlive/2022/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></usr/local/texlive/2022
+/texmf-dist/fonts/type1/public/lm/lmtko10.pfb></usr/local/texlive/2022/texmf-di
+st/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2022/texmf-dist/fonts/t
+ype1/public/lm/lmtt8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public
+/lm/lmtti10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts
+/symbols/msam10.pfb>
+Output written on week13p2.pdf (35 pages, 299109 bytes).
 PDF statistics:
- 257 PDF objects out of 1000 (max. 8388607)
- 196 compressed objects within 2 object streams
- 74 named destinations out of 1000 (max. 500000)
+ 352 PDF objects out of 1000 (max. 8388607)
+ 271 compressed objects within 3 object streams
+ 104 named destinations out of 1000 (max. 500000)
  36922 words of extra memory for PDF output out of 42996 (max. 10000000)
 
