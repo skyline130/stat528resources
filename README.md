@@ -283,23 +283,21 @@ A list of the designated University employees who, as counselors, confidential a
   + Homework 5 due on Friday, April 7th at 11:59 PM
 
 * Week 13 [04/11, 04/13]
-  + GLMM
+  + GLMM/GEE
   + **Reading**: course notes, chapter 13 of Faraway
   
 * Week 14 [04/18, 04/20]
-  + GEE
   + aster models 
-  + **Reading**: course notes, chapter 13 of Faraway, materials cited in aster notes
+  + **Reading**: course notes, materials cited in aster notes
   + Homework 6 due on Friday, April 21st at 11:59 PM
 
 * Week 15 [04/25, 04/27]
-  + aster models
   + multivariate regression and envelope basics
   + **Reading**: course notes
 
 * Week 16 [05/02]
-  + multivariate regression and envelopes  
   + Last day of instruction on 05/02
+  + Final take-home exam assigned
   + Homework 7 due on Wednesday, May 3rd at 11:59 PM
 
 * Final exam due on 05/11 at 11:59 pm.
