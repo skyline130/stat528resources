@@ -161,9 +161,9 @@ $$
 $$
 where $\Sigma$ is the Fisher information matrix corresponding to $l(\beta)$. The \texttt{aster} package \citep{geyer2019package} provides estimates of $\hat\beta$ and $\widehat{\Sigma}$. 
 
-In scientific applications $\mu$, or a function of $\mu$, will be the parameter of interest. In many aster analyses one seeks to estimate expected Darwinian fitness (total number of offspring produced by individuals) as a function of covariates. One may estimate a proxy for expected Darwinian fitness when one does not have this information recorded. The sum of flower head counts $\sum_j H_j$ can be taken as a proxy in the motivating \emph{E. angustifolia} example. In any event, suppose the parameter of interest is given by $g(\beta)$. Then this parameter has an estimator with the following asymptotic distribution
+In scientific applications $\mu$, or a function of $\mu$, will be the parameter of interest. In many aster analyses one seeks to estimate expected Darwinian fitness (total number of offspring produced by individuals) as a function of covariates. One may estimate a proxy for expected Darwinian fitness when one does not have this information recorded. The sum of flower head counts $\sum_j H_j$ can be taken as a proxy in the motivating \emph{E. angustifolia} example. In any event, suppose the parameter of interest is given by $h(\beta)$. Then this parameter has an estimator with the following asymptotic distribution
 $$
-  \sqrt{n}(g(\hat\beta) - g(\beta)) \to N\left(0, \nabla g(\beta)\Sigma^{-1} \{\nabla g(\beta)\}^T \right).
+  \sqrt{n}(h(\hat\beta) - h(\beta)) \to N\left(0, \nabla h(\beta)\Sigma^{-1} \{\nabla h(\beta)\}^T \right).
 $$
 
 
@@ -351,7 +351,7 @@ If we were interested in the effect of population on the different components of
 
 Hypothesis tests using the R function \texttt{anova} are fairly straightforward. Confidence intervals using the R function \texttt{predict} for estimates of expected Darwinian fitness are anything but straightforward. Part of this is bad design. The \texttt{predict} function has some aspects of its user interface that are clumsy and hard to use (Charlie's words, not mine). The R package \texttt{aster2} fixes these issues (and does lots more) but is still incomplete. But the other part of what makes confidence intervals is just the inherent complexity of aster models. Among other issues, aster models have six  different parameterizations, all of which can be of scientific interest in some application, not necessarily in your application, not necessarily all in any one application.
 
-The result of \texttt{predict(aout)} is the maximum likelihood estimate of the saturated model mean value parameter vector $\mu$. If we want to say how bad or good our estimators are, then weneed confidence intervals (or perhaps just standard errors).
+The result of \texttt{predict(aout)} is the maximum likelihood estimate of the saturated model mean value parameter vector $\mu$. If we want to say how bad or good our estimators are, then we need confidence intervals (or perhaps just standard errors).
 
 ```{r}
 pout <- predict(aout, se.fit = TRUE)
@@ -426,7 +426,7 @@ rownames(preds) <- unique(as.character(renewdata$pop))
 colnames(preds) <- unique(as.character(renewdata$varb))
 preds
 ```
-We now obtain estimated expected Dawinian fitness for typical individuals belonging to each population.
+We now obtain estimated expected Darwinian fitness for typical individuals belonging to each population.
 
 ```{r}
 preds_hdct <- preds[ , grepl("hdct", colnames(preds))]
@@ -448,7 +448,7 @@ amat <- array(0, c(npop, nnode, npop))
 dim(amat)
 ```
 
-We want only the means for the $k$-th individual to contribute to $\zeta$.  And we want to add only the head count entries.
+We want only the means for the $k$th individual to contribute to $\zeta$.  And we want to add only the head count entries.
 
 ```{r}
 foo <- grepl("hdct", vars)

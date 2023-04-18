@@ -215,6 +215,9 @@ site.
 
 Darwinian fitness (our best surrogate of Darwinian fitness) is total
 flower head count over the years of data collection.
+
+We are interested in estimated expected Darwinian fitness for the
+different ancestral populations.
 \end{frame}
 
 \begin{frame}{The aster graph for \emph{Echinacea angustifolia}
@@ -1041,11 +1044,430 @@ separate components, then there is hardly any difference in the two
 models.
 \end{frame}
 
+\begin{frame}{Estimating expected Darwinian fitness}
+\protect\hypertarget{estimating-expected-darwinian-fitness}{}
+Hypothesis tests using the R function \texttt{anova} are fairly
+straightforward.
+
+Confidence intervals using the R function \texttt{predict} for estimates
+of expected Darwinian fitness are anything but straightforward.
+
+Among other issues, aster models have six different parameterizations,
+all of which can be of scientific interest in some applications.
+\end{frame}
+
 \begin{frame}{}
 \protect\hypertarget{section-26}{}
 \begin{center}
 \includegraphics[angle=270, width=0.75\textwidth]{transforms.pdf}
 \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-27}{}
+The result of \texttt{predict(aout)} is the maximum likelihood estimate
+of the saturated model mean value parameter vector \(\mu\).
+
+If we want to say how bad or good our estimators are, then we need
+confidence intervals (or perhaps just standard errors).
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pout }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(aout, }\AttributeTok{se.fit =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\vspace{12pt}
+\normalsize
+
+The components of \texttt{predict(aout)} are
+
+\begin{itemize}
+  \item The component \texttt{fit} gives the estimators (the same vector that was returned when predict was invoked with no optional arguments).
+  \item The component \texttt{se.fit} gives the corresponding standard errors.
+  \item The component \texttt{gradient} gives the derivative of the map from regression coefficients to predictions.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-28}{}
+These are asymptotic (large sample size, approximate) estimated standard
+deviations of the components of \(\hat\mu\) derived using the usual
+theory of maximum likelihood estimation.
+
+In any event, suppose the parameter of interest is given by
+\(h(\beta)\). Then this parameter has an estimator with the following
+asymptotic distribution \[
+  \sqrt{n}(h(\hat\beta) - h(\beta)) \to N\left(0, \nabla h(\beta)\Sigma^{-1} \{\nabla h(\beta)\}^T \right).
+\]
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-29}{}
+Below are confidence bounds for approximate 95\% confidence intervals
+(not corrected for simultaneous coverage) for each of the components of
+the response vector.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{low }\OtherTok{\textless{}{-}}\NormalTok{ pout}\SpecialCharTok{$}\NormalTok{fit }\SpecialCharTok{{-}} \FunctionTok{qnorm}\NormalTok{(}\FloatTok{0.975}\NormalTok{) }\SpecialCharTok{*}\NormalTok{ pout}\SpecialCharTok{$}\NormalTok{se.fit}
+\NormalTok{hig }\OtherTok{\textless{}{-}}\NormalTok{ pout}\SpecialCharTok{$}\NormalTok{fit }\SpecialCharTok{+} \FunctionTok{qnorm}\NormalTok{(}\FloatTok{0.975}\NormalTok{) }\SpecialCharTok{*}\NormalTok{ pout}\SpecialCharTok{$}\NormalTok{se.fit}
+\end{Highlighting}
+\end{Shaded}
+
+\vspace{12pt}
+\normalsize
+
+These are of no scientific interest whatsoever. The question of
+scientific interest addressed by confidence intervals was about (best
+surrogate of) fitness of a \emph{typical} individual in each population.
+Thus we only want
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{nlevels}\NormalTok{(redata}\SpecialCharTok{$}\NormalTok{pop)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 7
+\end{verbatim}
+
+\vspace{12pt}
+\normalsize
+
+confidence intervals, one for each population. What do we mean by
+\emph{typical} individuals?
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-30}{}
+Those that are directly comparable. Those that the same in all respects
+except for population.
+
+Thus we have to make up covariate data for hypothetical individuals that
+are comparable like this and get estimated mean values for them.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dat }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{nsloc =} \DecValTok{0}\NormalTok{, }\AttributeTok{ewloc =} \DecValTok{0}\NormalTok{, }\AttributeTok{pop =} \FunctionTok{levels}\NormalTok{(redata}\SpecialCharTok{$}\NormalTok{pop), }
+  \AttributeTok{root =} \DecValTok{1}\NormalTok{, }\AttributeTok{ld02 =} \DecValTok{1}\NormalTok{, }\AttributeTok{ld03 =} \DecValTok{1}\NormalTok{, }\AttributeTok{ld04 =} \DecValTok{1}\NormalTok{, }\AttributeTok{fl02 =} \DecValTok{1}\NormalTok{, }\AttributeTok{fl03 =} \DecValTok{1}\NormalTok{, }
+  \AttributeTok{fl04 =} \DecValTok{1}\NormalTok{, }\AttributeTok{hdct02 =} \DecValTok{1}\NormalTok{, }\AttributeTok{hdct03 =} \DecValTok{1}\NormalTok{, }\AttributeTok{hdct04 =} \DecValTok{1}\NormalTok{)}
+\NormalTok{dat}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   nsloc ewloc     pop root ld02 ld03 ld04 fl02 fl03 fl04 hdct02 hdct03 hdct04
+## 1     0     0      AA    1    1    1    1    1    1    1      1      1      1
+## 2     0     0  Eriley    1    1    1    1    1    1    1      1      1      1
+## 3     0     0      Lf    1    1    1    1    1    1    1      1      1      1
+## 4     0     0 Nessman    1    1    1    1    1    1    1      1      1      1
+## 5     0     0    NWLF    1    1    1    1    1    1    1      1      1      1
+## 6     0     0     SPP    1    1    1    1    1    1    1      1      1      1
+## 7     0     0 Stevens    1    1    1    1    1    1    1      1      1      1
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-31}{}
+The components of the response vector are ignored in prediction so we
+can give them arbitrary values. Somewhat annoyingly, they have to be
+possible values because \texttt{predict.aster.formula} will check.
+
+We now wrangle this new data into a format to be used by
+\texttt{predict.aster}.
+
+\tiny
+\vspace{12pt}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{renewdata }\OtherTok{\textless{}{-}} \FunctionTok{reshape}\NormalTok{(dat, }\AttributeTok{varying =} \FunctionTok{list}\NormalTok{(vars), }
+  \AttributeTok{direction =} \StringTok{"long"}\NormalTok{, }\AttributeTok{timevar =} \StringTok{"varb"}\NormalTok{, }\AttributeTok{times =} \FunctionTok{as.factor}\NormalTok{(vars), }
+  \AttributeTok{v.names =} \StringTok{"resp"}\NormalTok{)}
+\NormalTok{layer }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{(}\StringTok{"[0{-}9]"}\NormalTok{, }\StringTok{""}\NormalTok{, }\FunctionTok{as.character}\NormalTok{(renewdata}\SpecialCharTok{$}\NormalTok{varb))}
+\NormalTok{renewdata }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(renewdata, }\AttributeTok{layer =}\NormalTok{ layer)}
+\NormalTok{fit }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(layer }\SpecialCharTok{==} \StringTok{"hdct"}\NormalTok{)}
+\NormalTok{renewdata }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(renewdata, }\AttributeTok{fit =}\NormalTok{ fit)}
+\FunctionTok{head}\NormalTok{(renewdata)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        nsloc ewloc     pop root varb resp id layer fit
+## 1.ld02     0     0      AA    1 ld02    1  1    ld   0
+## 2.ld02     0     0  Eriley    1 ld02    1  2    ld   0
+## 3.ld02     0     0      Lf    1 ld02    1  3    ld   0
+## 4.ld02     0     0 Nessman    1 ld02    1  4    ld   0
+## 5.ld02     0     0    NWLF    1 ld02    1  5    ld   0
+## 6.ld02     0     0     SPP    1 ld02    1  6    ld   0
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-32}{}
+Now we have predictions for these variables
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{names}\NormalTok{(renewdata)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "nsloc" "ewloc" "pop"   "root"  "varb"  "resp"  "id"    "layer" "fit"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pout }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(aout, }\AttributeTok{newdata =}\NormalTok{ renewdata, }\AttributeTok{varvar =}\NormalTok{ varb, }
+  \AttributeTok{idvar =}\NormalTok{ id, }\AttributeTok{root =}\NormalTok{ root, }\AttributeTok{se.fit =} \ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{sapply}\NormalTok{(pout, length)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      fit   se.fit gradient   modmat 
+##       63       63     1323     1323
+\end{verbatim}
+
+\vspace{12pt}
+\normalsize
+
+Why do we need the arguments \texttt{varvar}, \texttt{idvar}, and
+\texttt{root} when we did not before? More bad design (Charlie Geyer's
+words, not mine).
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-33}{}
+So now we can make 63 not corrected for simultaneous coverage confidence
+intervals, one for each of the 9 nodes of the graph for each of these 7
+hypothetical individuals (one per population). These too are of no
+scientific interest whatsoever. But we are getting closer.
+
+What is of scientific interest is confidence intervals for Darwinian
+fitness for these 7 individuals. Fitness (best surrogate of) in these
+data is the lifetime headcount which is
+
+\begin{center}
+  \texttt{hdct02 + hdct03 + hdct04}
+\end{center}
+
+The effects of other components of fitness is already counted in head
+count. You cannot have nonzero head count if you are dead or if you had
+no flowers, so that is already accounted for.
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-34}{}
+We now obtain estimates of \(\mu\) for each hypothetical individual,
+different rows for different individuals.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nnode }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(vars)}
+\NormalTok{preds }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(pout}\SpecialCharTok{$}\NormalTok{fit, }\AttributeTok{ncol =}\NormalTok{ nnode) }
+\FunctionTok{dim}\NormalTok{(preds)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 7 9
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{rownames}\NormalTok{(preds) }\OtherTok{\textless{}{-}} \FunctionTok{unique}\NormalTok{(}\FunctionTok{as.character}\NormalTok{(renewdata}\SpecialCharTok{$}\NormalTok{pop))}
+\FunctionTok{colnames}\NormalTok{(preds) }\OtherTok{\textless{}{-}} \FunctionTok{unique}\NormalTok{(}\FunctionTok{as.character}\NormalTok{(renewdata}\SpecialCharTok{$}\NormalTok{varb))}
+\NormalTok{preds}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              ld02      ld03      ld04      fl02      fl03      fl04    hdct02
+## AA      0.7833884 0.7521016 0.7284738 0.3228949 0.2560121 0.4560906 0.6215239
+## Eriley  0.6954310 0.6565099 0.6299422 0.2333911 0.1774180 0.3236674 0.4084934
+## Lf      0.7029431 0.6646121 0.6382397 0.2404182 0.1834251 0.3342160 0.4242352
+## Nessman 0.6377067 0.5946209 0.5668688 0.1824325 0.1347627 0.2469403 0.2993480
+## NWLF    0.7288502 0.6926410 0.6670184 0.2654522 0.2050578 0.3716382 0.4816654
+## SPP     0.7936647 0.7633787 0.7401963 0.3345782 0.2665928 0.4729477 0.6513874
+## Stevens 0.7186716 0.6816127 0.6556811 0.2554631 0.1963829 0.3567396 0.4584965
+##            hdct03    hdct04
+## AA      0.4990070 1.2554533
+## Eriley  0.3139651 0.7796097
+## Lf      0.3272954 0.8144317
+## Nessman 0.2233300 0.5418002
+## NWLF    0.3764236 0.9421609
+## SPP     0.5256736 1.3224073
+## Stevens 0.3565129 0.8905197
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-35}{}
+We now obtain estimated expected Darwinian fitness for typical
+individuals belonging to each population.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{preds\_hdct }\OtherTok{\textless{}{-}}\NormalTok{ preds[ , }\FunctionTok{grepl}\NormalTok{(}\StringTok{"hdct"}\NormalTok{, }\FunctionTok{colnames}\NormalTok{(preds))]}
+\FunctionTok{rowSums}\NormalTok{(preds\_hdct)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       AA   Eriley       Lf  Nessman     NWLF      SPP  Stevens 
+## 2.375984 1.502068 1.565962 1.064478 1.800250 2.499468 1.705529
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section-36}{}
+These are the desired estimates of expected fitness, but they do not
+come with standard errors because there is no simple way to get the
+standard errors for sums from the standard errors for the summands (when
+the summands are not independent, which is the case here).
+
+So we have to proceed indirectly. We have to tell
+\texttt{predict.aster.formula} what functions of mean values we want and
+let it figure out the standard errors (which it can do). It only figures
+out for linear functions.
+
+If \(\hat\mu\) is the result of \texttt{predict.aster.formula} without
+the optional argument \texttt{amat}, then when the optional argument
+\texttt{amat} is given it does parameter estimates with standard errors
+for a new parameter \[
+  \hat\zeta = A^T\hat\mu,
+\] where \(A\) is a known matrix (the \texttt{amat} argument).
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-37}{}
+The argument \texttt{amat} is a three dimensional array. The first
+dimension is the number of individuals (in \texttt{newdata} if provided,
+and otherwise in the original data). The second dimension is the number
+of nodes in the graph. The third dimension is the number of parameters
+we want point estimates and standard errors for.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{npop }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(dat) }
+\NormalTok{nnode }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(vars)}
+\NormalTok{amat }\OtherTok{\textless{}{-}} \FunctionTok{array}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FunctionTok{c}\NormalTok{(npop, nnode, npop))}
+\FunctionTok{dim}\NormalTok{(amat)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 7 9 7
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-38}{}
+We want only the means for the \(k\)th individual to contribute to
+\(\zeta\). And we want to add only the head count entries.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{foo }\OtherTok{\textless{}{-}} \FunctionTok{grepl}\NormalTok{(}\StringTok{"hdct"}\NormalTok{, vars)}
+\ControlFlowTok{for}\NormalTok{ (k }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{npop) amat[k, foo, k] }\OtherTok{\textless{}{-}} \DecValTok{1}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-39}{}
+We now obtain estimates of expected Darwinian fitness and its standard
+error using \texttt{predict.aster}.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pout.amat }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(aout, }\AttributeTok{newdata =}\NormalTok{ renewdata, }\AttributeTok{varvar =}\NormalTok{ varb, }
+  \AttributeTok{idvar =}\NormalTok{ id, }\AttributeTok{root =}\NormalTok{ root, }\AttributeTok{se.fit =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{amat =}\NormalTok{ amat)}
+
+\DocumentationTok{\#\# predict.aster}
+\NormalTok{pout.amat}\SpecialCharTok{$}\NormalTok{fit}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2.375984 1.502068 1.565962 1.064478 1.800250 2.499468 1.705529
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# computation by hand}
+\FunctionTok{rowSums}\NormalTok{(preds\_hdct)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       AA   Eriley       Lf  Nessman     NWLF      SPP  Stevens 
+## 2.375984 1.502068 1.565962 1.064478 1.800250 2.499468 1.705529
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-40}{}
+Here are the estimated standard errors corresponding to estimates of
+expected Darwinian fitness for hypothetical typical individuals
+belonging to each population.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{foo }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(pout.amat}\SpecialCharTok{$}\NormalTok{fit, pout.amat}\SpecialCharTok{$}\NormalTok{se.fit)}
+\FunctionTok{rownames}\NormalTok{(foo) }\OtherTok{\textless{}{-}} \FunctionTok{unique}\NormalTok{(}\FunctionTok{as.character}\NormalTok{(renewdata}\SpecialCharTok{$}\NormalTok{pop))}
+\FunctionTok{colnames}\NormalTok{(foo) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"estimates"}\NormalTok{, }\StringTok{"std. err."}\NormalTok{)}
+\FunctionTok{round}\NormalTok{(foo, }\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         estimates std. err.
+## AA          2.376     0.446
+## Eriley      1.502     0.196
+## Lf          1.566     0.249
+## Nessman     1.064     0.309
+## NWLF        1.800     0.182
+## SPP         2.499     0.289
+## Stevens     1.706     0.222
+\end{verbatim}
 \end{frame}
 
 \end{document}

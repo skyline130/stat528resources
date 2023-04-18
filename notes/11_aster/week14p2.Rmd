@@ -78,6 +78,7 @@ Each individual was grown from seed taken from a surviving population in a prair
 
 Darwinian fitness (our best surrogate of Darwinian fitness) is total flower head count over the years of data collection.
 
+We are interested in estimated expected Darwinian fitness for the different ancestral populations.
 
 
 ## The aster graph for \emph{Echinacea angustifolia} ([aster plants](http://echinaceaproject.org/)) 
@@ -526,6 +527,13 @@ The model \texttt{aout.bigger} has different population effects in different *la
 But if we are only interested in overall fitness rather than the separate components, then there is hardly any difference in the two models.
 
 
+## Estimating expected Darwinian fitness
+
+Hypothesis tests using the R function \texttt{anova} are fairly straightforward. 
+
+Confidence intervals using the R function \texttt{predict} for estimates of expected Darwinian fitness are anything but straightforward. 
+
+Among other issues, aster models have six  different parameterizations, all of which can be of scientific interest in some applications.
 
 
 ## 
@@ -534,4 +542,227 @@ But if we are only interested in overall fitness rather than the separate compon
 \includegraphics[angle=270, width=0.75\textwidth]{transforms.pdf}
 \end{center}
 
+
+## 
+
+The result of \texttt{predict(aout)} is the maximum likelihood estimate of the saturated model mean value parameter vector $\mu$. 
+
+If we want to say how bad or good our estimators are, then we need confidence intervals (or perhaps just standard errors).
+
+\vspace{12pt}
+\tiny
+```{r}
+pout <- predict(aout, se.fit = TRUE)
+```
+
+\vspace{12pt}
+\normalsize
+The components of \texttt{predict(aout)} are
+\begin{itemize}
+  \item The component \texttt{fit} gives the estimators (the same vector that was returned when predict was invoked with no optional arguments).
+  \item The component \texttt{se.fit} gives the corresponding standard errors.
+  \item The component \texttt{gradient} gives the derivative of the map from regression coefficients to predictions.
+\end{itemize}
+
+
+##
+
+These are asymptotic (large sample size, approximate) estimated standard deviations of the components of $\hat\mu$ derived using the usual theory of maximum likelihood estimation.
+
+In any event, suppose the parameter of interest is given by $h(\beta)$. Then this parameter has an estimator with the following asymptotic distribution
+$$
+  \sqrt{n}(h(\hat\beta) - h(\beta)) \to N\left(0, \nabla h(\beta)\Sigma^{-1} \{\nabla h(\beta)\}^T \right).
+$$
+
+
+##
+
+Below are confidence bounds for approximate 95% confidence intervals (not corrected for simultaneous coverage) for each of the components of the response vector. 
+
+\vspace{12pt}
+\tiny
+```{r}
+low <- pout$fit - qnorm(0.975) * pout$se.fit
+hig <- pout$fit + qnorm(0.975) * pout$se.fit
+```
+
+\vspace{12pt}
+\normalsize
+These are of no scientific interest whatsoever. The question of scientific interest addressed by confidence intervals was about (best surrogate of) fitness of a *typical* individual in each population.  Thus we only want 
+
+\vspace{12pt}
+\tiny
+```{r}
+nlevels(redata$pop)
+```
+
+\vspace{12pt}
+\normalsize
+confidence intervals, one for each population. What do we mean by *typical* individuals?
+
+
+##
+
+Those that are directly comparable. Those that the same in all respects except for population. 
+
+Thus we have to make up covariate data for hypothetical individuals that are comparable like this and get estimated mean values for them.
+
+\vspace{12pt}
+\tiny
+```{r}
+dat <- data.frame(nsloc = 0, ewloc = 0, pop = levels(redata$pop), 
+  root = 1, ld02 = 1, ld03 = 1, ld04 = 1, fl02 = 1, fl03 = 1, 
+  fl04 = 1, hdct02 = 1, hdct03 = 1, hdct04 = 1)
+dat
+```
+
+
+## 
+
+The components of the response vector are ignored in prediction so we can give them arbitrary values. Somewhat annoyingly, they have to be possible values because \texttt{predict.aster.formula} will check.
+
+We now wrangle this new data into a format to be used by \texttt{predict.aster}.
+
+\tiny
+\vspace{12pt}
+```{r}
+renewdata <- reshape(dat, varying = list(vars), 
+  direction = "long", timevar = "varb", times = as.factor(vars), 
+  v.names = "resp")
+layer <- gsub("[0-9]", "", as.character(renewdata$varb))
+renewdata <- data.frame(renewdata, layer = layer)
+fit <- as.numeric(layer == "hdct")
+renewdata <- data.frame(renewdata, fit = fit)
+head(renewdata)
+```
+
+
+##
+
+Now we have predictions for these variables 
+
+\vspace{12pt}
+\tiny
+```{r}
+names(renewdata)
+pout <- predict(aout, newdata = renewdata, varvar = varb, 
+  idvar = id, root = root, se.fit = TRUE)
+sapply(pout, length)
+```
+
+\vspace{12pt}
+\normalsize
+Why do we need the arguments \texttt{varvar}, \texttt{idvar}, and \texttt{root} when we did not before? More bad design (Charlie Geyer's words, not mine). 
+
+
+##
+
+So now we can make 63 not corrected for simultaneous coverage confidence intervals, one for each of the 9 nodes of the graph for each of these 7 hypothetical individuals (one per population). These too are of no scientific interest whatsoever. But we are getting closer.
+
+What is of scientific interest is confidence intervals for Darwinian fitness for these 7 individuals. Fitness (best surrogate of) in these data is the lifetime headcount which is 
+\begin{center}
+  \texttt{hdct02 + hdct03 + hdct04}
+\end{center}
+
+The effects of other components of fitness is already counted in head count. You cannot have nonzero head count if you are dead or if you had no flowers, so that is already accounted for.
+
+
+## 
+
+We now obtain estimates of $\mu$ for each hypothetical individual, different rows for different individuals.
+
+\vspace{12pt}
+\tiny
+```{r}
+nnode <- length(vars)
+preds <- matrix(pout$fit, ncol = nnode) 
+dim(preds)
+
+rownames(preds) <- unique(as.character(renewdata$pop))
+colnames(preds) <- unique(as.character(renewdata$varb))
+preds
+```
+
+
+##
+
+We now obtain estimated expected Darwinian fitness for typical individuals belonging to each population.
+
+\vspace{12pt}
+\tiny
+```{r}
+preds_hdct <- preds[ , grepl("hdct", colnames(preds))]
+rowSums(preds_hdct)
+```
+
+
+## 
+
+These are the desired estimates of expected fitness, but they do not come with standard errors because there is no simple way to get the standard errors for sums from the standard errors for the summands (when the summands are not independent, which is the case here). 
+
+So we have to proceed indirectly. We have to tell \texttt{predict.aster.formula} what functions of mean values we want and let it figure out the standard errors (which it can do). It only figures out for linear functions.
+
+If $\hat\mu$ is the result of \texttt{predict.aster.formula} without the optional argument \texttt{amat}, then when the optional argument \texttt{amat} is given it does parameter estimates with standard errors for a new parameter
+$$
+  \hat\zeta = A^T\hat\mu,
+$$
+where $A$ is a known matrix (the \texttt{amat} argument). 
+
+
+##
+
+The argument \texttt{amat} is a three dimensional array. The first dimension is the number of individuals (in \texttt{newdata} if provided, and otherwise in the original data). The second dimension is the number of nodes in the graph. The third dimension is the number of parameters we want point estimates and standard errors for.
+
+\vspace{12pt}
+\tiny
+```{r}
+npop <- nrow(dat) 
+nnode <- length(vars)
+amat <- array(0, c(npop, nnode, npop))
+dim(amat)
+```
+
+
+## 
+
+We want only the means for the $k$th individual to contribute to $\zeta$.  And we want to add only the head count entries.
+
+\vspace{12pt}
+\tiny
+```{r}
+foo <- grepl("hdct", vars)
+for (k in 1:npop) amat[k, foo, k] <- 1
+```
+
+
+## 
+
+We now obtain estimates of expected Darwinian fitness and its standard error using \texttt{predict.aster}.
+
+\vspace{12pt}
+\tiny
+```{r}
+pout.amat <- predict(aout, newdata = renewdata, varvar = varb, 
+  idvar = id, root = root, se.fit = TRUE, amat = amat)
+
+## predict.aster
+pout.amat$fit
+
+## computation by hand
+rowSums(preds_hdct)
+```
+
+
+## 
+
+Here are the estimated standard errors corresponding to estimates of expected Darwinian fitness for hypothetical typical individuals belonging to each population.
+
+\vspace{12pt}
+\tiny
+```{r}
+foo <- cbind(pout.amat$fit, pout.amat$se.fit)
+rownames(foo) <- unique(as.character(renewdata$pop))
+colnames(foo) <- c("estimates", "std. err.")
+round(foo, 3)
+```
 
