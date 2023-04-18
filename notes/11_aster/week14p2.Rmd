@@ -1,0 +1,537 @@
+---
+title: "STAT 528 - Advanced Regression Analysis II"
+author: "Aster models"
+institute: |
+  | Daniel J. Eck
+  | Department of Statistics
+  | University of Illinois
+date: ""
+output: 
+    beamer_presentation:
+        keep_tex: true
+        fig_width: 11
+        fig_height: 7.5
+        includes:
+urlcolor: blue
+header-includes:
+- \usepackage{graphicx}
+- \usepackage{bm}
+- \definecolor{foreground}{RGB}{255,255,255}
+- \definecolor{background}{RGB}{34,28,54}
+- \definecolor{title}{RGB}{105,165,255}
+- \definecolor{gray}{RGB}{175,175,175}
+- \definecolor{lightgray}{RGB}{225,225,225}
+- \definecolor{subtitle}{RGB}{232,234,255}
+- \definecolor{hilight}{RGB}{112,224,255}
+- \definecolor{vhilight}{RGB}{255,111,207}
+- \setbeamertemplate{footline}[page number]
+- \usepackage{amsthm}
+- \usepackage{amsmath}
+- \usepackage{amsfonts}
+- \usepackage{amscd}
+- \usepackage{amssymb}
+- \usepackage{natbib}
+- \usepackage{url}
+- \usepackage{tikz}
+---
+
+\newcommand{\R}{\mathbb{R}}
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy.opts=list(width.cutoff=40))
+library(ggplot2)
+
+mycols     = c("chartreuse3", "orangered", "deepskyblue3", "darkorchid1", "yellow")
+dark_theme = theme(plot.background   = element_blank(), 
+                   panel.background  = element_blank(),
+                   #legend.background = element_blank(), legend.key = element_blank(),
+                   axis.title.x      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(10,0,0,0)),
+                   axis.title.y      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(0,20,0,0)),
+                   axis.text         = element_text(size=18, color = "grey80"), 
+                   text              = element_text(size=20),
+                   axis.title        = element_text(size = 26),
+                   legend.title      = element_text(size = 26, colour = "grey80"),
+                   panel.border      = element_blank(),
+                   panel.grid.major  = element_line(colour = "grey50"), 
+                   panel.grid.minor  = element_line(colour = "grey30"))
+```
+
+
+## Learning Objectives Today
+
+- aster model example
+- aster analysis
+
+
+## 
+
+The variables under consideration: 
+
+- \texttt{nsloc} north-south location of each individual in the experimental plot
+- \texttt{ewloc} east-west location of each individual in the experimental plot 
+- \texttt{pop} the ancestral population of each individual
+
+\vspace{12pt}
+Each individual was grown from seed taken from a surviving population in a prairie remnant in western Minnesota near the Echinacea Project field site.
+
+Darwinian fitness (our best surrogate of Darwinian fitness) is total flower head count over the years of data collection.
+
+
+
+## The aster graph for \emph{Echinacea angustifolia} ([aster plants](http://echinaceaproject.org/)) 
+
+\begin{figure}
+\begin{tikzpicture}
+\put(-100,50){\makebox(0,0){$1$}}
+\put(-50,50){\makebox(0,0){$M_1$}}
+\put(0,50){\makebox(0,0){$M_2$}}
+\put(50,50){\makebox(0,0){$M_3$}}
+\put(-87.5,50){\vector(1,0){25}}
+\put(-37.5,50){\vector(1,0){25}}
+\put(12.5,50){\vector(1,0){25}}
+\put(-50,0){\makebox(0,0){$F_1$}}
+\put(0,0){\makebox(0,0){$F_2$}}
+\put(50,0){\makebox(0,0){$F_3$}}
+\put(-50,37.5){\vector(0,-1){25}}
+\put(0,37.5){\vector(0,-1){25}}
+\put(50,37.5){\vector(0,-1){25}}
+\put(-50,-50){\makebox(0,0){$H_1$}}
+\put(0,-50){\makebox(0,0){$H_2$}}
+\put(50,-50){\makebox(0,0){$H_3$}}
+\put(-50,-12.5){\vector(0,-1){25}}
+\put(0,-12.5){\vector(0,-1){25}}
+\put(50,-12.5){\vector(0,-1){25}}
+\end{tikzpicture}
+\label{fig:astergraph}
+\end{figure}
+
+
+
+##
+
+We load in necessary packages:
+
+\vspace{12pt}
+```{r, message = FALSE}
+library(tidyverse)
+library(ggplot2)
+library(aster)
+library(aster2)
+```
+
+
+## Initial data processing
+
+Here is a brief look at the data:
+
+\vspace{12pt}
+\tiny
+```{r}
+data("echinacea")
+names(echinacea)
+head(echinacea$redata)
+```
+
+
+##
+
+\tiny
+```{r}
+echinacea$redata %>% filter(id == 1)
+echinacea$redata %>% filter(id == 6)
+```
+
+
+##
+
+We can see the proportion of individuals that survive each year.
+
+\vspace{12pt}
+\tiny
+```{r}
+## M1
+echinacea$redata %>% filter(varb == "ld02") %>% pull(resp) %>% table()
+
+## M2
+echinacea$redata %>% filter(id %in% (echinacea$redata %>% 
+                                       filter(varb == "ld02" & resp == 1) %>% 
+                                       pull(id)) & varb == "ld03") %>% 
+  pull(resp) %>% table()
+
+## M3
+echinacea$redata %>% filter(id %in% (echinacea$redata %>% 
+                                       filter(varb == "ld03" & resp == 1) %>% 
+                                       pull(id)) & varb == "ld04") %>% 
+  pull(resp) %>% table()
+```
+
+
+
+##
+
+We can see the proportion of individuals that flower each year.
+
+\vspace{12pt}
+\tiny
+```{r}
+## F1
+echinacea$redata %>% filter(id %in% (echinacea$redata %>% 
+                                       filter(varb == "ld02" & resp == 1) %>% 
+                                       pull(id)) & varb == "fl02") %>% 
+  pull(resp) %>% table()
+
+## F2
+echinacea$redata %>% filter(id %in% (echinacea$redata %>% 
+                                       filter(varb == "ld03" & resp == 1) %>% 
+                                       pull(id)) & varb == "fl03") %>% 
+  pull(resp) %>% table()
+
+## F3
+echinacea$redata %>% filter(id %in% (echinacea$redata %>% 
+                                       filter(varb == "ld04" & resp == 1) %>% 
+                                       pull(id)) & varb == "fl04") %>% 
+  pull(resp) %>% table()
+```
+
+
+
+##
+
+We can see the distribution of head counts each year.
+
+\vspace{12pt}
+\tiny
+```{r}
+echinacea$redata %>% filter(id %in% (echinacea$redata %>% 
+                                       filter(varb == "fl02" & resp == 1) %>% 
+                                       pull(id)) & varb == "hdct02") %>% 
+  pull(resp) %>% hist(., main = "Distribution of hdct02")
+```
+
+
+##
+
+\tiny
+```{r}
+echinacea$redata %>% filter(id %in% (echinacea$redata %>% 
+                                       filter(varb == "fl03" & resp == 1) %>% 
+                                       pull(id)) & varb == "hdct03") %>% 
+  pull(resp) %>% hist(., main = "Distribution of hdct03")
+```
+
+
+##
+
+\tiny
+```{r}
+echinacea$redata %>% filter(id %in% (echinacea$redata %>% 
+                                       filter(varb == "fl04" & resp == 1) %>% 
+                                       pull(id)) & varb == "hdct04") %>% 
+  pull(resp) %>% hist(., main = "Distribution of hdct04")
+```
+
+
+##
+
+\tiny
+```{r}
+echinacea$redata %>% group_by(id) %>% 
+  filter(varb %in% c("hdct02","hdct03","hdct04")) %>% 
+  summarise(fitness = sum(resp)) %>% 
+  pull(fitness) %>% hist(., main = "Distribution of fitness", breaks = 20)
+```
+
+
+
+## Aster analysis preliminaries
+
+The variables that correspond to nodes of the graph are, in the order they are numbered in the graph 
+\vspace{12pt}
+```{r}
+vars <- c("ld02", "ld03", "ld04", "fl02", "fl03", 
+					"fl04", "hdct02", "hdct03", "hdct04")
+```
+
+##
+
+The graphical structure is specified by a vector that gives for each node the index (not the name) of the predecessor node or zero if the predecessor is an initial node.
+
+\vspace{12pt}
+```{r}
+pred <- c(0, 1, 2, 1, 2, 3, 4, 5, 6)
+```
+
+\vspace{12pt}
+This says the predecessor of the first node given by the \texttt{vars} vector is initial (because \texttt{pred[1] == 0}), the predecessor of the second node given by the \texttt{vars} vector is the first node given by the \texttt{vars} vector (because \texttt{pred[2] == 1}), and so forth. 
+
+##
+
+\tiny
+```{r}
+foo <- rbind(vars, c("initial", vars)[pred + 1]) 
+rownames(foo) <- c("successor", "predecessor")
+foo
+```
+
+\vspace{12pt}
+\normalsize
+That's right.
+
+
+## 
+
+The last part of the specification of the graph is given by a corresponding vector of integers coding families (distributions). The default is to use the codes:  
+
+- 1 = Bernoulli 
+- 2 = Poisson 
+- 3 = zero-truncated Poisson 
+
+
+##
+
+Optionally, the integer codes specify families given by an optional argument \texttt{famlist} to functions in the \texttt{aster} package, and this can specify other distributions besides those in the default coding.
+
+\vspace{12pt}
+\tiny
+```{r}
+fam <- c(1, 1, 1, 1, 1, 1, 3, 3, 3)
+rbind(vars, fam)
+```
+
+
+## 
+
+There is one more step before we can fit models. 
+
+The R function \texttt{aster} which fits aster models wants the data in long rather than wide format, the former having one line per node of the graph rather than one per individual.
+
+\vspace{12pt}
+\tiny
+```{r}
+## aster example already in long format
+redata <- data.frame(echinacea$redata, root = 1)
+head(redata)
+```
+
+
+## 
+
+All of the variables in \texttt{echinacea} that are named in \texttt{vars} are gone. They are packed into the variable \texttt{resp}. 
+
+Which components of \texttt{resp} correspond to which components of \texttt{vars} is shown by the new variable \texttt{varb}.
+
+\vspace{12pt}
+\tiny
+```{r}
+levels(redata$varb)
+```
+
+
+## Fitting aster models
+
+We will now discuss fitting aster models. 
+
+Different families for different nodes of the graph means it makes no sense to have terms of the regression formula applying to different nodes. 
+
+In particular, it makes no sense to have one *intercept* for all nodes. To in effect get a different *intercept* for each node in the graph, include \texttt{varb} in the formula
+\begin{center}
+  \texttt{y $\sim$ varb + ...}
+\end{center}
+
+The categorical variable \texttt{varb} gets turned into as many dummy variables as there are nodes in the graph, one is dropped, and the *intercept* dummy variable.
+
+
+## 
+
+Similar thinking says we want completely different regression coefficients of all kinds of predictors for each node of the graph. 
+
+That would lead us to formulas like
+\begin{center}
+  \texttt{y $\sim$ varb + varb:(...)}
+\end{center}
+where $\ldots$ is any other part of the formula. 
+
+We should not think of this formula as specifying *interaction* between \texttt{varb} and *everything else* but rather as specifying separate coefficients for *everything else* for each node of the graph. 
+
+That being said, formulas like this would likely yield too many regression coefficients to estimate well.  
+
+
+## 
+
+Maybe different for each kind of node (whatever that may mean) would be enough.
+
+\vspace{12pt}
+\tiny
+```{r}
+layer <- gsub("[0-9]", "", as.character(redata$varb))
+redata <- data.frame(redata, layer = layer)
+unique(layer)
+```
+
+\vspace{12pt}
+\normalsize
+Maybe
+\begin{center}
+  \texttt{y $\sim$ varb + layer:(...)}
+\end{center}
+is good enough? But formulas like this would still yield too many regression coefficients to estimate well. 
+
+
+## 
+
+In aster models regression coefficients *for* a node of the graph also influence all *earlier* nodes of the graph (predecessor, predecessor of predecessor, predecessor of predecessor of predecessor, etc.) 
+
+So maybe it would be good enough to only have separate coefficients for the layer of the graph consisting of terminal nodes? 
+
+\vspace{12pt}
+```{r}
+fit <- as.numeric(layer == "hdct") 
+redata <- data.frame(redata, fit = fit)
+unique(fit)
+```
+
+
+##
+
+Maybe
+\begin{center}
+  \texttt{y $\sim$ varb + fit:(...)}
+\end{center}
+is good enough. 
+
+We called the variable we just made up \texttt{fit} which is short for Darwinian fitness. 
+
+The regression coefficients in terms specified by $\ldots$ have a direct relationship with expected Darwinian fitness (or a surrogate of Darwinian fitness). 
+
+And that is usually what is wanted in life history analysis. 
+
+
+## 
+
+We now fit our first aster model.
+
+\vspace{12pt}
+\tiny
+```{r}
+aout <- aster(resp ~ varb + layer : (nsloc + ewloc) + 
+							fit : pop, pred, fam, varb, id, root, data = redata)
+summary(aout)
+```
+
+
+## 
+
+The regression coefficients are of little interest. 
+
+The main interest is in what model among those that have a scientific interpretation fits the best.
+
+\vspace{12pt}
+\tiny
+```{r astermodeltests, cache = TRUE}
+aout.smaller <- aster(resp ~ varb + 
+  fit : (nsloc + ewloc + pop), 
+  pred, fam, varb, id, root, data = redata)
+aout.bigger <- aster(resp ~ varb + 
+  layer : (nsloc + ewloc + pop), 
+  pred, fam, varb, id, root, data = redata)
+anova(aout.smaller, aout, aout.bigger)
+```
+
+
+## 
+
+Despite the largest model fitting the best, we choose the middle model because that one tells us something about fitness directly that the other one does not.
+
+The argument for doing this is because we are interested in modeling fitness, and the distribution of fitness (actually best surrogate of fitness in their data) is not very different between the two models. 
+
+The distribution of other components of fitness (other than the final one) may differ quite a lot, but that was not the question of scientific interest. 
+
+
+##
+
+So what do these models say about the distribution of fitness?
+
+\tiny
+```{r}
+## we will go over this later
+pop <- levels(redata$pop)
+nind <- length(unique(redata$id))
+nnode <- nlevels(redata$varb)
+npop <- length(pop)
+amat <- array(0, c(nind, nnode, npop))
+amat.ind <- array(as.character(redata$pop), 
+  c(nind, nnode, npop))
+amat.node <- array(as.character(redata$varb), 
+  c(nind, nnode, npop))
+amat.fit <- grepl("hdct", amat.node)
+amat.fit <- array(amat.fit, 
+  c(nind, nnode, npop))
+amat.pop <- array(pop, c(npop, nnode, nind))
+amat.pop <- aperm(amat.pop)
+amat[amat.pop == amat.ind & amat.fit] <- 1
+pout <- predict(aout,  varvar = varb, idvar = id, 
+  root = root, se.fit = TRUE, amat = amat)
+pout.bigger <- predict(aout.bigger, varvar = varb, 
+  idvar = id, root = root, se.fit = TRUE, amat = amat)
+```
+
+
+##
+
+The first interesting thing about these *predictions* (actually point estimates of parameters with standard errors) is that the point estimates are exactly the same for the two models.
+
+\vspace{12pt}
+\tiny
+```{r}
+pout$fit
+pout.bigger$fit
+all.equal(pout$fit, pout.bigger$fit)
+```
+
+\vspace{12pt}
+\normalsize
+And why is that?  These are submodel canonical statistics (components of $M^Ty$).  Thus by the observed-equals-expected property of exponential families their MLE are equal to their observed values and hence equal to each other. 
+
+So that is certainly not a reason to prefer one model to the other. If the estimated means are exactly the same how about estimated asymptotic variances?
+
+
+##
+
+The asymptotic variance matrix of these canonical statistics is actually diagonal for each model. 
+
+The reason is that different populations of origin have different individuals in the sample, and only individuals from one population contribute to estimating one of these canonical statistics. 
+
+Thus it is enough to look at the asymptotic standard errors (all the covariances are zero).
+
+\vspace{12pt}
+\tiny
+```{r}
+pout$se.fit
+pout.bigger$se.fit
+```
+
+\vspace{12pt}
+\normalsize
+We see that they are not that different.
+
+
+##
+
+If we were interested in the effect of population on the different components of fitness, then the P-value 0.00016 does indicate that the model \texttt{aout.bigger} fits the data better.
+
+The model \texttt{aout.bigger} has different population effects in different *layers* of the graph does show a statistically significant difference in the way the components of fitness combine to make up fitness in the various population of origin groups. 
+
+But if we are only interested in overall fitness rather than the separate components, then there is hardly any difference in the two models.
+
+
+
+
+## 
+
+\begin{center}
+\includegraphics[angle=270, width=0.75\textwidth]{transforms.pdf}
+\end{center}
+
+
