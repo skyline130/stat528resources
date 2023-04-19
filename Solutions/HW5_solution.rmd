@@ -1,0 +1,670 @@
+---
+title: "STAT 528 HW5"
+output: 
+        pdf_document:
+                latex_engine: xelatex
+header-includes: 
+ - \usepackage{amsthm}
+ - \usepackage{amsmath}
+ - \usepackage{amsfonts}
+ - \usepackage{amscd}
+ - \usepackage{amssymb}
+ - \usepackage[sectionbib]{natbib}
+ - \usepackage{url}
+ - \usepackage{graphicx}
+ - \usepackage{tikz-cd}
+ - \usepackage{pgfplots}
+ - \usepackage{geometry}
+ - \usepackage{bm}
+ - \usepackage{array,epsfig,fancyheadings,rotating}
+ - \usepackage{multirow}
+ - \usepackage{placeins}
+---
+
+\allowdisplaybreaks
+
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\inner}[1]{\langle #1 \rangle}
+\newcommand{\yobs}{y_{\text{obs}}}
+\newcommand{\simiid}{\stackrel{iid}{\sim}}
+
+```{r setup,include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(cache = FALSE)
+knitr::opts_chunk$set(warning=FALSE)
+```
+
+```{css, echo=FALSE}
+.solution {
+background-color: #e6ffe6;
+}
+```
+
+### Problem 1
+Prove that intraclass correlation between observations at the same level is formally
+expressed as
+$$\rho = \frac{\sigma^2_\alpha}{\sigma^2_\alpha + \sigma^2_\varepsilon}$$
+and discuss the implications of a value of $\rho$ close to zero or one.
+
+
+### Solution 1:
+The model is
+$$Y_{ij} = \mu + \alpha_i + \varepsilon_{ij}$$
+We first find the covariance between observations at the same level
+
+$$Cov(Y_{ij},Y_{ij'}) = Cov(\mu + \alpha_i + \varepsilon_{ij},\mu + \alpha_i + \varepsilon_{ij'}) \text{ where j $\neq$ j'}$$
+Since the $\varepsilon_{ij}$ are mutually independent and independent from $\alpha_i$
+
+$$\therefore Cov(Y_{ij},Y_{ij'}) = Cov(\alpha_i, \alpha_i) = \sigma^2_\alpha$$
+the variance term
+
+$$Var(Y_{ij}) = Var(Y_{ij'}) = Var(\mu + \alpha_i + \varepsilon_{ij}) = \sigma^2_\alpha + \sigma^2_\varepsilon$$
+Thus,
+$$Corr(Y_{ij},Y_{ij'}) = \frac{\sigma^2_\alpha}{\sigma^2_\alpha + \sigma^2_\varepsilon}$$
+A value of 0 of $\rho$ indicates no variance between the means of the different levels while a value of 1 indicates that the total variance is due to the variance "between" levels rather than the variance "within" levels. So the intraclass correlation indicates the relative importance of the "between group variance" (values closer to 1) and "within group variance" (values closer to 0).
+
+\vspace*{1cm}
+
+
+
+### Problem 2
+
+Do the following with the pulp data set:
+
+### Solution 2:
+
+(a) Analyze the pulp data in the notes using unrestricted maximum likelihood estimation and
+comment on the differences that such analysis produces when compared to the REML and
+ANOVA estimates.
+
+Analyzing the pulp data in the notes using unrestricted maximum likelihood estimation:
+```{r}
+library(faraway)
+library(lme4)
+library(dplyr)
+
+data(pulp)
+mod = lmer(bright ~ 1 + (1|operator), pulp,REML = FALSE)
+summary(mod)
+```
+
+Comparing it with REML
+
+```{r}
+mmod <- lmer(bright ~ 1 + (1|operator), pulp)
+summary(mmod)
+```
+We know that the problem with unrestricted MLE estimation is that the estimates of the variance are biased.
+Thus as expected the variance and standard errors of the fixed and random effects are different. But the estimates for the residual and the estimate of the fixed effect are the same when calculated using both methods. This leads to different t-values in the two methods.
+
+Comparing it with ANOVA
+
+```{r}
+op <- options(contrasts = c("contr.sum", "contr.poly"))
+lmod <- aov(bright ~ operator, pulp)
+summary(lmod)
+```
+
+
+```{r}
+coef(lmod)
+```
+The operator variance from this model is
+```{r}
+## Operator variance - (MSA - MSE) / n
+(0.447 - 0.106)/5
+```
+Where the residual variance is 0.106
+
+Comparing it with the unrestricted likelihood model we can see that the estimate for the intercept (the fixed effect) is still exactly the same, so is the estimate for the residual variance. The estimates for the operator variance differs. But note that the value of the variance using the anova model is a lot closer to the value that we estimate using unrestricted MLE as opposed to REML, which means this is also biased.
+
+(b) Interpret the diagnostic plots in the notes corresponding to the analysis with respect to the
+pulp data set; conclude that these plots indicate no particular problems.
+
+```{r}
+par(mfrow = c(1,2))
+qqnorm(resid(mmod), main="", pch = 19)
+plot(fitted(mmod),resid(mmod), xlab="Fitted", ylab="Residuals", pch = 19)
+abline(0,0)
+```
+
+We can see that the plot of the theoretical quantiles against the sample quantiles is a straight line which means that our model follows the distributional assumptions.
+
+
+From the fitted vs residuals plot we can see that the smoothing line is a straight line. This means that the linearity assumption is reasonable and the data is homoskedastic. Also from the spread of the points around the smoothing line there seems to be no outliers in the data. Thus the plots show that our data has no particular problems.
+\vspace*{1cm}
+
+### Problem 3
+Do the following:
+
+
+### Solution 3:
+
+(a) Compare and contrast the nonparametric bootstrap, residual bootstrap, and parametric bootstraps.
+Discuss the assumptions that make each bootstrap procedure appropriate.
+
+**Parametric Bootstrap:** We estimate a model and then simulate from the estimated model. The parametric bootstrap assumes that the model we estimate is perfectly correct for some parameter value. The advantage of this method is that if the parametric model really is correct, we can get more precise results using parametric bootstrap.
+
+**Residual Bootstrap:**  We first estimate the model, and then simulate by resampling the
+residuals to that estimate and adding them back to the fitted values. This type of bootstrap does not trust the model as much as the parametric bootstrap. It assumes that the shape of the regression function is right but does not make any distributional assumptions on the residuals. This makes it more secure than parametric bootstrap. If we are correct about the shape of the curve then resampling the residuals gives more precise results than the next (non-parametric) bootstrap method.
+
+**Nonparametric Bootstrap:** We resample whole rows from the dataset. This method does not involve the estimated model in any way. The only assumption that this method makes is that the observations are independent, making it the safest. But the reason we do not always want to use the safest bootstrap is because it gives the widest confidence intervals. The residual bootstrap gives narrower CIs whereas the parametric bootstrap gives the narrowest.
+
+(b) In the notes we developed a parametric bootstrap procedure to approximate the distribution
+of the LRT corresponding to a test between mixed-effects models. Write your own parametric
+bootstrap procedure with B = 1e4 samples and make it as fast as possible using parallel
+programming with either mclapply and/or foreach and whatever accompanying software
+packages are needed.
+
+```{r}
+## null model fit
+null_mod <- lm(bright ~ 1, pulp)
+```
+
+Doing the parametric bootstrap procedure sequentially
+```{r,cache = T}
+set.seed(2609)
+B <- 1e4
+lrtstat <- numeric(B)
+system.time(for(b in 1:B){
+        y <- unlist(simulate(null_mod))
+        beta_null <- lm(y ~ 1)
+        beta_alt <- lmer(y ~ 1 + (1|operator), pulp, REML = FALSE,control = lmerControl(check.conv.singular = .makeCC(action = "ignore",tol = 1e-4)))
+        lrtstat[b] <- as.numeric(2*(logLik(beta_alt) - logLik(beta_null)))
+})
+```
+The proportion of LRTs close to zer0
+```{r}
+mean(lrtstat < 1e-5)
+```
+The estimated p-value is
+```{r}
+## p-value
+pval <- mean(lrtstat > 2.568371)
+pval
+```
+
+Doing the parametric bootstrap procedure using parallel computing.
+```{r}
+library(foreach)
+library(doParallel)
+cores=detectCores()
+registerDoParallel(cores)
+
+
+set.seed(2609)
+B <- 1e4
+
+system.time(lrtstat <- foreach(b=1:B,.combine = c) %dopar%{
+        y <- unlist(simulate(null_mod))
+        beta_null <- lm(y ~ 1)
+        beta_alt <- lme4::lmer(y ~ 1 + (1|operator), pulp, REML = FALSE,control = lme4::lmerControl(check.conv.singular = lme4::.makeCC(action = "ignore",tol = 1e-4)))
+        as.numeric(2*(logLik(beta_alt) - logLik(beta_null)))
+})
+
+stopImplicitCluster()
+```
+The proportion of LRTs close to zero
+```{r}
+mean(lrtstat < 1e-5)
+```
+The estimated p-value is
+```{r}
+## p-value
+pval <- mean(lrtstat > 2.568371)
+pval
+```
+
+Clearly the results are the same (the small difference is due to the randomization) but the process is a lot faster!
+
+(c) Explain how the testing procedure using the exactRLRT function works. See the analysis
+of the irrigation data in the LMM course notes for context.
+
+Our goal is to test whether a random effect is different from zero. Since according to the distributional assumption we make the expectation of these random effects = 0, this is equivalent to testing if the variance of the random effect is different from zero. Thus our test is:
+
+$$H_0: \sigma^2_\alpha = 0 \quad \text{vs.} \quad H_1: \sigma^2_\alpha \neq 0 $$
+The problem with using the typical LRT test is that the null hypothesis lies on the boundary of the parameter space and the observations are not iid due to the particular covariance structure of the grouped data. This violates the regularity conditions of the LRT and the the LRT statistics does not have an asymptotic $\chi^2$ distribution.
+
+Thus we consider the RLRT statistic, which is the test statistic based on Restricted Maximum
+Likelihood (REML) estimation of the variance components.
+
+Consider a test of the given structure for an LMM with only one random
+effect (vector) and i.i.d. errors. In this case, the exact RLRT distribution under
+$H_0$ can be expressed (with $\lambda = \sigma^2_\alpha/\sigma^2_\varepsilon$)
+
+$$RLRT_n \overset{d}{=} \sup_{ \lambda \ge 0 } \left\{(n - p) \log \left[ 1 +
+\frac{N_n(\lambda)}{D_n(\lambda)} \right] -
+\sum_{l = 1}^K \log(1 + \lambda_{\mu_{l,n}}) \right\}
+$$
+
+where
+
+$$N_n(\lambda) = \sum_{l = 1}^K \frac{\lambda_{\mu_{l,n}}}{1+\lambda_{\mu_{l,n}}}\omega_l^2,\quad D_n(\lambda) = \sum_{l = 1}^K\frac{\omega_l^2}{1+\lambda_{\mu_{l,n}}} + \sum_{l = K+1}^{n - p}\omega_l^2$$
+Here,$\mu_{l,n}$, $l = 1,\dots ,K_s$, are the eigen- values of the matrix $\Sigma_s^{\frac12}Z_s'(I_n -  X(X'X)^{-1}X')Z_s\Sigma_s^{\frac12}$ and $\omega_l \overset{iid}{\sim} N(0, 1)$, $l = 1,\dots ,n - p$.
+
+This distribution only depends on the design matrices of the fixed
+and random effects, $X$ and $Z_s$, and on the correlation structure within the
+random effects vector, $\Sigma_s$.
+
+
+Critical values or p-values of the distribution of $RLRT_n$ can be determined
+efficiently by simulation, which is implemented in the RLRsim package in R
+
+\vspace*{1cm}
+
+### Problem 4
+Analyzing the `denim` dataset
+
+### Solution 4:
+```{r}
+data(denim)
+```
+
+(a) Plot the data and comment.
+
+
+```{r}
+plot(denim)
+```
+From the plot there seems to be two outliers. Leaving those out the variability of the waste due to supplier 1,3 and 4 seem to be lesser than that due to supplier 2,5
+
+(b) Fit the linear fixed effects model. Is the operator significant?
+
+```{r}
+fixed_mod = lm(waste ~ ., data = denim)
+summary(fixed_mod)
+```
+The suppliers do not seem to be significant. We can also compare the null model to this model to check its significance.
+```{r}
+null_mod = lm(waste~1, data = denim)
+anova(null_mod,fixed_mod)
+```
+
+The null model is preffered which gives further evidence that the suppliers are not significant.
+
+(c) Make a useful diagnostic plot for this model and comment.
+
+```{r}
+par(mfrow = c(2,2))
+plot(fixed_mod)
+```
+The residuals vs fitted plots form a straight smoothing line which means that the linearity assumption is fair. But we can see that the 82nd and 87th observations are outliers. From the QQ plot we can see that the normality assumptions are satisfied and the scale location plot is almost straight, indicating that the homoskedastic assumption is also a fair one (the slight curve can be attributed to the presence of the outliers). The last plot again points to the two outlying observations.
+
+(d) Analyze the data with supplier as a random effect. What are the estimated standard deviations
+of the effects?
+
+```{r}
+library(lme4)
+mixed_effects = lmer(waste ~ 1+(1|supplier),denim)
+summary(mixed_effects)
+```
+Thus $\sigma_\alpha = 0.8192$ and $\sigma_\varepsilon = 9.8658$
+
+(e) Test the significance of the supplier term.
+
+```{r}
+library(RLRsim)
+exactRLRT(mixed_effects)
+```
+It still does not seem to be significant.
+
+(f) Compute confidence intervals for the random effect SDs
+
+```{r,warning=TRUE}
+confint(mixed_effects,method = "boot")
+```
+
+
+(g) Locate two outliers and remove them from the data. Repeat the fitting, testing and computation
+of the confidence intervals, commenting on the differences you see from the complete
+data.
+
+We have seen from the above analysis that the 82nd and 87th observations are outliers. Thus we remove them from our dataset
+```{r}
+denim_new = denim[-c(82,87),]
+plot(denim_new)
+```
+
+The outliers seem to be removed. Let us repeat the above analysis.
+
+First let us create a linear fixed effects model.
+
+
+```{r}
+fixed_mod_new = lm(waste ~ ., data = denim_new)
+summary(fixed_mod_new)
+```
+Supplier 5 now seems to be significant.
+
+Let us next apply fit the mixed effects model.
+
+```{r}
+mixed_effects_new = lmer(waste ~ 1+(1|supplier),denim_new)
+summary(mixed_effects_new)
+```
+The standard deviation of the suppliers effect has increased and the residual standard error has now decreased. This implies that a greater portion of the variability is now explained by the suppliers.
+
+Let us test the significance of this mixed effect.
+
+```{r}
+exactRLRT(mixed_effects_new)
+```
+Clearly now the suppliers effect is significant.
+
+We next compute the cofidence intervals.
+
+```{r,warning=FALSE}
+confint(mixed_effects_new,method = "boot")
+```
+
+The interval still has 0 despite the test being significant.
+
+(h) Estimate the effect of each supplier. If only one supplier will be used, choose the best.
+
+```{r}
+ranef(mixed_effects_new)$supplier
+```
+Since the first supplier has the smallest estimated waste, I would choose it as the best.
+
+
+\vspace*{1cm}
+
+
+
+
+### Problem 5
+Load in the \texttt{soybean\_full} dataset and analyze the \texttt{tqM} response variable. Refer to the analysis of the \texttt{AqE} response in the course notes, and recall that the researchers are interested in determining which ID variables differ from the RC reference level. Consider response transformations if modeling assumptions are violated. Do attempts to rectify departures from modeling assumptions affect the conclusions?
+
+
+### Solution 5:
+
+
+```{r}
+dat <- read.csv("/Users/diptarka/Documents/GitHub/stat528resources/homework/HW5/soybean_full.csv") 
+dat$ID <- as.factor(dat$ID)
+head(dat)
+```
+
+## EDA
+
+```{r}
+range(dat$tqM)
+```
+
+Let's see the correlation of variables.
+
+```{r}
+pairs(dat[,c(9:10, 12:16)])
+pairs(dat[,c(9, 17:21)])
+```
+
+And the signal-to-noise ratio histogram. Looks like the variation caused by plot and disk are not that significant for `tqM`.
+
+```{r}
+sig2noise_plot <- sapply(unique(dat$plot_number), function(x) mean(dat[dat$plot_number == x, ]$tqM) /
+                                 sd(dat[dat$plot_number == x, ]$tqM))
+hist(sig2noise_plot, breaks = 20, main = "Histogram of signal-to-noise ratios for plot effect")
+```
+
+```{r}
+disk_num <- sort(unique(dat$disk))
+sig2noise_disk <- sapply(disk_num, function(x) mean(dat[dat$disk == x, ]$tqM) /
+                                 sd(dat[dat$disk == x, ]$tqM))
+hist(sig2noise_disk, breaks = 20, main = "Histogram of signal-to-noise ratios for disk effect")
+```
+
+According to the correlation plots, select and scale covariates before model fitting.
+
+```{r}
+selected <- c('Ta', 'VPD', 'Fsd', 'Ta_7day', 'Precip', 'Precip_7day', 'VPD_7day', 'Fsd_7day')
+dat_sd <- dat %>% mutate_at(selected, ~(scale(.) %>% as.vector))
+```
+
+## Model fitting and selection
+
+Three models.
+
+```{r}
+library(lme4)
+
+m <- lm(tqM ~ ID + Ta + VPD + Fsd + Ta_7day + Precip +
+                Precip_7day + VPD_7day + Fsd_7day,
+        data = dat_sd)
+
+m_re_plot <- lmer(tqM ~ ID + Ta + VPD + Fsd + Ta_7day + Precip +
+                          Precip_7day + VPD_7day + Fsd_7day + (1|plot_number), data = dat_sd, REML = FALSE)
+
+m_re_full <- lmer(tqM ~ ID + Ta + VPD + Fsd + Ta_7day + Precip + 
+                          Precip_7day + VPD_7day + Fsd_7day + (1|plot_number) + (1|disk), data = dat_sd, REML = FALSE)
+```
+
+```{r warning=FALSE}
+B <- 1e3
+
+library(parallel)
+library(doParallel)
+
+myCluster <- makeCluster(detectCores(), type='PSOCK')
+registerDoParallel(myCluster)
+
+system.time(lrtstat <- foreach(1:B) %dopar% {
+        y <- unlist(simulate(m))
+        bnull <- lm(y ~ ID + Ta + VPD + Fsd + Ta_7day + Precip + 
+                            Precip_7day + VPD_7day + Fsd_7day,
+                    data = dat_sd)
+        balt <- lme4::lmer(y ~ ID + Ta + VPD + Fsd + Ta_7day + Precip + 
+                                   Precip_7day + VPD_7day + Fsd_7day + (1|plot_number),
+                           data = dat_sd, REML = FALSE)
+        as.numeric(2*(logLik(balt) - logLik(bnull)))
+})
+```
+
+```{r}
+## p-value
+pval <- mean(lrtstat > 2.568371)
+pval
+## simple standard error of the above
+sqrt(pval*(1-pval)/B)
+```
+
+```{r warning=FALSE, cache=TRUE}
+B <- 1e3
+
+myCluster <- makeCluster(detectCores(), type='PSOCK')
+registerDoParallel(myCluster)
+
+system.time(lrtstat <- foreach(1:B) %dopar% {
+        y <- unlist(simulate(m_re_plot))
+        bnull <- lme4::lmer(y ~ ID + Ta + VPD + Fsd + Ta_7day + Precip +
+                                    Precip_7day + VPD_7day + Fsd_7day + (1|plot_number), 
+                            data = dat_sd, REML = FALSE)
+        balt <- lme4::lmer(y ~ ID + Ta + VPD + Fsd + Ta_7day + Precip + 
+                                   Precip_7day + VPD_7day + Fsd_7day + (1|plot_number) + (1|disk),
+                           data = dat_sd, REML = FALSE)
+        
+        as.numeric(2*(logLik(balt) - logLik(bnull)))
+})
+```
+
+```{r}
+## p-value
+pval <- mean(lrtstat > 2.568371)
+pval
+## simple standard error of the above
+sqrt(pval*(1-pval)/B)
+```
+
+Bootstrapping choose the model with only random effect from plot(at significance level of 5%). Let's see if AIC and BIC agree with this.
+
+```{r}
+AIC(m)
+AIC(m_re_plot)
+AIC(m_re_full)
+```
+
+```{r}
+BIC(m)
+BIC(m_re_plot)
+BIC(m_re_full)
+```
+
+They do. So let's just draw diagnostic plots for the model.
+
+```{r}
+par(mfrow = c(1,2))
+plot(fitted(m_re_plot), residuals(m_re_plot), xlab="Fitted", ylab="Residuals", 
+     pch = 19, col = rgb(0,0,0,alpha=0.2))
+a <- qqnorm(residuals(m_re_plot), main="", pch = 19, col = rgb(0,0,0,alpha=0.2))
+qqline(residuals(m_re_plot))
+```
+
+
+Looks like modeling assumptions are violated. Let try log transformation on the response.
+
+```{r}
+dat_sd <- dat_sd %>% mutate(tqM_log = log(tqM))
+```
+
+```{r}
+
+m_log <- lm(tqM_log ~ ID + Ta + VPD + Fsd + Ta_7day + Precip +
+                    Precip_7day + VPD_7day + Fsd_7day,
+            data = dat_sd)
+
+m_re_plot_log <- lmer(tqM_log ~ ID + Ta + VPD + Fsd + Ta_7day + Precip + 
+                              Precip_7day + VPD_7day + Fsd_7day + (1|plot_number), data = dat_sd, REML = FALSE)
+
+m_re_full_log <- lmer(tqM_log ~ ID + Ta + VPD + Fsd + Ta_7day + Precip + 
+                              Precip_7day + VPD_7day + Fsd_7day + (1|plot_number) + (1|disk), data = dat_sd, REML = FALSE)
+```
+
+```{r}
+AIC(m_log)
+AIC(m_re_plot_log)
+AIC(m_re_full_log)
+```
+
+```{r}
+BIC(m_log)
+BIC(m_re_plot_log)
+BIC(m_re_full_log)
+```
+
+This time AIC and BIC disagrees. Let's see what bootstrapping say.
+
+```{r cache=TRUE}
+myCluster <- makeCluster(detectCores(), type='PSOCK')
+registerDoParallel(myCluster)
+
+
+system.time(lrtstat <- foreach(1:B) %dopar% {
+        y <- unlist(simulate(m_re_plot_log))
+        bnull <- lme4::lmer(y ~ ID + Ta + VPD + Fsd + Ta_7day + Precip + 
+                                    Precip_7day + VPD_7day + Fsd_7day + (1|plot_number), data = dat_sd, REML = FALSE)
+        balt <- lme4::lmer(y ~ ID + Ta + VPD + Fsd + Ta_7day + Precip + 
+                                   Precip_7day + VPD_7day + Fsd_7day + (1|plot_number) + (1|disk), data = dat_sd, REML = FALSE)
+        
+        as.numeric(2*(logLik(balt) - logLik(bnull)))
+})
+
+## p-value
+pval <- mean(lrtstat > 2.568371)
+pval
+## simple standard error of the above
+sqrt(pval*(1-pval)/B)
+```
+
+Bootstrapping choose the full model, so we will go with it.
+
+```{r}
+par(mfrow = c(1,2))
+plot(fitted(m_re_full_log), residuals(m_re_full_log), xlab="Fitted", ylab="Residuals", 
+     pch = 19, col = rgb(0,0,0,alpha=0.2))
+a <- qqnorm(residuals(m_re_full_log), main="", pch = 19, col = rgb(0,0,0,alpha=0.2))
+qqline(residuals(m_re_full_log))
+```
+
+The log-transformation does make the model fit better. Modelling assumption are satisfied now.
+
+## Results
+
+```{r}
+## AIC for each ID variable from full AqE fixed-effects model
+M <- model.matrix(tqM_log ~ ID + Ta + VPD + Fsd + Ta_7day + Precip + 
+                          Precip_7day + VPD_7day + Fsd_7day,
+                  data = dat_sd)
+# Note that likelihood ratios are asymptotic, i.e. don't account for
+# uncertainty in the estimate of the residual variance
+system.time(AIC_IDs <- foreach(j = grep("ID", colnames(M))) %dopar% {
+        M1 <- M[, -j]
+        foo <- lme4::lmer(tqM_log ~ -1 + M1 + (1|plot_number) + (1|disk),
+                          data = dat_sd, REML = FALSE)
+        AIC(m_re_full_log) - AIC(foo)
+})
+AIC_IDs <- data.frame(unlist(AIC_IDs))
+```
+
+```{r}
+rownames(AIC_IDs) <- colnames(M)[grep("ID", colnames(M))]
+colnames(AIC_IDs) <- c("tqM")
+cbind(round(AIC_IDs,2), ifelse(AIC_IDs < 0, 1, 0))
+```
+
+
+
+
+
+### Problem 6:
+
+Prove that the penalized weighted residual sum-of-squares problem can be cast as
+$$r^2(\theta, \beta, u) = r^2(\theta) + \|L^T_\theta
+(u - \mu_{U|Y =y_{obs}}) + R_{ZX}(\beta - \hat\beta_\theta)\|^2 + \|R_X(\beta - \hat\beta_\theta)\|^2$$
+
+### Solution 6:
+
+The PLS problem is to minimize
+$$r^2(\theta, \beta, u) = \left \| \begin{bmatrix} y_{obs}\\ 0\end{bmatrix} -  \begin{bmatrix} Z\Lambda_\theta & X\\I_q &  0\end{bmatrix}\begin{bmatrix} u\\ \beta\end{bmatrix}\right\|^2$$
+This PLS problem may be thought of as a standard least squares
+problem for an extended response vector, which implies that the minimizing value $(\mu^T_{U|Y =yobs} \; \hat\beta_\theta^T)^T$ satisfies
+the normal equations,
+
+$$\begin{bmatrix} \Lambda_\theta ^TZ^Ty_{obs}\\ X^Ty_{obs}\end{bmatrix} = \begin{bmatrix} \Lambda_\theta ^TZ^TZ\lambda_\theta + I & \Lambda_\theta ^TZ^TX\\ X^TZ\Lambda_\theta &X^TX \end{bmatrix}\begin{bmatrix} \mu_{U|Y =yobs}\\ \hat\beta_\theta\end{bmatrix}$$
+
+We can perform a Cholesky
+decomposition on the above cross-product matrix, so that
+
+$$\begin{bmatrix} \Lambda_\theta ^TZ^TZ\lambda_\theta + I & \Lambda_\theta ^TZ^TX\\ X^TZ\Lambda_\theta &X^TX \end{bmatrix} = \begin{bmatrix} L_\theta  & 0\\ R^T_{ZX} &R^T_X \end{bmatrix}\begin{bmatrix} L_\theta^T & R_{ZX}\\ 0 &R_X \end{bmatrix}$$
+
+To simplify this notation we define
+
+$$Y =  \begin{bmatrix} y_{obs}\\ 0\end{bmatrix},\quad A = \begin{bmatrix} Z\Lambda_\theta & X\\I_q &  0\end{bmatrix}, \quad \gamma = \begin{bmatrix} u\\ \beta\end{bmatrix}, \quad \hat\gamma = \begin{bmatrix} \mu_{U|Y =yobs}\\ \hat\beta_\theta\end{bmatrix}  \quad \text{and } Q = \begin{bmatrix} L_\theta^T & R_{ZX}\\ 0 &R_X \end{bmatrix}$$
+
+Using this notation we get
+$$r^2(\theta,\beta,u) = \|Y - A\gamma\|^2$$
+
+with the normal equations
+$$A^TY = A^TA\hat\gamma$$
+and the cholesky decomposition of $A^TA$ is
+$$A^TA = Q^TQ$$
+
+Also note that we define $$r^2(\theta) = \|Y - A\hat\gamma\|^2$$
+
+Thus simplyfying $r^2(\theta,\beta,u)$ we get
+
+\begin{align*}
+r^2(\theta,\beta,u) & = \|Y - A\gamma\|^2\\
+&=( Y - A\gamma)^T(Y - A\gamma)\\
+&= ( Y - A\hat\gamma+ A\hat\gamma - A\gamma)^T(Y - A\hat\gamma + A\hat\gamma - A\gamma)\\
+&= ( Y - A\hat\gamma)^T( Y - A\hat\gamma) - (A\hat\gamma - A\gamma)^T( Y - A\hat\gamma) - ( Y - A\hat\gamma)^T(A\hat\gamma - A\gamma) + (A\hat\gamma - A\gamma)^T(A\hat\gamma - A\gamma)\\
+&=  \|Y - A\hat\gamma\|^2 +  (\hat\gamma - \gamma)^T(A^TY - A^TA\hat\gamma) - ( A^TY - A^TA\hat\gamma)^T(\hat\gamma - \gamma) + (\hat\gamma - \gamma)^TA^TA(\hat\gamma - \gamma)\\
+&= r^2(\theta) - 0 - 0 + (\hat\gamma - \gamma)^TQ^TQ(\hat\gamma - \gamma)\\
+&= r^2(\theta) + \|Q(\hat\gamma - \gamma)\|^2\\
+&= r^2(\theta) + \left\| \begin{bmatrix} L_\theta^T & R_{ZX}\\ 0 &R_X \end{bmatrix}\left(\begin{bmatrix} u\\ \beta\end{bmatrix}- \begin{bmatrix} \mu_{U|Y =yobs}\\ \hat\beta_\theta\end{bmatrix}\right)\right\|^2\\
+&= r^2(\theta) + \|L^T_\theta
+(u − \mu_{U|Y =y_{obs}}) + R_{ZX}(\beta − \hat\beta_\theta)\|^2 + \|R_X(\beta − \hat\beta_\theta)\|^2
+\end{align*}
+
+Hence proved.
