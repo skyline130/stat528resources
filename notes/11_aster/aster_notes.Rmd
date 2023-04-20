@@ -248,7 +248,7 @@ Similar thinking says we want completely different regression coefficients of al
 \begin{center}
   \texttt{y $\sim$ varb + varb:(...)}
 \end{center}
-where $\ldots$ is any other part of the formula. We should not think of this formula as specifying *interaction* between \texttt{varb} and *everything else* (whatever that may mean) but rather as specifying separate coefficients for *everything else* for each node of the graph. That being said, formulas like this would yield too many regression coefficients to estimate well.  We can do better! Maybe we do not really need different regression coefficients for each node. Maybe different for each kind of node (whatever that may mean) would be enough.
+where $\ldots$ is any other part of the formula. We should not think of this formula as specifying *interaction* between \texttt{varb} and *everything else* (whatever that may mean) but rather as specifying separate coefficients for *everything else* for each node of the graph. That being said, formulas like this would yield too many regression coefficients to estimate well.  We can do better! Maybe we do not really need different regression coefficients for each node. Maybe coefficients different for each kind of node (whatever that may mean) would be enough.
 
 ```{r}
 layer <- gsub("[0-9]", "", as.character(redata$varb))

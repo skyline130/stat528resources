@@ -713,9 +713,9 @@ That would lead us to formulas like
 where \(\ldots\) is any other part of the formula.
 
 We should not think of this formula as specifying \emph{interaction}
-between \texttt{varb} and \emph{everything else} but rather as
-specifying separate coefficients for \emph{everything else} for each
-node of the graph.
+between \texttt{varb} and terms in the model but rather as specifying
+separate coefficients for the terms in the model for each node of the
+graph.
 
 That being said, formulas like this would likely yield too many
 regression coefficients to estimate well.
@@ -723,8 +723,8 @@ regression coefficients to estimate well.
 
 \begin{frame}[fragile]{}
 \protect\hypertarget{section-16}{}
-Maybe different for each kind of node (whatever that may mean) would be
-enough.
+Maybe different coefficients for each kind of node (ie mortality or head
+count) would be good enough.
 
 \vspace{12pt}
 \tiny
@@ -907,6 +907,7 @@ interest.
 \protect\hypertarget{section-22}{}
 So what do these models say about the distribution of fitness?
 
+\vspace{12pt}
 \tiny
 
 \begin{Shaded}
@@ -1451,10 +1452,10 @@ belonging to each population.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{foo }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(pout.amat}\SpecialCharTok{$}\NormalTok{fit, pout.amat}\SpecialCharTok{$}\NormalTok{se.fit)}
-\FunctionTok{rownames}\NormalTok{(foo) }\OtherTok{\textless{}{-}} \FunctionTok{unique}\NormalTok{(}\FunctionTok{as.character}\NormalTok{(renewdata}\SpecialCharTok{$}\NormalTok{pop))}
-\FunctionTok{colnames}\NormalTok{(foo) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"estimates"}\NormalTok{, }\StringTok{"std. err."}\NormalTok{)}
-\FunctionTok{round}\NormalTok{(foo, }\DecValTok{3}\NormalTok{)}
+\NormalTok{mean\_value }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(pout.amat}\SpecialCharTok{$}\NormalTok{fit, pout.amat}\SpecialCharTok{$}\NormalTok{se.fit)}
+\FunctionTok{rownames}\NormalTok{(mean\_value) }\OtherTok{\textless{}{-}} \FunctionTok{unique}\NormalTok{(}\FunctionTok{as.character}\NormalTok{(renewdata}\SpecialCharTok{$}\NormalTok{pop))}
+\FunctionTok{colnames}\NormalTok{(mean\_value) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"estimates"}\NormalTok{, }\StringTok{"std. err."}\NormalTok{)}
+\FunctionTok{round}\NormalTok{(mean\_value, }\DecValTok{3}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1467,6 +1468,361 @@ belonging to each population.
 ## NWLF        1.800     0.182
 ## SPP         2.499     0.289
 ## Stevens     1.706     0.222
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-41}{}
+We can obtain estimates of submodel conditional mean-value parameters
+(ie mean survival for each ancestral line).
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pout\_cond }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(aout, }\AttributeTok{newdata =}\NormalTok{ renewdata, }\AttributeTok{varvar =}\NormalTok{ varb, }
+  \AttributeTok{idvar =}\NormalTok{ id, }\AttributeTok{root =}\NormalTok{ root, }\AttributeTok{se.fit =} \ConstantTok{TRUE}\NormalTok{, }
+  \AttributeTok{model.type =} \StringTok{"unconditional"}\NormalTok{, }\AttributeTok{parm.type =} \StringTok{"mean.value"}\NormalTok{)}
+
+\NormalTok{nnode }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(vars)}
+\NormalTok{preds\_cond }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(pout\_cond}\SpecialCharTok{$}\NormalTok{fit, }\AttributeTok{ncol =}\NormalTok{ nnode) }
+\FunctionTok{rownames}\NormalTok{(preds\_cond) }\OtherTok{\textless{}{-}}\NormalTok{ pop}
+\FunctionTok{colnames}\NormalTok{(preds\_cond) }\OtherTok{\textless{}{-}}\NormalTok{ vars}
+\NormalTok{preds\_cond[, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{6}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              ld02      ld03      ld04      fl02      fl03      fl04
+## AA      0.7833884 0.7521016 0.7284738 0.3228949 0.2560121 0.4560906
+## Eriley  0.6954310 0.6565099 0.6299422 0.2333911 0.1774180 0.3236674
+## Lf      0.7029431 0.6646121 0.6382397 0.2404182 0.1834251 0.3342160
+## Nessman 0.6377067 0.5946209 0.5668688 0.1824325 0.1347627 0.2469403
+## NWLF    0.7288502 0.6926410 0.6670184 0.2654522 0.2050578 0.3716382
+## SPP     0.7936647 0.7633787 0.7401963 0.3345782 0.2665928 0.4729477
+## Stevens 0.7186716 0.6816127 0.6556811 0.2554631 0.1963829 0.3567396
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-42}{}
+We display the average survival and flowering rates for each ancestral
+line.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{rowMeans}\NormalTok{(preds\_cond[, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        AA    Eriley        Lf   Nessman      NWLF       SPP   Stevens 
+## 0.7546546 0.6606277 0.6685983 0.5997321 0.6961699 0.7657466 0.6853218
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{rowMeans}\NormalTok{(preds\_cond[, }\DecValTok{4}\SpecialCharTok{:}\DecValTok{6}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        AA    Eriley        Lf   Nessman      NWLF       SPP   Stevens 
+## 0.3449992 0.2448255 0.2526864 0.1880451 0.2807161 0.3580396 0.2695285
+\end{verbatim}
+
+\vspace{12pt}
+\normalsize
+
+We can compare with the estimates of expected Darwinian fitness (or the
+best surrogate of) for each ancestral line.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{rowSums}\NormalTok{(preds\_hdct)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       AA   Eriley       Lf  Nessman     NWLF      SPP  Stevens 
+## 2.375984 1.502068 1.565962 1.064478 1.800250 2.499468 1.705529
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-43}{}
+Let's now compare with a zero-inflated Poisson model. The response for
+this model will be the sum of all head counts.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{foo }\OtherTok{\textless{}{-}}\NormalTok{ redata }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(fit }\SpecialCharTok{==} \DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{group\_by}\NormalTok{(id) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{fitness =} \FunctionTok{sum}\NormalTok{(resp), }\AttributeTok{pop =} \FunctionTok{unique}\NormalTok{(pop), }
+            \AttributeTok{ewloc =} \FunctionTok{unique}\NormalTok{(ewloc), }\AttributeTok{nsloc =} \FunctionTok{unique}\NormalTok{(nsloc))}
+\FunctionTok{head}\NormalTok{(foo)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6 x 5
+##      id fitness pop    ewloc nsloc
+##   <int>   <int> <fct>  <int> <int>
+## 1     1       0 NWLF      -8   -11
+## 2     2       0 Eriley    -8   -10
+## 3     3       0 NWLF      -8    -9
+## 4     4       0 SPP       -8    -8
+## 5     5       0 SPP       -8    -7
+## 6     6       1 Eriley    -8    -6
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-44}{}
+Recall the \texttt{zeroinfl} function in the \texttt{pscl} package.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(pscl)}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{zeroinfl}\NormalTok{(fitness }\SpecialCharTok{\textasciitilde{}}\NormalTok{ pop }\SpecialCharTok{+}\NormalTok{ ewloc }\SpecialCharTok{+}\NormalTok{ nsloc, }\AttributeTok{data =}\NormalTok{ foo)}
+\FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## zeroinfl(formula = fitness ~ pop + ewloc + nsloc, data = foo)
+## 
+## Pearson residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1.5892 -0.6795 -0.4511  0.4048  6.8134 
+## 
+## Count model coefficients (poisson with log link):
+##              Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)  1.556952   0.116514  13.363  < 2e-16 ***
+## popEriley   -0.489889   0.143062  -3.424 0.000616 ***
+## popLf       -0.446440   0.152620  -2.925 0.003443 ** 
+## popNessman  -0.498853   0.228660  -2.182 0.029136 *  
+## popNWLF     -0.057281   0.129259  -0.443 0.657659    
+## popSPP      -0.117293   0.133304  -0.880 0.378917    
+## popStevens  -0.097473   0.139955  -0.696 0.486142    
+## ewloc        0.007642   0.005513   1.386 0.165711    
+## nsloc       -0.002746   0.005586  -0.492 0.622999    
+## 
+## Zero-inflation model coefficients (binomial with logit link):
+##             Estimate Std. Error z value Pr(>|z|)    
+## (Intercept) -0.03934    0.38506  -0.102  0.91862    
+## popEriley   -0.24266    0.45578  -0.532  0.59445    
+## popLf       -0.18248    0.48038  -0.380  0.70404    
+## popNessman   0.50797    0.58430   0.869  0.38465    
+## popNWLF      0.42221    0.42359   0.997  0.31889    
+## popSPP      -0.49195    0.46225  -1.064  0.28722    
+## popStevens   0.44164    0.44807   0.986  0.32430    
+## ewloc       -0.04561    0.01480  -3.082  0.00206 ** 
+## nsloc       -0.11550    0.01477  -7.818 5.35e-15 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+## 
+## Number of iterations in BFGS optimization: 22 
+## Log-likelihood: -1007 on 18 Df
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-45}{}
+Estimates of fitness are nearly identical.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{preds\_hdct\_0infl }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(m, }
+  \AttributeTok{newdata =} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{pop =}\NormalTok{ pop, }\AttributeTok{ewloc =} \DecValTok{0}\NormalTok{, }\AttributeTok{nsloc =} \DecValTok{0}\NormalTok{), }
+  \AttributeTok{type =} \StringTok{"response"}\NormalTok{)}
+
+\FunctionTok{cbind}\NormalTok{(}\FunctionTok{rowSums}\NormalTok{(preds\_hdct), preds\_hdct\_0infl)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                  preds_hdct_0infl
+## AA      2.375984         2.418829
+## Eriley  1.502068         1.657001
+## Lf      1.565962         1.685632
+## Nessman 1.064478         1.108977
+## NWLF    1.800250         1.816442
+## SPP     2.499468         2.657224
+## Stevens 1.705529         1.724758
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-46}{}
+The \texttt{zeroinfl} does not come with a function for estimating
+standard errors of mean-value parameters. So we bootstrap.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(parallel)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{13}\NormalTok{)}
+\FunctionTok{RNGkind}\NormalTok{(}\StringTok{"L\textquotesingle{}Ecuyer{-}CMRG"}\NormalTok{)}
+\NormalTok{nCores }\OtherTok{\textless{}{-}} \FunctionTok{detectCores}\NormalTok{() }\SpecialCharTok{{-}} \DecValTok{2}
+\NormalTok{B }\OtherTok{\textless{}{-}} \FloatTok{1e4}
+\FunctionTok{system.time}\NormalTok{(\{out }\OtherTok{\textless{}{-}} \FunctionTok{do.call}\NormalTok{(rbind, }\FunctionTok{mclapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{B, }\AttributeTok{mc.cores =}\NormalTok{ nCores, }
+                               \ControlFlowTok{function}\NormalTok{(j)\{}
+\NormalTok{    m }\OtherTok{\textless{}{-}} \FunctionTok{zeroinfl}\NormalTok{(fitness }\SpecialCharTok{\textasciitilde{}}\NormalTok{ pop }\SpecialCharTok{+}\NormalTok{ ewloc }\SpecialCharTok{+}\NormalTok{ nsloc, }
+                  \AttributeTok{data =}\NormalTok{ foo[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(foo), }\AttributeTok{replace =} \ConstantTok{TRUE}\NormalTok{), ])}
+    \FunctionTok{predict}\NormalTok{(m, }\AttributeTok{newdata =} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{pop =}\NormalTok{ pop, }\AttributeTok{ewloc =} \DecValTok{0}\NormalTok{, }\AttributeTok{nsloc =} \DecValTok{0}\NormalTok{), }
+            \AttributeTok{type =} \StringTok{"response"}\NormalTok{)}
+\NormalTok{  \})}
+\NormalTok{)\})}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    user  system elapsed 
+## 207.820  12.382  31.772
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-47}{}
+The aster model comes with useful lower standard errors.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cbind}\NormalTok{(preds\_hdct\_0infl, }\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{diag}\NormalTok{(}\FunctionTok{var}\NormalTok{(out))))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   preds_hdct_0infl          
+## 1         2.418829 0.6467319
+## 2         1.657001 0.2412353
+## 3         1.685632 0.3226397
+## 4         1.108977 0.3737391
+## 5         1.816442 0.2457005
+## 6         2.657224 0.3905494
+## 7         1.724758 0.3279760
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mean\_value}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         estimates std. err.
+## AA       2.375984 0.4460557
+## Eriley   1.502068 0.1959073
+## Lf       1.565962 0.2486880
+## Nessman  1.064478 0.3090545
+## NWLF     1.800250 0.1815734
+## SPP      2.499468 0.2889009
+## Stevens  1.705529 0.2216032
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-48}{}
+For completeness we now consider a parametric bootstrap.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{13}\NormalTok{)}
+\FunctionTok{RNGkind}\NormalTok{(}\StringTok{"L\textquotesingle{}Ecuyer{-}CMRG"}\NormalTok{)}
+\NormalTok{B }\OtherTok{\textless{}{-}} \FloatTok{1e4}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{zeroinfl}\NormalTok{(fitness }\SpecialCharTok{\textasciitilde{}}\NormalTok{ pop }\SpecialCharTok{+}\NormalTok{ ewloc }\SpecialCharTok{+}\NormalTok{ nsloc, }\AttributeTok{data =}\NormalTok{ foo)}
+\NormalTok{pred\_prob }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(m, }\AttributeTok{type =} \StringTok{"zero"}\NormalTok{)}
+\NormalTok{pred\_lambda }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(m, }\AttributeTok{type =} \StringTok{"count"}\NormalTok{)}
+\FunctionTok{system.time}\NormalTok{(\{out }\OtherTok{\textless{}{-}} \FunctionTok{do.call}\NormalTok{(rbind, }\FunctionTok{mclapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{B, }\AttributeTok{mc.cores =}\NormalTok{ nCores, }
+                               \ControlFlowTok{function}\NormalTok{(j)\{}
+\NormalTok{  bar }\OtherTok{\textless{}{-}}\NormalTok{ foo}
+\NormalTok{  bar}\SpecialCharTok{$}\NormalTok{resp }\OtherTok{\textless{}{-}} \FunctionTok{rbinom}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(foo), }\AttributeTok{size =} \DecValTok{1}\NormalTok{, }\AttributeTok{prob =}\NormalTok{ pred\_prob) }\SpecialCharTok{*} 
+    \FunctionTok{rpois}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(foo), }\AttributeTok{lambda =}\NormalTok{ pred\_lambda)}
+\NormalTok{  m }\OtherTok{\textless{}{-}} \FunctionTok{zeroinfl}\NormalTok{(resp }\SpecialCharTok{\textasciitilde{}}\NormalTok{ pop }\SpecialCharTok{+}\NormalTok{ ewloc }\SpecialCharTok{+}\NormalTok{ nsloc, }\AttributeTok{data =}\NormalTok{ bar)}
+  \FunctionTok{predict}\NormalTok{(m, }\AttributeTok{newdata =} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{pop =}\NormalTok{ pop, }\AttributeTok{ewloc =} \DecValTok{0}\NormalTok{, }\AttributeTok{nsloc =} \DecValTok{0}\NormalTok{), }
+          \AttributeTok{type =} \StringTok{"response"}\NormalTok{)}
+\NormalTok{  \})}
+\NormalTok{)\})}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    user  system elapsed 
+## 207.861  12.708  31.955
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-49}{}
+The aster model comes with useful lower standard errors, but the
+parametric bootstrap procedure is more competitive.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cbind}\NormalTok{(preds\_hdct\_0infl, }\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{diag}\NormalTok{(}\FunctionTok{var}\NormalTok{(out))))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   preds_hdct_0infl          
+## 1         2.418829 0.5260550
+## 2         1.657001 0.1939094
+## 3         1.685632 0.2469549
+## 4         1.108977 0.3714930
+## 5         1.816442 0.2380877
+## 6         2.657224 0.2850335
+## 7         1.724758 0.2932117
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mean\_value}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         estimates std. err.
+## AA       2.375984 0.4460557
+## Eriley   1.502068 0.1959073
+## Lf       1.565962 0.2486880
+## Nessman  1.064478 0.3090545
+## NWLF     1.800250 0.1815734
+## SPP      2.499468 0.2889009
+## Stevens  1.705529 0.2216032
 \end{verbatim}
 \end{frame}
 
