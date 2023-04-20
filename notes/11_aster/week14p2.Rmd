@@ -736,7 +736,7 @@ for (k in 1:npop) amat[k, foo, k] <- 1
 ```
 
 
-## 
+## Standard Errors
 
 We now obtain estimates of expected Darwinian fitness and its standard error using \texttt{predict.aster}.
 
@@ -754,7 +754,7 @@ rowSums(preds_hdct)
 ```
 
 
-## 
+##
 
 Here are the estimated standard errors corresponding to estimates of expected Darwinian fitness for hypothetical typical individuals belonging to each population.
 
@@ -769,7 +769,7 @@ round(mean_value, 3)
 
 
 
-##
+## Conditional modeling parameters
 
 We can obtain estimates of submodel conditional mean-value parameters (ie mean survival for each ancestral line).
 
@@ -824,7 +824,7 @@ rowSums(preds_hdct)
 <!-- ``` -->
 
 
-## 
+## Zero-inflated Poisson model
 
 Let's now compare with a zero-inflated Poisson model. The response for this model will be the sum of all head counts. 
 
@@ -838,6 +838,12 @@ head(foo)
 ```
 
 
+## 
+
+\tiny
+```{r}
+foo %>% pull(fitness) %>% hist(., main = "Distribution of fitness", breaks = 20)
+```
 
 ##
 

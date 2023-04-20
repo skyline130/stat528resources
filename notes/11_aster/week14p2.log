@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  20 APR 2023 10:10
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  20 APR 2023 10:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1421,16 +1421,25 @@ Package pdftex.def Info: transforms.pdf  used on input line 1065.
 ]
 \openout4 = `week14p2.vrb'.
 
-(./week14p2.vrb)
-Overfull \vbox (53.46169pt too high) detected at line 1642
- []
+(./week14p2.vrb
+<week14p2_files/figure-beamer/unnamed-chunk-38-1.pdf, id=405, 735.74875pt x 499
+.8675pt>
+File: week14p2_files/figure-beamer/unnamed-chunk-38-1.pdf Graphic file (type pd
+f)
+<use week14p2_files/figure-beamer/unnamed-chunk-38-1.pdf>
+Package pdftex.def Info: week14p2_files/figure-beamer/unnamed-chunk-38-1.pdf  u
+sed on input line 11.
+(pdftex.def)             Requested size: 307.2947pt x 208.77592pt.
+) [53
 
-[53
-
-]
+ <./week14p2_files/figure-beamer/unnamed-chunk-38-1.pdf>]
 \openout4 = `week14p2.vrb'.
 
-(./week14p2.vrb) [54
+(./week14p2.vrb)
+Overfull \vbox (53.46169pt too high) detected at line 1655
+ []
+
+[54
 
 ]
 \openout4 = `week14p2.vrb'.
@@ -1453,6 +1462,11 @@ Overfull \vbox (53.46169pt too high) detected at line 1642
 (./week14p2.vrb) [58
 
 ]
+\openout4 = `week14p2.vrb'.
+
+(./week14p2.vrb) [59
+
+]
 \tf@nav=\write6
 \openout6 = `week14p2.nav'.
 
@@ -1464,10 +1478,10 @@ Overfull \vbox (53.46169pt too high) detected at line 1642
 
 (./week14p2.aux) ) 
 Here is how much of TeX's memory you used:
- 29310 strings out of 478268
- 573419 string characters out of 5846347
+ 29324 strings out of 478268
+ 573918 string characters out of 5846347
  878660 words of memory out of 5000000
- 46547 multiletter control sequences out of 15000+600000
+ 46555 multiletter control sequences out of 15000+600000
  532836 words of font info for 122 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  128i,11n,122p,1005b,455s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -1491,10 +1505,10 @@ lmsy8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmtk10.pfb>
 al/texlive/2022/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive
 /2022/texmf-dist/fonts/type1/public/lm/lmtt8.pfb></usr/local/texlive/2022/texmf
 -dist/fonts/type1/public/amsfonts/symbols/msam10.pfb>
-Output written on week14p2.pdf (58 pages, 512877 bytes).
+Output written on week14p2.pdf (59 pages, 518669 bytes).
 PDF statistics:
- 559 PDF objects out of 1000 (max. 8388607)
- 438 compressed objects within 5 object streams
- 174 named destinations out of 1000 (max. 500000)
- 36932 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 575 PDF objects out of 1000 (max. 8388607)
+ 450 compressed objects within 5 object streams
+ 177 named destinations out of 1000 (max. 500000)
+ 36937 words of extra memory for PDF output out of 42996 (max. 10000000)
 

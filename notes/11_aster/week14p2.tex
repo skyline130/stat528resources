@@ -1406,8 +1406,8 @@ We want only the means for the \(k\)th individual to contribute to
 \end{Shaded}
 \end{frame}
 
-\begin{frame}[fragile]{}
-\protect\hypertarget{section-39}{}
+\begin{frame}[fragile]{Standard Errors}
+\protect\hypertarget{standard-errors}{}
 We now obtain estimates of expected Darwinian fitness and its standard
 error using \texttt{predict.aster}.
 
@@ -1442,7 +1442,7 @@ error using \texttt{predict.aster}.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-40}{}
+\protect\hypertarget{section-39}{}
 Here are the estimated standard errors corresponding to estimates of
 expected Darwinian fitness for hypothetical typical individuals
 belonging to each population.
@@ -1471,8 +1471,8 @@ belonging to each population.
 \end{verbatim}
 \end{frame}
 
-\begin{frame}[fragile]{}
-\protect\hypertarget{section-41}{}
+\begin{frame}[fragile]{Conditional modeling parameters}
+\protect\hypertarget{conditional-modeling-parameters}{}
 We can obtain estimates of submodel conditional mean-value parameters
 (ie mean survival for each ancestral line).
 
@@ -1506,7 +1506,7 @@ We can obtain estimates of submodel conditional mean-value parameters
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-42}{}
+\protect\hypertarget{section-40}{}
 We display the average survival and flowering rates for each ancestral
 line.
 
@@ -1556,8 +1556,8 @@ best surrogate of) for each ancestral line.
 \end{verbatim}
 \end{frame}
 
-\begin{frame}[fragile]{}
-\protect\hypertarget{section-43}{}
+\begin{frame}[fragile]{Zero-inflated Poisson model}
+\protect\hypertarget{zero-inflated-poisson-model}{}
 Let's now compare with a zero-inflated Poisson model. The response for
 this model will be the sum of all head counts.
 
@@ -1587,7 +1587,20 @@ this model will be the sum of all head counts.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-44}{}
+\protect\hypertarget{section-41}{}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{foo }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{pull}\NormalTok{(fitness) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{hist}\NormalTok{(., }\AttributeTok{main =} \StringTok{"Distribution of fitness"}\NormalTok{, }\AttributeTok{breaks =} \DecValTok{20}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{week14p2_files/figure-beamer/unnamed-chunk-38-1.pdf}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-42}{}
 Recall the \texttt{zeroinfl} function in the \texttt{pscl} package.
 
 \vspace{12pt}
@@ -1642,7 +1655,7 @@ Recall the \texttt{zeroinfl} function in the \texttt{pscl} package.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-45}{}
+\protect\hypertarget{section-43}{}
 Estimates of fitness are nearly identical.
 
 \vspace{12pt}
@@ -1671,7 +1684,7 @@ Estimates of fitness are nearly identical.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-46}{}
+\protect\hypertarget{section-44}{}
 The \texttt{zeroinfl} does not come with a function for estimating
 standard errors of mean-value parameters. So we bootstrap.
 
@@ -1708,7 +1721,7 @@ standard errors of mean-value parameters. So we bootstrap.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-47}{}
+\protect\hypertarget{section-45}{}
 The aster model comes with useful lower standard errors.
 
 \vspace{12pt}
@@ -1750,7 +1763,7 @@ The aster model comes with useful lower standard errors.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-48}{}
+\protect\hypertarget{section-46}{}
 For completeness we now consider a parametric bootstrap.
 
 \vspace{12pt}
@@ -1784,7 +1797,7 @@ For completeness we now consider a parametric bootstrap.
 \end{frame}
 
 \begin{frame}[fragile]{}
-\protect\hypertarget{section-49}{}
+\protect\hypertarget{section-47}{}
 The aster model comes with useful lower standard errors, but the
 parametric bootstrap procedure is more competitive.
 
