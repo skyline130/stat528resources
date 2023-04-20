@@ -928,7 +928,7 @@ set.seed(13)
 RNGkind("L'Ecuyer-CMRG")
 B <- 1e4
 m <- zeroinfl(fitness ~ pop + ewloc + nsloc, data = foo)
-pred_prob <- predict(m, type = "zero")
+pred_prob <- 1 - predict(m, type = "zero")
 pred_lambda <- predict(m, type = "count")
 system.time({out <- do.call(rbind, mclapply(1:B, mc.cores = nCores, 
                                function(j){

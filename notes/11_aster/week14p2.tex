@@ -1762,7 +1762,7 @@ For completeness we now consider a parametric bootstrap.
 \FunctionTok{RNGkind}\NormalTok{(}\StringTok{"L\textquotesingle{}Ecuyer{-}CMRG"}\NormalTok{)}
 \NormalTok{B }\OtherTok{\textless{}{-}} \FloatTok{1e4}
 \NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{zeroinfl}\NormalTok{(fitness }\SpecialCharTok{\textasciitilde{}}\NormalTok{ pop }\SpecialCharTok{+}\NormalTok{ ewloc }\SpecialCharTok{+}\NormalTok{ nsloc, }\AttributeTok{data =}\NormalTok{ foo)}
-\NormalTok{pred\_prob }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(m, }\AttributeTok{type =} \StringTok{"zero"}\NormalTok{)}
+\NormalTok{pred\_prob }\OtherTok{\textless{}{-}} \DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{predict}\NormalTok{(m, }\AttributeTok{type =} \StringTok{"zero"}\NormalTok{)}
 \NormalTok{pred\_lambda }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(m, }\AttributeTok{type =} \StringTok{"count"}\NormalTok{)}
 \FunctionTok{system.time}\NormalTok{(\{out }\OtherTok{\textless{}{-}} \FunctionTok{do.call}\NormalTok{(rbind, }\FunctionTok{mclapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{B, }\AttributeTok{mc.cores =}\NormalTok{ nCores, }
                                \ControlFlowTok{function}\NormalTok{(j)\{}
@@ -1779,7 +1779,7 @@ For completeness we now consider a parametric bootstrap.
 
 \begin{verbatim}
 ##    user  system elapsed 
-## 207.861  12.708  31.955
+## 207.074  11.542  32.616
 \end{verbatim}
 \end{frame}
 
@@ -1799,13 +1799,13 @@ parametric bootstrap procedure is more competitive.
 
 \begin{verbatim}
 ##   preds_hdct_0infl          
-## 1         2.418829 0.5260550
-## 2         1.657001 0.1939094
-## 3         1.685632 0.2469549
-## 4         1.108977 0.3714930
-## 5         1.816442 0.2380877
-## 6         2.657224 0.2850335
-## 7         1.724758 0.2932117
+## 1         2.418829 0.5286974
+## 2         1.657001 0.2061730
+## 3         1.685632 0.2580984
+## 4         1.108977 0.3451462
+## 5         1.816442 0.2226821
+## 6         2.657224 0.3086680
+## 7         1.724758 0.2747817
 \end{verbatim}
 
 \begin{Shaded}
