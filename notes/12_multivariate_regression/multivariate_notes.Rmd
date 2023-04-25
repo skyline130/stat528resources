@@ -53,7 +53,7 @@ $$
   a_{m1} B & \cdots & a_{mn}B
   \end{array}\right) \in \R^{mp \times nq}.
 $$
-The representation \eqref{multivariate} allows for a straightforward procedure for obtaining estimates of $\beta$. Maximizing the likelihood \eqref{multivariate} is equivalent to minimizing the sum of squares $\| \text{vec}(\Y') - \text{vec}(\beta'\X')\|^2$. After a bit of algebra we arrive at an aesthetically similar ordinary least squares problem
+The representation \eqref{multivariate} allows for a straightforward procedure for obtaining estimates of $\beta$. Maximizing the likelihood \eqref{multivariate} is equivalent to minimizing the sum of squares $\| \text{vec}(\Y') - \text{vec}(\beta\X')\|^2$. After a bit of algebra we arrive at an aesthetically similar ordinary least squares problem
 \begin{align*}
   \| \text{vec}(\Y') - \text{vec}(\beta\X')\|^2 &= \| \text{vec}(\Y) - \text{vec}(\X\beta')\|^2 \\
     &= \| \Y - \X\beta'\|_F^2,

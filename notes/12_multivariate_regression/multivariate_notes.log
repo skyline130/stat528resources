@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  24 APR 2023 20:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.11.7)  25 APR 2023 07:35
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -960,23 +960,14 @@ File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 LaTeX Font Warning: Font shape `T1/lmtt/bx/it' in size <10> not available
 (Font)              Font shape `T1/lmtt/b/sl' tried instead on input line 494.
 
-[6] [7]
-
-Package natbib Warning: Citation `cook2010envelope' on page 8 undefined on inpu
-t line 684.
-
-[8]
-
-Package natbib Warning: Citation `cook2020envelope' on page 9 undefined on inpu
-t line 699.
-
-<envelope_schematic.png, id=98, 1340.50812pt x 584.1825pt>
+[6] [7] [8]
+<envelope_schematic.png, id=103, 1340.50812pt x 584.1825pt>
 File: envelope_schematic.png Graphic file (type png)
 <use envelope_schematic.png>
 Package pdftex.def Info: envelope_schematic.png  used on input line 701.
 (pdftex.def)             Requested size: 469.73714pt x 204.70761pt.
 [9 <./envelope_schematic.png>] [10]
-<multivariate_notes_files/figure-latex/unnamed-chunk-9-1.pdf, id=119, 453.695pt
+<multivariate_notes_files/figure-latex/unnamed-chunk-9-1.pdf, id=125, 453.695pt
  x 313.17pt>
 File: multivariate_notes_files/figure-latex/unnamed-chunk-9-1.pdf Graphic file 
 (type pdf)
@@ -985,7 +976,7 @@ Package pdftex.def Info: multivariate_notes_files/figure-latex/unnamed-chunk-9-
 1.pdf  used on input line 841.
 (pdftex.def)             Requested size: 453.6939pt x 313.16922pt.
 [11 <./multivariate_notes_files/figure-latex/unnamed-chunk-9-1.pdf>]
-<multivariate_notes_files/figure-latex/unnamed-chunk-10-1.pdf, id=134, 453.695p
+<multivariate_notes_files/figure-latex/unnamed-chunk-10-1.pdf, id=140, 453.695p
 t x 313.17pt>
 File: multivariate_notes_files/figure-latex/unnamed-chunk-10-1.pdf Graphic file
  (type pdf)
@@ -994,51 +985,43 @@ Package pdftex.def Info: multivariate_notes_files/figure-latex/unnamed-chunk-10
 -1.pdf  used on input line 901.
 (pdftex.def)             Requested size: 453.6939pt x 313.16922pt.
 [12] [13 <./multivariate_notes_files/figure-latex/unnamed-chunk-10-1.pdf>] [14]
-
-Package natbib Warning: Citation `eck2017weighted' on page 15 undefined on inpu
-t line 1003.
-
-(./multivariate_notes.bbl)
-
-Package natbib Warning: There were undefined citations.
-
-[15] (./multivariate_notes.aux) ) 
+(./multivariate_notes.bbl [15]) [16] (./multivariate_notes.aux) ) 
 Here is how much of TeX's memory you used:
- 34835 strings out of 478268
- 794929 string characters out of 5846347
- 1213456 words of memory out of 5000000
- 52239 multiletter control sequences out of 15000+600000
- 533985 words of font info for 158 fonts, out of 8000000 for 9000
+ 34848 strings out of 478268
+ 795213 string characters out of 5846347
+ 1213564 words of memory out of 5000000
+ 52248 multiletter control sequences out of 15000+600000
+ 534079 words of font info for 158 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  84i,11n,80p,1015b,609s stack positions out of 10000i,1000n,20000p,200000b,200000s
-{/usr/local/texlive/2022/texmf-dist/fonts/enc/
-dvips/lm/lm-ec.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ma
-thit.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{/us
-r/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texliv
-e/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/local/texlive/2022/tex
-mf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}</usr/local/texlive/2022/texmf-dist/fo
-nts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/
-public/lm/lmbx12.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/
-lmex10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi10.pfb
-></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></usr/loca
-l/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2
-022/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2022/texmf-d
-ist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2022/texmf-dist/fonts/t
-ype1/public/lm/lmr17.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public
-/lm/lmr5.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr7.pfb
-></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/loc
-al/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive
-/2022/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2022/texmf
--dist/fonts/type1/public/lm/lmtk10.pfb></usr/local/texlive/2022/texmf-dist/font
-s/type1/public/lm/lmtko10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/p
-ublic/lm/lmtt10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/l
-mtti10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symb
-ols/msbm10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/
-symbols/msbm7.pfb>
-Output written on multivariate_notes.pdf (15 pages, 787919 bytes).
+{/usr/local/te
+xlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/2022/tex
+mf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2022/texmf-dist/fo
+nts/enc/dvips/lm/lm-ts1.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips
+/lm/lm-rm.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathex.
+enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}</usr/
+local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texl
+ive/2022/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2022/t
+exmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2022/texmf-dist/
+fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type
+1/public/lm/lmmi5.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm
+/lmmi7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr10.pfb>
+</usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local
+/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/20
+22/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2022/texmf-dis
+t/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type
+1/public/lm/lmri10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/l
+m/lmsy10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy7.pf
+b></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></usr/lo
+cal/texlive/2022/texmf-dist/fonts/type1/public/lm/lmtko10.pfb></usr/local/texli
+ve/2022/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2022/te
+xmf-dist/fonts/type1/public/lm/lmtti10.pfb></usr/local/texlive/2022/texmf-dist/
+fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2022/texmf-d
+ist/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
+Output written on multivariate_notes.pdf (16 pages, 793403 bytes).
 PDF statistics:
- 324 PDF objects out of 1000 (max. 8388607)
- 251 compressed objects within 3 object streams
- 44 named destinations out of 1000 (max. 500000)
+ 337 PDF objects out of 1000 (max. 8388607)
+ 263 compressed objects within 3 object streams
+ 48 named destinations out of 1000 (max. 500000)
  34924 words of extra memory for PDF output out of 35830 (max. 10000000)
 
