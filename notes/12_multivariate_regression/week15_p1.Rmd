@@ -1,0 +1,297 @@
+---
+title: "STAT 528 - Advanced Regression Analysis II"
+author: "Multivariate Regression"
+institute: |
+  | Daniel J. Eck
+  | Department of Statistics
+  | University of Illinois
+date: ""
+output: 
+    beamer_presentation:
+        keep_tex: true
+        fig_width: 11
+        fig_height: 7.5
+        includes:
+urlcolor: blue
+header-includes:
+- \usepackage{graphicx}
+- \usepackage{bm}
+- \usepackage{amsthm}
+- \usepackage{amsmath}
+- \usepackage{amsfonts}
+- \usepackage{amscd}
+- \usepackage{amssymb}
+- \usepackage{natbib}
+- \usepackage{url}
+- \usepackage{tikz}
+- \definecolor{foreground}{RGB}{255,255,255}
+- \definecolor{background}{RGB}{34,28,54}
+- \definecolor{title}{RGB}{105,165,255}
+- \definecolor{gray}{RGB}{175,175,175}
+- \definecolor{lightgray}{RGB}{225,225,225}
+- \definecolor{subtitle}{RGB}{232,234,255}
+- \definecolor{hilight}{RGB}{112,224,255}
+- \definecolor{vhilight}{RGB}{255,111,207}
+- \setbeamertemplate{footline}[page number]
+---
+
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\Y}{\mathbb{Y}}
+\newcommand{\X}{\mathbb{X}}
+
+
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy.opts=list(width.cutoff=40))
+library(ggplot2)
+
+mycols     = c("chartreuse3", "orangered", "deepskyblue3", "darkorchid1", "yellow")
+dark_theme = theme(plot.background   = element_blank(), 
+                   panel.background  = element_blank(),
+                   #legend.background = element_blank(), legend.key = element_blank(),
+                   axis.title.x      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(10,0,0,0)),
+                   axis.title.y      = element_text(size = 26, colour = "grey80",
+                                                    margin=margin(0,20,0,0)),
+                   axis.text         = element_text(size=18, color = "grey80"), 
+                   text              = element_text(size=20),
+                   axis.title        = element_text(size = 26),
+                   legend.title      = element_text(size = 26, colour = "grey80"),
+                   panel.border      = element_blank(),
+                   panel.grid.major  = element_line(colour = "grey50"), 
+                   panel.grid.minor  = element_line(colour = "grey30"))
+```
+
+
+## Learning Objectives Today
+
+- Multivariate regression modeling
+- Examples
+
+
+## Motor Trend Cars example
+
+The data was extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973-74 models). The variables are: 
+
+- mpg:	Miles/(US) gallon
+- disp:	Displacement (cu.in.)
+- hp:	Gross horsepower
+- wt:	Weight (1000 lbs)
+- cyl:	Number of cylinders
+- am:	Transmission (0 = automatic, 1 = manual)
+- carb:	Number of carburetors
+
+The first four variables are response variables corresponding to engine performance and size. The next three variables are engine design variables.
+
+
+## 
+
+We load in the data
+
+\vspace{12pt}
+\tiny
+```{r}
+data(mtcars)
+head(mtcars)
+```
+
+\vspace{12pt}
+\normalsize
+The standard \texttt{lm} function in R can fit multivariate linear regression models.
+
+\vspace{12pt}
+\tiny
+```{r}
+mtcars$cyl <- factor(mtcars$cyl)
+Y <- as.matrix(mtcars[,c("mpg","disp","hp","wt")])
+m <- lm(Y ~ cyl + am + carb, data=mtcars, x = TRUE)
+
+# estimate of beta'
+betahat <- coef(m)
+betahat
+```
+
+
+## 
+
+We now estimate $\Sigma$ via MLE and provide an unbiased estimator.
+
+\vspace{12pt}
+\tiny
+```{r}
+# estimates of Sigma
+SSE <- crossprod(Y - m$fitted.values)
+n <- nrow(Y)
+p <- nrow(coef(m))
+SigmaMLE <- SSE / n
+SigmaMLE
+Sigmahat <- SSE / (n - p)
+Sigmahat
+```
+
+
+## 
+
+We can see that the R's \texttt{vcov} function provides an estimate of $\Var(\text{vec}(\hat\beta')) = \Sigma \otimes (\X'\X)^{-1}$ as its default
+
+\vspace{12pt}
+\tiny
+```{r}
+X <- m$x
+unique(round(vcov(m) - kronecker(Sigmahat, solve(crossprod(X))), 10))
+```
+
+
+## 
+
+We obtain inferences for regression coefficients corresponding to the first response variable \texttt{mpg}.
+
+\vspace{12pt}
+\tiny
+```{r}
+# summary table from lm
+msum <- summary(m)
+msum[[1]]
+```
+
+
+##
+
+We compare the summary table on the previous design to one obtained directly from theory
+
+\vspace{12pt}
+\tiny
+```{r}
+## estimates and standard errors
+msum2 <- cbind(coef(m)[, 1], sqrt(diag( kronecker(Sigmahat, solve(crossprod(X))) ))[1:5])
+
+## tstat and p-values
+msum2 <- cbind(msum2, msum2[, 1] / msum2[, 2])
+msum2 <- cbind(msum2, sapply(msum2[, 3], function(x) pt(abs(x), df = n - p, lower = FALSE)*2 ))
+msum2
+```
+
+
+## Inference and nested models 
+
+There are a plethora of additional tests that we could perform in this setting (we will not stress each test's origins in this course). 
+
+These include the Wilk's lambda, Pillai's trace, Hotelling-Lawley trace, and Roy's greatest root.
+
+First, let $E = n\tilde{\Sigma}$ where $\tilde{\Sigma}$ is the MLE for the full model with $\beta$ unconstrained and let $\tilde{H} = n(\tilde{\Sigma}_1 - \tilde{\Sigma})$ where $\tilde{\Sigma}_1$ is the MLE of $\Sigma$ in the reduced model constrained by $\beta_2 = 0$. 
+
+The test statistics now follow:
+
+\begin{itemize}
+\item Wilk's lambda = $\prod_{i=1}^s \frac{1}{1+\eta_i} = \frac{|\tilde{E}|}{|\tilde{E} + \tilde{H}|}$
+\item Pillai's trace = $\sum_{i=1}^s \frac{\eta_i}{1 + \eta_i} = \text{tr}[\tilde{H}(\tilde{E} + \tilde{H})^{-1}]$
+\item Hotelling-Lawley trace = $\sum_{i=1}^s\eta_i = \text{tr}(\tilde{H}\tilde{E}^{-1})$
+\item Roy's greatest root = $\frac{\eta_1}{1 + \eta_1}$
+\end{itemize}
+where $\eta_1 \geq \eta_2 \geq \cdots \geq \eta_s$ denote the nonzero eigenvalues of $\tilde{H}\tilde{E}^{-1}$.
+
+
+
+## 
+
+We demonstrate estimation of  Wilk's lambda and Pillai's trace. 
+
+\vspace{12pt}
+\tiny
+```{r}
+## anova implements these methods
+m0 <- lm(Y ~ am + carb, data=mtcars)
+anova(m0, m, test="Wilks")
+anova(m0, m, test="Pillai")
+```
+
+
+##
+
+The same quantities are estimated directly 
+
+\vspace{12pt}
+\tiny
+```{r}
+Etilde <- n * SigmaMLE
+SigmaTilde1 <- crossprod(Y - m0$fitted.values) / n
+Htilde <- n * (SigmaTilde1 - SigmaMLE)
+HEi <- Htilde %*% solve(Etilde)
+HEi.values <- eigen(HEi)$values
+c(Wilks = prod(1 / (1 + HEi.values)), Pillai = sum(HEi.values / (1 + HEi.values)))
+```
+
+
+## 
+
+We will now demonstrate confidence and prediction intervals in the motor trends cars example. Note that we have to code our own functions because R does not have the capability to provide these quantities. R does provide point predictions.
+
+\vspace{12pt}
+\tiny
+```{r}
+# confidence interval
+newdata <- data.frame(cyl=factor(6, levels=c(4,6,8)), am=1, carb=4)
+predict(m, newdata, interval="confidence")
+
+# prediction interval
+newdata <- data.frame(cyl=factor(6, levels=c(4,6,8)), am=1, carb=4)
+predict(m, newdata, interval="prediction")
+```
+
+
+
+## 
+
+Here is the function which produces confidence and prediction intervals (credit to Nathaniel Helwig)
+
+
+We now provide 95\% confidence and prediction intervals using code from [Nathaniel Helwig](http://users.stat.umn.edu/~helwig/notes/mvlr-Notes.pdf) (see Rmd file):
+
+```{r, echo = FALSE}
+pred.mlm <- function(object, newdata, level=0.95,
+                     interval = c("confidence", "prediction")){
+  form <- as.formula(paste("~",as.character(formula(object))[3]))
+  xnew <- model.matrix(form, newdata)
+  fit <- predict(object, newdata)
+  Y <- model.frame(object)[,1]
+  X <- model.matrix(object)
+  n <- nrow(Y)
+  r <- ncol(Y)
+  p <- ncol(X) - 1
+  sigmas <- colSums((Y - object$fitted.values)^2) / (n - p - 1)
+  fit.var <- diag(xnew %*% tcrossprod(solve(crossprod(X)), xnew))
+  if(interval[1]=="prediction") fit.var <- fit.var + 1
+  const <- qf(level, df1=r, df2=n-p-r) * r * (n - p - 1) / (n - p - r)
+  vmat <- (n/(n-p-1)) * outer(fit.var, sigmas)
+  lwr <- fit - sqrt(const) * sqrt(vmat)
+  upr <- fit + sqrt(const) * sqrt(vmat)
+  if(nrow(xnew)==1L){
+    ci <- rbind(fit, lwr, upr)
+    rownames(ci) <- c("fit", "lwr", "upr")
+  } else {
+    ci <- array(0, dim=c(nrow(xnew), r, 3))
+    dimnames(ci) <- list(1:nrow(xnew), colnames(Y), c("fit", "lwr", "upr") )
+    ci[,,1] <- fit
+    ci[,,2] <- lwr
+    ci[,,3] <- upr
+  }
+  ci
+}
+```
+
+\vspace{12pt}
+\tiny
+```{r}
+# confidence interval
+newdata <- data.frame(cyl=factor(6, levels=c(4,6,8)), am=1, carb=4)
+pred.mlm(m, newdata)
+
+# prediction interval
+newdata <- data.frame(cyl=factor(6, levels=c(4,6,8)), am=1, carb=4)
+pred.mlm(m, newdata, interval="prediction")
+```
+
+

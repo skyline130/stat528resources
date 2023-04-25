@@ -1,0 +1,588 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\newif\ifbibliography
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{graphicx}
+\usepackage{bm}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amscd}
+\usepackage{amssymb}
+\usepackage{natbib}
+\usepackage{url}
+\usepackage{tikz}
+\definecolor{foreground}{RGB}{255,255,255}
+\definecolor{background}{RGB}{34,28,54}
+\definecolor{title}{RGB}{105,165,255}
+\definecolor{gray}{RGB}{175,175,175}
+\definecolor{lightgray}{RGB}{225,225,225}
+\definecolor{subtitle}{RGB}{232,234,255}
+\definecolor{hilight}{RGB}{112,224,255}
+\definecolor{vhilight}{RGB}{255,111,207}
+\setbeamertemplate{footline}[page number]
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={STAT 528 - Advanced Regression Analysis II},
+  pdfauthor={Multivariate Regression},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{STAT 528 - Advanced Regression Analysis II}
+\author{Multivariate Regression}
+\date{}
+\institute{Daniel J. Eck\\
+Department of Statistics\\
+University of Illinois}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\Y}{\mathbb{Y}}
+\newcommand{\X}{\mathbb{X}}
+\end{frame}
+
+\begin{frame}{Learning Objectives Today}
+\protect\hypertarget{learning-objectives-today}{}
+\begin{itemize}
+\tightlist
+\item
+  Multivariate regression modeling
+\item
+  Examples
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Motor Trend Cars example}
+\protect\hypertarget{motor-trend-cars-example}{}
+The data was extracted from the 1974 Motor Trend US magazine, and
+comprises fuel consumption and 10 aspects of automobile design and
+performance for 32 automobiles (1973-74 models). The variables are:
+
+\begin{itemize}
+\tightlist
+\item
+  mpg: Miles/(US) gallon
+\item
+  disp: Displacement (cu.in.)
+\item
+  hp: Gross horsepower
+\item
+  wt: Weight (1000 lbs)
+\item
+  cyl: Number of cylinders
+\item
+  am: Transmission (0 = automatic, 1 = manual)
+\item
+  carb: Number of carburetors
+\end{itemize}
+
+The first four variables are response variables corresponding to engine
+performance and size. The next three variables are engine design
+variables.
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section}{}
+We load in the data
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{data}\NormalTok{(mtcars)}
+\FunctionTok{head}\NormalTok{(mtcars)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
+\end{verbatim}
+
+\vspace{12pt}
+\normalsize
+
+The standard \texttt{lm} function in R can fit multivariate linear
+regression models.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mtcars}\SpecialCharTok{$}\NormalTok{cyl }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(mtcars}\SpecialCharTok{$}\NormalTok{cyl)}
+\NormalTok{Y }\OtherTok{\textless{}{-}} \FunctionTok{as.matrix}\NormalTok{(mtcars[,}\FunctionTok{c}\NormalTok{(}\StringTok{"mpg"}\NormalTok{,}\StringTok{"disp"}\NormalTok{,}\StringTok{"hp"}\NormalTok{,}\StringTok{"wt"}\NormalTok{)])}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ cyl }\SpecialCharTok{+}\NormalTok{ am }\SpecialCharTok{+}\NormalTok{ carb, }\AttributeTok{data=}\NormalTok{mtcars, }\AttributeTok{x =} \ConstantTok{TRUE}\NormalTok{)}
+
+\CommentTok{\# estimate of beta\textquotesingle{}}
+\NormalTok{betahat }\OtherTok{\textless{}{-}} \FunctionTok{coef}\NormalTok{(m)}
+\NormalTok{betahat}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                   mpg      disp         hp         wt
+## (Intercept) 25.320303 134.32487 46.5201421  2.7612069
+## cyl6        -3.549419  61.84324  0.9116288  0.1957229
+## cyl8        -6.904637 218.99063 87.5910956  0.7723077
+## am           4.226774 -43.80256  4.4472569 -1.0254749
+## carb        -1.119855   1.72629 21.2764930  0.1749132
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-1}{}
+We now estimate \(\Sigma\) via MLE and provide an unbiased estimator.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# estimates of Sigma}
+\NormalTok{SSE }\OtherTok{\textless{}{-}} \FunctionTok{crossprod}\NormalTok{(Y }\SpecialCharTok{{-}}\NormalTok{ m}\SpecialCharTok{$}\NormalTok{fitted.values)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(Y)}
+\NormalTok{p }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(}\FunctionTok{coef}\NormalTok{(m))}
+\NormalTok{SigmaMLE }\OtherTok{\textless{}{-}}\NormalTok{ SSE }\SpecialCharTok{/}\NormalTok{ n}
+\NormalTok{SigmaMLE}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             mpg       disp          hp         wt
+## mpg    6.638633  -44.94796 -16.6232233 -0.5548030
+## disp -44.947964 2113.48487 358.7058833 15.2773945
+## hp   -16.623223  358.70588 487.0718440  0.3933977
+## wt    -0.554803   15.27739   0.3933977  0.2171394
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Sigmahat }\OtherTok{\textless{}{-}}\NormalTok{ SSE }\SpecialCharTok{/}\NormalTok{ (n }\SpecialCharTok{{-}}\NormalTok{ p)}
+\NormalTok{Sigmahat}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              mpg       disp          hp         wt
+## mpg    7.8680094  -53.27166 -19.7015979 -0.6575443
+## disp -53.2716607 2504.87095 425.1328988 18.1065416
+## hp   -19.7015979  425.13290 577.2703337  0.4662491
+## wt    -0.6575443   18.10654   0.4662491  0.2573503
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-2}{}
+We can see that the R's \texttt{vcov} function provides an estimate of
+\(\mathrm{Var}(\text{vec}(\hat\beta')) = \Sigma \otimes (\mathbb{X}'\mathbb{X})^{-1}\)
+as its default
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{X }\OtherTok{\textless{}{-}}\NormalTok{ m}\SpecialCharTok{$}\NormalTok{x}
+\FunctionTok{unique}\NormalTok{(}\FunctionTok{round}\NormalTok{(}\FunctionTok{vcov}\NormalTok{(m) }\SpecialCharTok{{-}} \FunctionTok{kronecker}\NormalTok{(Sigmahat, }\FunctionTok{solve}\NormalTok{(}\FunctionTok{crossprod}\NormalTok{(X))), }\DecValTok{10}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                 mpg:(Intercept) mpg:cyl6 mpg:cyl8 mpg:am mpg:carb
+## mpg:(Intercept)               0        0        0      0        0
+##                 disp:(Intercept) disp:cyl6 disp:cyl8 disp:am disp:carb
+## mpg:(Intercept)                0         0         0       0         0
+##                 hp:(Intercept) hp:cyl6 hp:cyl8 hp:am hp:carb wt:(Intercept)
+## mpg:(Intercept)              0       0       0     0       0              0
+##                 wt:cyl6 wt:cyl8 wt:am wt:carb
+## mpg:(Intercept)       0       0     0       0
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-3}{}
+We obtain inferences for regression coefficients corresponding to the
+first response variable \texttt{mpg}.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# summary table from lm}
+\NormalTok{msum }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(m)}
+\NormalTok{msum[[}\DecValTok{1}\NormalTok{]]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = mpg ~ cyl + am + carb, data = mtcars, x = TRUE)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -5.9074 -1.1723  0.2538  1.4851  5.4728 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  25.3203     1.2238  20.690  < 2e-16 ***
+## cyl6         -3.5494     1.7296  -2.052 0.049959 *  
+## cyl8         -6.9046     1.8078  -3.819 0.000712 ***
+## am            4.2268     1.3499   3.131 0.004156 ** 
+## carb         -1.1199     0.4354  -2.572 0.015923 *  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.805 on 27 degrees of freedom
+## Multiple R-squared:  0.8113, Adjusted R-squared:  0.7834 
+## F-statistic: 29.03 on 4 and 27 DF,  p-value: 1.991e-09
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-4}{}
+We compare the summary table on the previous design to one obtained
+directly from theory
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# estimates and standard errors}
+\NormalTok{msum2 }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(}\FunctionTok{coef}\NormalTok{(m)[, }\DecValTok{1}\NormalTok{], }\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{diag}\NormalTok{( }\FunctionTok{kronecker}\NormalTok{(Sigmahat, }\FunctionTok{solve}\NormalTok{(}\FunctionTok{crossprod}\NormalTok{(X))) ))[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{])}
+
+\DocumentationTok{\#\# tstat and p{-}values}
+\NormalTok{msum2 }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(msum2, msum2[, }\DecValTok{1}\NormalTok{] }\SpecialCharTok{/}\NormalTok{ msum2[, }\DecValTok{2}\NormalTok{])}
+\NormalTok{msum2 }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(msum2, }\FunctionTok{sapply}\NormalTok{(msum2[, }\DecValTok{3}\NormalTok{], }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{pt}\NormalTok{(}\FunctionTok{abs}\NormalTok{(x), }\AttributeTok{df =}\NormalTok{ n }\SpecialCharTok{{-}}\NormalTok{ p, }\AttributeTok{lower =} \ConstantTok{FALSE}\NormalTok{)}\SpecialCharTok{*}\DecValTok{2}\NormalTok{ ))}
+\NormalTok{msum2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                  [,1]      [,2]      [,3]         [,4]
+## (Intercept) 25.320303 1.2237903 20.690067 4.303483e-18
+## cyl6        -3.549419 1.7295506 -2.052221 4.995947e-02
+## cyl8        -6.904637 1.8078219 -3.819313 7.124146e-04
+## am           4.226774 1.3499249  3.131118 4.156214e-03
+## carb        -1.119855 0.4353558 -2.572274 1.592280e-02
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Inference and nested models}
+\protect\hypertarget{inference-and-nested-models}{}
+There are a plethora of additional tests that we could perform in this
+setting (we will not stress each test's origins in this course).
+
+These include the Wilk's lambda, Pillai's trace, Hotelling-Lawley trace,
+and Roy's greatest root.
+
+First, let \(E = n\tilde{\Sigma}\) where \(\tilde{\Sigma}\) is the MLE
+for the full model with \(\beta\) unconstrained and let
+\(\tilde{H} = n(\tilde{\Sigma}_1 - \tilde{\Sigma})\) where
+\(\tilde{\Sigma}_1\) is the MLE of \(\Sigma\) in the reduced model
+constrained by \(\beta_2 = 0\).
+
+The test statistics now follow:
+
+\begin{itemize}
+\item Wilk's lambda = $\prod_{i=1}^s \frac{1}{1+\eta_i} = \frac{|\tilde{E}|}{|\tilde{E} + \tilde{H}|}$
+\item Pillai's trace = $\sum_{i=1}^s \frac{\eta_i}{1 + \eta_i} = \text{tr}[\tilde{H}(\tilde{E} + \tilde{H})^{-1}]$
+\item Hotelling-Lawley trace = $\sum_{i=1}^s\eta_i = \text{tr}(\tilde{H}\tilde{E}^{-1})$
+\item Roy's greatest root = $\frac{\eta_1}{1 + \eta_1}$
+\end{itemize}
+
+where \(\eta_1 \geq \eta_2 \geq \cdots \geq \eta_s\) denote the nonzero
+eigenvalues of \(\tilde{H}\tilde{E}^{-1}\).
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-5}{}
+We demonstrate estimation of Wilk's lambda and Pillai's trace.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# anova implements these methods}
+\NormalTok{m0 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ am }\SpecialCharTok{+}\NormalTok{ carb, }\AttributeTok{data=}\NormalTok{mtcars)}
+\FunctionTok{anova}\NormalTok{(m0, m, }\AttributeTok{test=}\StringTok{"Wilks"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Model 1: Y ~ am + carb
+## Model 2: Y ~ cyl + am + carb
+##   Res.Df Df Gen.var.   Wilks approx F num Df den Df    Pr(>F)    
+## 1     29      43.692                                             
+## 2     27 -2   29.862 0.16395   8.8181      8     48 2.525e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{anova}\NormalTok{(m0, m, }\AttributeTok{test=}\StringTok{"Pillai"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Model 1: Y ~ am + carb
+## Model 2: Y ~ cyl + am + carb
+##   Res.Df Df Gen.var. Pillai approx F num Df den Df    Pr(>F)    
+## 1     29      43.692                                            
+## 2     27 -2   29.862 1.0323   6.6672      8     50 6.593e-06 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-6}{}
+The same quantities are estimated directly
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Etilde }\OtherTok{\textless{}{-}}\NormalTok{ n }\SpecialCharTok{*}\NormalTok{ SigmaMLE}
+\NormalTok{SigmaTilde1 }\OtherTok{\textless{}{-}} \FunctionTok{crossprod}\NormalTok{(Y }\SpecialCharTok{{-}}\NormalTok{ m0}\SpecialCharTok{$}\NormalTok{fitted.values) }\SpecialCharTok{/}\NormalTok{ n}
+\NormalTok{Htilde }\OtherTok{\textless{}{-}}\NormalTok{ n }\SpecialCharTok{*}\NormalTok{ (SigmaTilde1 }\SpecialCharTok{{-}}\NormalTok{ SigmaMLE)}
+\NormalTok{HEi }\OtherTok{\textless{}{-}}\NormalTok{ Htilde }\SpecialCharTok{\%*\%} \FunctionTok{solve}\NormalTok{(Etilde)}
+\NormalTok{HEi.values }\OtherTok{\textless{}{-}} \FunctionTok{eigen}\NormalTok{(HEi)}\SpecialCharTok{$}\NormalTok{values}
+\FunctionTok{c}\NormalTok{(}\AttributeTok{Wilks =} \FunctionTok{prod}\NormalTok{(}\DecValTok{1} \SpecialCharTok{/}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ HEi.values)), }\AttributeTok{Pillai =} \FunctionTok{sum}\NormalTok{(HEi.values }\SpecialCharTok{/}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ HEi.values)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        Wilks       Pillai 
+## 0.1639527+0i 1.0322975+0i
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-7}{}
+We will now demonstrate confidence and prediction intervals in the motor
+trends cars example. Note that we have to code our own functions because
+R does not have the capability to provide these quantities. R does
+provide point predictions.
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# confidence interval}
+\NormalTok{newdata }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{cyl=}\FunctionTok{factor}\NormalTok{(}\DecValTok{6}\NormalTok{, }\AttributeTok{levels=}\FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{8}\NormalTok{)), }\AttributeTok{am=}\DecValTok{1}\NormalTok{, }\AttributeTok{carb=}\DecValTok{4}\NormalTok{)}
+\FunctionTok{predict}\NormalTok{(m, newdata, }\AttributeTok{interval=}\StringTok{"confidence"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        mpg     disp      hp       wt
+## 1 21.51824 159.2707 136.985 2.631108
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# prediction interval}
+\NormalTok{newdata }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{cyl=}\FunctionTok{factor}\NormalTok{(}\DecValTok{6}\NormalTok{, }\AttributeTok{levels=}\FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{8}\NormalTok{)), }\AttributeTok{am=}\DecValTok{1}\NormalTok{, }\AttributeTok{carb=}\DecValTok{4}\NormalTok{)}
+\FunctionTok{predict}\NormalTok{(m, newdata, }\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        mpg     disp      hp       wt
+## 1 21.51824 159.2707 136.985 2.631108
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{}
+\protect\hypertarget{section-8}{}
+Here is the function which produces confidence and prediction intervals
+(credit to Nathaniel Helwig)
+
+We now provide 95\% confidence and prediction intervals using code from
+\href{http://users.stat.umn.edu/~helwig/notes/mvlr-Notes.pdf}{Nathaniel
+Helwig} (see Rmd file):
+
+\vspace{12pt}
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# confidence interval}
+\NormalTok{newdata }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{cyl=}\FunctionTok{factor}\NormalTok{(}\DecValTok{6}\NormalTok{, }\AttributeTok{levels=}\FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{8}\NormalTok{)), }\AttributeTok{am=}\DecValTok{1}\NormalTok{, }\AttributeTok{carb=}\DecValTok{4}\NormalTok{)}
+\FunctionTok{pred.mlm}\NormalTok{(m, newdata)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          mpg     disp        hp       wt
+## fit 21.51824 159.2707 136.98500 2.631108
+## lwr 16.65593  72.5141  95.33649 1.751736
+## upr 26.38055 246.0273 178.63351 3.510479
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# prediction interval}
+\NormalTok{newdata }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{cyl=}\FunctionTok{factor}\NormalTok{(}\DecValTok{6}\NormalTok{, }\AttributeTok{levels=}\FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{8}\NormalTok{)), }\AttributeTok{am=}\DecValTok{1}\NormalTok{, }\AttributeTok{carb=}\DecValTok{4}\NormalTok{)}
+\FunctionTok{pred.mlm}\NormalTok{(m, newdata, }\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           mpg      disp        hp        wt
+## fit 21.518240 159.27070 136.98500 2.6311076
+## lwr  9.680053 -51.95435  35.58397 0.4901152
+## upr 33.356426 370.49576 238.38603 4.7720999
+\end{verbatim}
+\end{frame}
+
+\end{document}
