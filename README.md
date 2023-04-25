@@ -7,7 +7,7 @@ See the Syllabus for more details. See the notes directory for course notes.
 # News
 
  - multivariate regression notes posted.
- - Homework 7 is posted and it is due on April 21st at 11:59 PM.
+ - Homework 7 is posted and it is due on May 3rd at 11:59 PM.
 
 
 ## Good Habits
