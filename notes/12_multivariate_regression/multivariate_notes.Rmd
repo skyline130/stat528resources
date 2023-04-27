@@ -423,7 +423,7 @@ Thus condition $(ii)$ is also satisfied.
 
 ## Example: wheat protein 
 
-This data contains measurements on protein content and the logarithms of near-infrared reflectance at six wavelengths across the range 1680-2310 nm measured on each of $n = 50$ samples of ground wheat. We will consider an analysis of the first two responses $(Y_1,Y_2)$ and convert the continuous measure of protein content into a categorical variable indicating low and high levels of protein. Here, the mean difference, $\mu_2 - \mu_1$ corresponds to $\beta$ in model (\ref{multimodel2}) where $X = 0$ indicates a high level of protein and $X = 1$ indicates a low level of protein. This dataset is in the \texttt{Renvlp} package and these manipulations have already been performed.
+This data contains measurements on protein content and the logarithms of near-infrared reflectance at six wavelengths across the range 1680-2310 nm measured on each of $n = 50$ samples of ground wheat. We will consider an analysis of the first two responses $(Y_1,Y_2)$ and convert the continuous measure of protein content into a categorical variable indicating low and high levels of protein. Here, the mean difference, $\mu_2 - \mu_1$ corresponds to $\beta$ in model (\ref{multimodel2}) where $X = 0$ indicates a high level of protein and $X = 1$ indicates a low level of protein. This dataset is in the \texttt{Renvlp} package..
 
 
 First, let's plot the data with the means of both responses at each protein level plotted.
@@ -450,17 +450,28 @@ ggplot(dat) + aes(x = Y1, y = Y2, color = X) +
 ```
 
 
-Now, let's see what envelopes has to say when $\hat{u} = 1$. We depict the envelope subspace and the ratio of the standard multivariate linear regression asymptotic standard errors over those of the envelope estimator, for each element in $\beta$. 
+We will now consider an envelope model with $\hat{u} = 1$. Model selection criteria support such a choice. 
 
 
 ```{r}
 # which dimension?
 u.env(X = as.numeric(dat$X), Y = dat[, 1:2])
+```
 
+
+The ratios of the standard multivariate linear regression asymptotic standard errors over those of the envelope estimator are displayed below (for each element in $\beta$). THe envelope model yields substantial variance reduction.
+
+
+```{r}
 # ratios at u = 1
 env_mod <- env(X = as.numeric(dat$X), Y = dat[, 1:2], u = 1)
 env_mod$ratio
+```
 
+
+We depict the envelope subspace added to the previous plot that only displayed the distribution of responses. We can see how the envelope model works by thinking through this visualization. The separate marginal distributions of the response have considerable overlap. Projecting into the envelope subspace reveals a separation across the categories of $X$.
+
+```{r}
 dat_means2 <- data.frame(Y1 = c(env_mod$mu[1] + 4*env_mod$beta[1], env_mod$mu[1] - 1.5*env_mod$beta[1]), 
                          Y2 = c(env_mod$mu[2] + 4*env_mod$beta[2], env_mod$mu[2] - 1.5*env_mod$beta[2]))
 ggplot(dat) + aes(x = Y1, y = Y2, color = X) + 
@@ -549,7 +560,7 @@ and $b_k$ is the BIC criterion evaluated at the envelope estimator $\hat{\beta}_
 
 ## Example: wheat protein (again)
 
-We can use the \texttt{weighted.env} function to estimation the variability of the weighted envelope estimator in the wheat protein example. We see that incorporation of model selection variability drastically lowers the efficiency gains produced by an analysis that conditions on $\hat{u} = 1$, but meaningful variance reduction is still observed.
+We can use the \texttt{weighted.env} function to estimation the variability of the weighted envelope estimator in the wheat protein example. We see that acccounting for model selection variability drastically lowers the efficiency gains produced by an analysis that conditions on $\hat{u} = 1$, but meaningful variance reduction is still observed.
 
 
 ```{r boot, cache = TRUE}
