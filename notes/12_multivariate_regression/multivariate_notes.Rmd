@@ -417,7 +417,7 @@ where $\text{Var}(\Gamma_0^T\varepsilon) = \Omega_0$. In the above, we see that 
 \end{align*}
 Thus condition $(ii)$ is also satisfied.
 
-\textbf{Note}: The envelope model decomposes variation $\Sigma$ into a material portion $\Gamma\Omega\Gamma^T$ and an immaterial portion $\Gamma_0\Omega_0\Gamma_0^T$. The material part represents the variability in $Y$ necessary for estimation of $\beta = \Gamma\eta$. When the errors in model (\ref{envmodel}) are normally distributed then $\beta X = \Gamma\eta X$ is the mean of a normal distribution and the envelope model yields variance reduction by exploiting a connection between the mean and the variance. In the standard multivariate model, Basu's Theorem tells us that estimation of the mean and variance are independent. The message from envelope methodology tells us the opposite.
+\textbf{Note}: The envelope model decomposes variation $\Sigma$ into a material portion $\Gamma\Omega\Gamma^T$ and an immaterial portion $\Gamma_0\Omega_0\Gamma_0^T$. The material part represents the variability in $Y$ necessary for estimation of $\beta = \Gamma\eta$. When the errors in model (\ref{envmodel}) are normally distributed then $\beta X = \Gamma\eta X$ is the mean of a normal distribution (centered predictors and responses) and the envelope model yields variance reduction by exploiting a connection between the mean and the variance. This is conflicts from lessons learned from Basu's Theorem which tells us that estimation of the mean and variance  are independent in some normal models.
 
 
 
