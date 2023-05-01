@@ -6,7 +6,8 @@ See the Syllabus for more details. See the notes directory for course notes.
 
 # News
 
- - multivariate regression notes posted.
+ - The final is posted and it is due on May 11th at 11:59 PM.
+ - Multivariate regression notes posted.
  - Homework 7 is posted and it is due on May 3rd at 11:59 PM.
 
 
@@ -175,7 +176,7 @@ Homeworks will be worth 100 points unless otherwise noted.
 
 
 #### Exams
-There will be two exams in this class. A midterm examination will be due on Friday, March 10th at 11:59 PM. The final examination will occur at the end of the semester, and it will be due on 05/11 at 11:59 pm. The final examination will be cumulative.
+There will be two exams in this class. A midterm examination will be due on Friday, March 10th at 11:59 PM. The final examination will occur at the end of the semester, and it will be due on 05/11 at 11:59 PM. The final examination will be cumulative.
 
 <!-- ### Final Grade Percentage & Letter Grade  -->
 <!-- | Lower bound | Upper bound | Letter grade | -->
@@ -300,6 +301,6 @@ A list of the designated University employees who, as counselors, confidential a
   + Final take-home exam assigned
   + Homework 7 due on Wednesday, May 3rd at 11:59 PM
 
-* Final exam due on 05/11 at 11:59 pm.
+* Final exam due on 05/11 at 11:59 PM.
 
 
