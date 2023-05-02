@@ -1,0 +1,513 @@
+---
+title: "STAT 528 HW 6"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+##\noindent{\bf Problem 1}: Do the following:
+\begin{itemize}
+	\item[a)] Explain why a GLMM with a Bernoulli response may have biased estimates of regression coefficients.
+	\item[b)] We have the same reasons as with LMMs to view $\chi^2$ testing with some skepticism. Elaborate on these reasons.
+	\item[c)] Construct a bootstrap procedure that estimates the p-value corresponding to the deviance based nested model hypothesis test for the \texttt{ctsid} data analysis in the GLMM notes.
+\end{itemize}
+
+\vspace*{0.5cm}
+
+## \noindent{\bf Solution}:
+
+
+### a)
+
+The idea of PQL is to transform the original response to produce a pseudo response. The transformed psuedo response will approximately behave like normally distributed random variables, for which optimization algorithms for linear mixed effects models can be used. The transformation works well when the original response is already close to being normally distributed, like poisson with high counts and binomial with large number of trials. But in the other case, when the original response is highly discrete, hence far from being normally distributed, like Bernoulli response, the approximation is poor and will result bias.
+
+### b)
+
+For testing fixed effects, the LRT is only approximately $\chi^2$ distributed under null hypothesis and tend to give smaller p-values, overestimating significance of variables.
+For testing random effects, the problem is more serious then the null hypothesis is of the form $H_0: \hat{\sigma_0} = 0$. Because in this case, the parameter is on the boundary of parameter space, making the $\chi^2$ approximation completely fail. Even when the null hypothesis is of other forms, LRT tends to give larger p-values, underestimating significance of variables.
+
+### c)
+
+```{r, message=FALSE, warning=FALSE}
+library(faraway)
+library(tidyverse)
+library(lme4)
+library(ggplot2)
+data(ctsib)
+ctsib$stable <- ifelse(ctsib$CTSIB==1,1,0)
+ctsib <- ctsib %>%
+mutate(Age = scale(Age), Height = scale(Height), Weight = scale(Weight))
+```
+
+
+```{r modgh, cache = TRUE}
+system.time(modgh <- glmer(stable ~ Sex + Age + Height + Weight + Surface +
+Vision + (1|Subject), nAGQ=25, family=binomial, data=ctsib,
+control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e5))))
+summary(modgh)
+```
+
+```{r}
+modgh2 <- glmer(stable ~ Surface + Vision + (1|Subject), nAGQ=25,
+family=binomial, data=ctsib)
+anova(modgh, modgh2)
+```
+
+```{r, cache=TRUE, warning=FALSE}
+library(doParallel)
+set.seed(42)
+B <- 1e3
+
+myCluster <- makeCluster(detectCores()-2, type='PSOCK')
+registerDoParallel(myCluster)
+
+system.time(lrtstat <- foreach(1:B) %dopar% {
+  y <- unlist(simulate(modgh2))
+  bnull <- lme4::glmer(y ~ Surface + Vision + (1|Subject), nAGQ=25,
+              family=binomial, data=ctsib)
+  balt <- lme4::glmer(y ~ Sex + Age + Height + Weight + Surface +
+            Vision + (1|Subject), nAGQ=25, family=binomial, data=ctsib,
+            control=lme4::glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e5)))
+  as.numeric(2*(logLik(balt) - logLik(bnull)))
+})
+```
+
+```{r}
+pval <- mean(lrtstat > as.numeric(2*(logLik(modgh) - logLik(modgh2))))
+pval
+```
+
+Again, the simplified model is justified.
+
+\vspace*{1cm}
+
+##
+\noindent{\bf Problem 2}: Show that a GLM in canonical form can be cast as a GEE. Explain your work in detail.
+
+\vspace*{0.5cm}
+
+##
+\noindent{\bf Solution}:
+
+GLM framework:
+
+\begin{align*}
+f(y;\theta, \phi) = \exp\left\{ \frac{y \theta - c(\theta)}{a_i(\phi)} + b(y, \phi) \right\},
+\end{align*}
+
+where $\theta$ is the location parameter, $a(\phi)$ is a scale parameter, $b(y, \phi)$ is the normalizing term, and $\phi$ is the dispersion parameter.
+
+Thus, we have
+
+\begin{align*}
+E(y) = c'(\theta),V(y) = Var(y) = c''(\theta) a(\phi)
+\end{align*}
+
+And the log-likelihood for the exponential family is,
+
+\begin{align*}
+L(\theta, \phi|y_1,...,y_n) = \sum^n_{i=1} \left\{ \frac{y_i \theta_i -c(\theta_i)}{ a_i(\phi)} + c(y_i, \phi) \right\}
+\end{align*}
+
+then we can get
+
+\begin{align*}
+\frac{\partial L}{\partial \theta_i} =  \left\{ \frac{y_i - c'(\theta_i)}{a_i(\phi)} \right\} =  \left\{ \frac{y_i - \mu_i}{a_i(\phi)} \right\}
+\end{align*}
+
+holds for $i=1,..,n$.
+
+Also, we obtain $\frac{\partial \theta_i}{\partial \mu_i} = \frac{a_i(\phi)}{V(\mu_i)}$ by the following,
+\begin{align*}
+\mu_i = c'(\theta_i) \iff \frac{\partial }{\partial \theta_i} \mu_i = \frac{\partial }{\partial \theta_i} c'(\theta_i) \iff \frac{\partial \mu_i }{\partial \theta_i}   =  c''(\theta_i) \iff \frac{\partial \theta_i}{\partial \mu_i} = \frac{a_i(\phi)}{V(\mu_i)},
+\end{align*}
+
+Thus, if we set $\frac{\partial L}{\partial \beta} = 0$, we will obtain
+
+\begin{align*}
+0=\frac{\partial L}{\partial \beta} & = \sum^n_{i=1} \frac{\partial L}{\partial \theta_i} \frac{\partial \theta_i}{\partial \beta} \\
+& = \sum^n_{i=1} \frac{\partial L}{\partial \theta_i} \frac{\partial \theta_i}{\partial \mu_i}\frac{\partial \mu_i}{\partial \beta} \\
+& = \sum^{n}_{i=1} \frac{y_i - \mu_i}{a_i(\phi)} \frac{a_i(\phi)}{V(\mu_i)} \frac{\partial \mu_i}{\partial \beta} \\
+& = \sum^{n}_{i=1} \frac{y_i - \mu_i}{V(\mu_i)}   \frac{\partial \mu_i}{\partial \beta}\\
+&= \sum_{i=1} D_i^T V_i^{-1} (Y_i - \mu_i)
+\end{align*}
+
+Which is equivalent to the GEE identity,
+
+where $D_i = \frac{\partial \mu_i}{\partial \beta}$, $V_i$ refers to the variance of $Y_i$. And this is just the same as the setting in GEE.
+
+\vspace*{1cm}
+##
+\noindent{\bf Problem 3}: The National Youth Survey collected a sample of 11–17 year olds, 117 boys and 120 girls, asking questions about marijuana usage. The data is presented in the \texttt{potuse} dataset int he \texttt{faraway} package. Do the following:
+\begin{itemize}
+	\item[a)] Plot the total number of people falling into each usage category as it varies over time separately for each sex.
+	\item[b)] Condense the levels of the response into whether the person did or did not use marijuana that year. Turn the year into a numerical variable. Fit a GLMM for the now binary response with an interaction between sex and year as a predictor using Gauss-Hermite quadrature. Comment on the effect of sex.
+	\item[c)] Fit a reduced model without sex and use it to test for the significance of sex in the larger model.
+	\item[d)] Fit a model with year as a factor. Should this model be preferred to the model with year as just a linear term? Interpret the estimated effects in the year as a factor version of the model.
+	\item[e)] Fit your final model using PQL, Bayesian methods, and MCLA. Compare the results and discuss any inconsistencies if any arise.
+	\item[f)] Fit GEE version of the model and compare it to the analogous GLMM fits.
+\end{itemize}
+
+\vspace*{0.5cm}
+##
+\noindent{\bf Solution}:
+
+## a)
+```{r message=FALSE, warning=FALSE}
+library(reshape2)
+library(lme4)
+library(MASS)
+```
+
+
+```{r}
+head(potuse, 5)
+```
+
+```{r message=FALSE, warning=FALSE}
+y76_m <- potuse %>% filter(sex == 1) %>% group_by(year.76) %>% 
+  summarise(count76 = sum(count)) %>% rename(cat=year.76)
+y77_m <- potuse %>% filter(sex == 1)%>% group_by(year.77) %>% 
+  summarise(count77 = sum(count))%>% mutate(cat=year.77)
+y78_m <- potuse %>% filter(sex == 1)%>% group_by(year.78) %>% 
+  summarise(count78 = sum(count))%>% mutate(cat=year.78)
+y79_m <- potuse %>% filter(sex == 1)%>% group_by(year.79) %>%
+  summarise(count79 = sum(count))%>% mutate(cat=year.79)
+y80_m <- potuse %>% filter(sex == 1)%>% group_by(year.80) %>%
+  summarise(count80 = sum(count))%>% mutate(cat=year.80)
+count_male <- y76_m %>% left_join(y77_m) %>% left_join(y78_m) %>%
+  left_join(y79_m) %>% left_join(y80_m) %>% 
+  dplyr::select(cat, count76, count77, count78, count79, count80) 
+```
+
+Plot for male.
+
+```{r message=FALSE, warning=FALSE}
+df_male <- melt(data.frame(count_male))[-c(1,2,3),]
+df_male$cat <- 1:3
+df_male$cat <- as.factor(df_male$cat)
+ggplot(df_male, aes(variable, value, group=cat)) + geom_line(aes(color=cat))
+```
+
+```{r message=FALSE, warning=FALSE}
+y76_f <- potuse %>% filter(sex == 2) %>% group_by(year.76) %>% summarise(count76 = sum(count)) %>% rename(cat=year.76)
+y77_f <- potuse %>% filter(sex == 2)%>% group_by(year.77) %>% summarise(count77 = sum(count))%>% mutate(cat=year.77)
+y78_f <- potuse %>% filter(sex == 2)%>% group_by(year.78) %>% summarise(count78 = sum(count))%>% mutate(cat=year.78)
+y79_f <- potuse %>% filter(sex == 2)%>% group_by(year.79) %>% summarise(count79 = sum(count))%>% mutate(cat=year.79)
+y80_f <- potuse %>% filter(sex == 2)%>% group_by(year.80) %>% summarise(count80 = sum(count))%>% mutate(cat=year.80)
+count_female <- y76_f %>% left_join(y77_f) %>% left_join(y78_f) %>% left_join(y79_f) %>% left_join(y80_f) %>% 
+  dplyr::select(cat, count76, count77, count78, count79, count80) 
+```
+
+Plot for female.
+
+```{r message=FALSE, warning=FALSE}
+df_female <- melt(data.frame(count_female))[-c(1,2,3),]
+df_female$cat <- 1:3
+df_female$cat <- as.factor(df_female$cat)
+ggplot(df_female, aes(variable, value, group=cat)) + geom_line(aes(color=cat))
+```
+
+
+## b)
+
+Condense responses, and transform data from wide format to long format, scale predictors.
+
+```{r}
+potuse_long <- potuse %>% filter(count > 0) %>% mutate(resp76 = ifelse(year.76 == 1, 0, 1), 
+                                 resp77 = ifelse(year.77 == 1, 0, 1),
+                                 resp78 = ifelse(year.78 == 1, 0, 1),
+                                 resp79 = ifelse(year.79 == 1, 0, 1),
+                                 resp80 = ifelse(year.80 == 1, 0, 1)) %>% uncount(count) %>%
+                          dplyr::select(sex, resp76, resp77,resp78, resp79, resp80)
+potuse_long$subject <- 1:236
+potuse_long <- melt(potuse_long, id.vars=c('subject', 'sex'))
+potuse_long$year <- as.numeric(gsub('resp','', potuse_long$variable))
+
+potuse_long$sex <- as.factor(potuse_long$sex)
+potuse_long$year_num <- (potuse_long$year - mean(potuse_long$year)) / sd(potuse_long$year)
+potuse_long$year <- as.factor(potuse_long$year)
+head(potuse_long)
+```
+
+```{r modfit, cache = TRUE}
+system.time(mod_large <- glmer(value ~ sex + year_num + sex:year_num + (1|subject), 
+                               nAGQ=25, family=binomial, data=potuse_long,
+                               control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e5))))
+```
+
+```{r}
+summary(mod_large)
+```
+
+`sex2` has negetive estimated coefficients, meaning that being female has negative effect on the probability of using pot. So the model says that females are less likely to use pot, compared with males.
+
+## c)
+
+```{r cmod_fit, cache = TRUE}
+system.time(mod_mid <- glmer(value ~ year_num + sex:year_num + (1|subject), 
+                               nAGQ=25, family=binomial, data=potuse_long,
+                               control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e5))))
+system.time(mod_small <- glmer(value ~ year_num  + (1|subject), 
+                               nAGQ=25, family=binomial, data=potuse_long,
+                               control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e5))))
+```
+```{r}
+anova(mod_large, mod_mid, mod_small)
+```
+
+Turns out the effect of sex is significant at significance level of $0.05$.
+
+## d)
+
+```{r dmod_fit, cache = TRUE}
+system.time(mod_fac <- glmer(value ~ sex + year + sex:year + (1|subject), 
+                               nAGQ=25, family=binomial, data=potuse_long,
+                               control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e5))))
+```
+
+```{r}
+summary(mod_fac)
+```
+
+AIC prefers the model with year as factor, but BIC disagrees. In my humble opinion, treating year as a categorical variable should be preferred. When year is included as numeric variable, since its value monotonically increases, the effect of year in the model is also monotone, and varying at a constant rate. To be specific, assume estimated coefficient for year is $\hat{\beta} > 0$, then the effect of `year=77` is greater than `yead=76` by $\hat{\beta}$, the effect of `year=78` is greater than `yead=77` by $\hat{\beta}$, and so on(this not exactly the case in the above models since year is scaled, but close enough), which not necessarily makes sense. But when year is included as categorical variable, the model can estimate different effect for each year, making the model more expressive.
+
+Now when we look at the summary table of model with year as factor, we notice that with year76 as reference level, each of the following years has stronger positive effect on pot usage than the previous year. But we can also note that the increasing rate of effect is slowing down. The increase in estimated coefficient from year 78 to 79 is greater than that from 79 to 80.
+
+## e)
+
+We choose the model with year as a categorical variable.
+
+PQL
+
+```{r}
+mod_fac_PQL <- glmmPQL(value ~ sex + year + sex:year, random = ~ 1|subject, 
+                               family=binomial, data=potuse_long)
+summary(mod_fac_PQL)
+```
+
+
+INLA for Bayesian method.
+
+```{r}
+library(INLA)
+```
+
+```{r message=FALSE, warning=FALSE}
+# formula <- use ~  year + f(id, model = "iid")
+# result <- inla(formula, family = "binomial", data = potuse3)
+
+formula <- value ~ sex + year + sex:year + f(subject, model="iid")
+result <- inla(formula, family="binomial", data=potuse_long)
+```
+
+```{r}
+sigmaalpha <- inla.tmarginal(function(x) 1/sqrt(x), result$marginals.hyperpar$"Precision for subject")
+```
+
+```{r}
+x <- seq(0,7,length.out = 100)
+sdf <- data.frame(effect = x, density=inla.dmarginal(x, sigmaalpha))
+ggplot(sdf,aes(x=effect,y=density)) +
+  ggtitle("Posterior distribution for SD") +
+  geom_line() +
+  theme_minimal()
+```
+
+```{r}
+restab <- sapply(result$marginals.fixed,
+  function(x) inla.zmarginal(x, silent=TRUE))
+restab <- cbind(restab, alpha=inla.zmarginal(sigmaalpha,silent=TRUE))
+#colnames(restab) = c("mu","norm","dome","open","alpha")
+restab
+```
+
+MCLA
+
+```{r mcla_mod_fit, cache = TRUE}
+library(glmm)
+set.seed(13)
+clust <- makeCluster(detectCores()-2)
+# subject needs to be a factor
+potuse_long$subjectF <- as.factor(potuse_long$subject)
+system.time(m_MCLA <- glmm(value ~ sex + year + sex:year, random = list(~0+subjectF),
+family.glmm=bernoulli.glmm, m = 1e3,
+varcomps.names = c("subjectF"), cluster = clust,
+data=potuse_long))
+```
+```{r}
+m_MCLA$beta
+se(m_MCLA)
+```
+
+There are of course some differences on the exact values of estimates. A notable one is that estimated coeffcients  of interaction terms given by MCLA is slightly off, compared with other approaches(probably because insufficient sample  size. I believe it is safe to say that all above approaches give similar results.
+
+
+## f)
+
+```{r}
+library(geepack)
+modgee <- geeglm(value ~ sex + year + sex:year,
+                  id=subject, corstr="exchangeable", scale.fix=TRUE, 
+                  data=potuse_long, family=binomial)
+summary(modgee)
+```
+
+Note that most of the estimated coefficients of GEE is smaller in magnitude than that of GLMM by numerical integration. The reason why lies in the underlying modelling assumptions. 
+
+In GLMM, it is assumed that random effects are normally distributed, and the link function correctly captures the relation between conditional expectation and linear combination of predictors. So given the logit link for this GLMM, the estimated coefficient should be interpreted as the change in log odds ratio for unit change in the corresponding predictor, given the subject and other predictors fixed. 
+
+
+In GEE, there's no distributional assumptions. We only assume a link function and a variance-covariance structure. In other words, there are weaker assumptions in GEE. And given logit link for GEE, the estimated coefficient should be interpreted as the average change in log odds ratio for unit change in the corresponding predictor, across all subjects, given other predictors fixed. So, GEE is modelling population-average effect, rather than subject-specific effect that is modeled by GLMM. Hence it makes sense that GEE gives estimates with smaller magnitude.
+
+\vspace*{1cm}
+##
+\noindent{\bf Problem 4}: The \texttt{nitrofen} data in \texttt{boot} package come from an experiment to measure the reproductive toxicity of the pesticide \texttt{nitrofen} on a species of zooplankton called \emph{Ceriodaphnia dubia}. Each animal produced three broods in which the number of live offspring was recorded. Fifty animals in total were used and divided into five batches. Each batch was treated in a solution with a different concentration of the pesticide. Do the following:
+\begin{itemize}
+	\item[a)] Plot the total number of live offspring as they vary with concentration and comment. Now plot the numbers for each brood, taking care to distinguish the different broods. Is the trend within each brood the same?
+	\item[b)] Fit a GLMM for the number of live offspring within each brood that varies with concentration and brood number (including an interaction). The model should take account of the dependence between observations from the same animal. Describe what the model says about how the number of live offspring change with concentration for the different broods.
+	\item[c)] Fit an equivalent GEE model and compare it to the GLMM result.
+\end{itemize}
+
+##
+\noindent{\bf Soln}:
+
+### a)
+
+```{r message=FALSE, warning=FALSE}
+library(boot)
+library(hrbrthemes)
+
+```
+
+```{r}
+head(nitrofen)
+```
+
+
+```{r}
+nitrofen %>% group_by(conc) %>% summarise(total_count = sum(total)) %>% 
+  ggplot(aes(x=conc, y=total_count)) + geom_line( color="grey") +
+    geom_point(shape=21, color="black", fill="#69b3a2", size=6) 
+```
+
+According to plot, concentration 80 does not make much difference from 0. But when greater than 80,  concentration clearly has negetive effect on number of live offspring.
+
+```{r}
+nitrofen %>% group_by(conc) %>% 
+  summarise(brood1_count = sum(brood1), brood2_count = sum(brood2), brood3_count = sum(brood3)) %>% 
+  ggplot(aes(conc)) + geom_line(aes(y=brood1_count, colour='brood1_count')) +
+  geom_line(aes(y=brood2_count, colour='brood2_count')) +
+  geom_line(aes(y=brood3_count, colour='brood3_count')) 
+  
+```
+
+Similar trend of decreasing as total count is observed for brood2 and brood3. But seems that brood1 does not vary much with different concentration values.
+
+### b)
+
+```{r}
+nitrofen_long <- nitrofen %>% dplyr::select(conc, brood1, brood2, brood3)
+nitrofen_long$subject <- 1:50
+nitrofen_long <- melt(nitrofen_long, id.vars=c('subject', 'conc'))
+nitrofen_long$brood_num <- gsub('brood','', nitrofen_long$variable)
+
+nitrofen_long$conc_s <- (nitrofen_long$conc - mean(nitrofen_long$conc)) / sd(nitrofen_long$conc)
+head(nitrofen_long)
+```
+
+```{r nitro_mod_fit, cache = TRUE}
+system.time(mod_nitro <- glmer(value ~ conc_s + brood_num + conc_s:brood_num + (1|subject), 
+                               nAGQ=25, family=poisson, data=nitrofen_long))
+```
+
+```{r}
+summary(mod_nitro)
+```
+
+Note that both brood number and the interaction between brood number and concentration chooses `brood1` as the reference level. With this in mind, we note that the estimate of `conc_s` effect, which actually stands for the effect of concentration in brood1, is really close to 0 and not significant, meaning number of live offspring is not significantly related to concentration level for brood1. On the other hand, both `conc_s:brood_num2` and `conc_s:brood_num3` have significant negative effect, meaning that compared with that of brood1, number of live offspring in brood2 and brood3 are much more significantly negatively correlated with concentration level. What's more, the magnitude of estimated effect for `conc_s:brood_num3` is greater than that of  `conc_s:brood_num2`. All above conclusions agree with what we observed from the plot.
+
+### c)
+
+
+```{r}
+mod_nitro_gee <- geeglm(value ~ conc_s + brood_num + conc_s:brood_num,
+                  id=subject, corstr="exchangeable", scale.fix=TRUE, 
+                  data=nitrofen_long, family=poisson)
+summary(mod_nitro_gee)
+```
+
+Interestingly, this time, we can no longer say that estimates given GEE are notably smaller in magnitude than that of GLMM. This is because the reason explained in Problem 3 is critical only for logit link. When modeling count response, which requires log link, the difference of interpretations of estimated coefficients of GEE and GLMM are not that crucial. Also, we can note that this time GEE estimates do have larger standar errors.
+
+
+We can observe from the plots that when the concentration of the solution is higher than 80 mug/litre, the higher the concentration, the less the number of live offspring.
+
+Then we can continue to observe the trend for each brood.
+
+```{r}
+nitrofen2  <- nitrofen %>%
+      dplyr::select(-total) %>%
+      pivot_longer(
+        cols = brood1:brood3,
+        names_to = "brood",
+        values_to = "num"
+      ) %>%
+  group_by(conc,brood) %>%
+  summarise(num = sum(num), .groups = "drop")
+ggplot(data = nitrofen2, mapping = aes(x = conc, y = num, col = brood)) +
+  geom_point() +
+  geom_line() +
+  theme_light() +
+  labs(title = "total number of live offspring for each brood)")+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+We can see that brood2 and brood3 has the similar trend with the last plot, while the brood1 is quite different. It seems that in brood3, the total number of live offspring isn't affected by the nitrofen concentration in the solution.
+
+###(b)
+
+First, do data wrangling as following:
+```{r}
+nitrofen3 <- nitrofen %>%
+  dplyr::select(-total) %>%
+  pivot_longer(
+    cols = brood1:brood3,
+    names_to = "brood",
+    values_to = "num") %>%
+  mutate(brood = substring(brood, 6,6)) %>%
+  mutate(brood = as.factor(brood))
+nitrofen3 <- cbind(nitrofen3, id = rep(c(1:50), each = 3)) %>%
+  mutate(conc = scale(conc)) %>%
+  dplyr::select(c(id,brood,conc,num))
+
+head(nitrofen3)
+```
+
+Then, we use Numerical integration for GLMM
+
+```{r}
+mod2glmm <- glmer(num ~ conc + brood + conc*brood + (1|id),nAGQ=25,
+                   family=poisson, data=nitrofen3)
+summary(mod2glmm)
+```
+
+we can observe that the random effect id has variance 0.0911 with standard deviance 0.302. For fixed effects, only ```conc``` is not significant. This agrees with the observation in (a).
+
+From the estimated coefficients of ```conc:brood2``` and ```coc:brood3``` are all negative, we can learn that when the nitrofen concentration in the solution increase in brood2 and brood3, the number of live offspring will decrease. This means that the nitrofen concentration has negative effect on the number of live offspring.
+
+Also, the estimated coefficients of ```brood2``` and ```brood3``` are positive. This indicates that brood2 and brood3 tend to have more offspring than brood1.
+
+###(c)
+
+For GEE model:
+
+```{r}
+mod2geep <- geeglm(num ~  conc + brood + conc*brood,
+                   id=id, corstr="ar1",
+                   data = nitrofen3, family=poisson)
+summary(mod2geep)
+```
+We can see that the estimated correlation between observations on the same subject is 0.329 with a standard error of 0.106, which indicates the correlation between responses within individuals.
+
+Only ```conc``` is not significant and all the other estimated coefficients are very closed for both GEE and GLMM methods. Thus, we can get the similar results with what we have got in GLMM. Besides, the estimated $\beta$s are also very close, even though they have different meanings.
+
+\vspace*{1cm}
